@@ -1,0 +1,61 @@
+@import "../../../../app.scss";
+
+.stores-list {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  .header-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    h3 {
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 18px;
+      letter-spacing: 0.5px;
+      color: #151d36;
+    }
+    button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: $border;
+     height: 40px;
+     width: 45px;
+      border-radius: 6px;
+    }
+  }
+  .stores-list-container {
+    display: flex;
+    flex-shrink: 0;
+    overflow-x: scroll;
+    max-width: 100vw;
+    gap: 10px;
+    padding-right: 20px;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    .single-store-badge {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+      .badge-card {
+        background-color: $border;
+        height: 70px;
+        width: 70px;
+        border-radius: 100px;
+        flex-shrink: 0;
+      }
+      p {
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 12px;
+        letter-spacing: 0.5px;
+        color: #151d36;
+        text-align: center;
+      }
+    }
+  }
+}

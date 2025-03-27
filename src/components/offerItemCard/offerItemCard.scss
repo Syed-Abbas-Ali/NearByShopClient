@@ -1,0 +1,38 @@
+@import "../../app.scss";
+
+.offer-item-card-div {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  .offer-item-div {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    .category-name {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      h3 {
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 20.8px;
+        color: $app-second-color;
+      }
+      img {
+        height: 24px;
+      }
+    }
+  }
+  .category-discount-cards {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap; 
+    height: 170px;
+    overflow-y: hidden;
+    gap: 10px;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}

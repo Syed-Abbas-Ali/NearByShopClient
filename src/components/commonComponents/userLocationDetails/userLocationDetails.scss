@@ -1,0 +1,16 @@
+@import "../../../app.scss";
+
+.user-location-details {
+  padding: 0px;
+  .select-location-card {
+    .drop-down-card {
+      p {
+        text-overflow: ellipsis;
+        width: 150px;
+        white-space: nowrap;
+        height: 25px;
+        overflow: hidden;
+      }
+    }
+  }
+}

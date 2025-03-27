@@ -1,0 +1,30 @@
+@import "../../../app.scss";
+
+.share-popup {
+  padding: 0px;
+  background-color: rgba(0, 0, 0, 0.25);
+  height: 100vh;
+  width: 100%;
+  z-index: 999999;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0px;
+  left: 0px;
+  .details-card{
+    width: 400px;
+    background-color: $white-color;
+    padding: 20px;
+    border-radius: 12px;
+    @media screen and (max-width:768px) {
+      width: 350px;
+    }
+    .cancel-icon-card{
+      text-align: end;
+      img{
+        cursor: pointer;
+      }
+    }
+  }
+}

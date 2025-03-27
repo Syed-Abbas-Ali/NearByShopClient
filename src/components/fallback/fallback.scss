@@ -1,0 +1,12 @@
+@import "../../app.scss";
+
+.fallback {
+  position: absolute;
+  height: 100vh;
+  width: 100%;
+  @include flex-center(row, center, center);
+  img {
+    height: 100px;
+    width: 100px;
+  }
+}

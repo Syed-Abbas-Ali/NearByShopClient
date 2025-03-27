@@ -1,0 +1,44 @@
+@import "../../../app.scss";
+
+.offer-sub-category-product {
+  padding: 0px;
+  .offer-sub-category-products-body {
+    margin-top: 70px;
+    padding: 1rem;
+    max-width: 1500px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    @media (min-width: 1500px) {
+      margin: 70px auto;
+      margin-bottom: 0px;
+    }
+    .all-discounts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      .sub-category-heading {
+        font-size: 14px;
+        color: $secondary-color;
+        font-weight: 500;
+      }
+      .category-discount-cards {
+        display: grid;
+        grid-template-columns: repeat(4,1fr);
+        gap: 16px;
+        @media (max-width: 1300px) {
+          grid-template-columns: repeat(3,1fr);
+        }
+        @media (max-width: 900px) {
+          grid-template-columns: repeat(2,1fr);
+        }
+        @media (max-width: 600px) {
+          grid-template-columns: 1fr;
+        }
+        .offer-content-card {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

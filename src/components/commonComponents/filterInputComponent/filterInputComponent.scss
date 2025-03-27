@@ -1,0 +1,39 @@
+@import "../../../app.scss";
+
+.filter-input-component {
+  display: flex;
+  align-items: center;
+  border: 1px solid #e0e0e0;
+  padding: 8px;
+  border-radius: 8px;
+  flex-grow: 1;
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    width: 24px;
+    img {
+      display: block;
+      height: 18px;
+      width: 18px;
+    }
+  }
+  input {
+    flex-grow: 1;
+    padding: 8px 10px;
+    height: 100%;
+    border: none;
+    outline: none;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 22px;
+    letter-spacing: 0px;
+    color: $app-second-color;
+  }
+  input::placeholder {
+    font-size: 16px;
+    color: #858585;
+    font-family: inherit;
+  }
+}

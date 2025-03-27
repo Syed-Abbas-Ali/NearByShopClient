@@ -1,0 +1,32 @@
+@import "../../../app.scss";
+
+.top-search-component {
+  padding: 16px;
+  height: 70px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  position: fixed;
+  width: 100%;
+  background-color: $white-color;
+  top: 0px;
+  z-index: 999;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 5px -5px;
+  button {
+    background-color: transparent;
+  }
+  .input-div {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 2px solid #e0e0e0;
+    padding: 9px;
+    border-radius: 8px;
+    input {
+      width: 100%;
+      border: none;
+      outline: none;
+    }
+  }
+}

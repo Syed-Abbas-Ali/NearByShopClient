@@ -1,0 +1,52 @@
+@import "../../app.scss";
+
+.product-details-container {
+  max-width: 1450px;
+  margin: auto;
+  margin-top: 70px;
+  padding-top: 20px;
+  @include flex-center(column, "", "");
+  &::-webkit-scrollbar{
+    display: none;
+  }
+  .search-back-icon {
+    height: 70px;
+    margin-top: 70px;
+    width: 100%;
+    background-color: $white-color;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0px 1rem;
+    @media (min-width:1500px) {
+      max-width: 1500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .back-icon {
+      height: 22px;
+      width: 24px;
+      cursor: pointer;
+    }
+    .search-card {
+      flex-grow: 1;
+    }
+  }
+  .content-card {
+    padding: 0.6rem;
+    .product-details-content {
+      @include flex-center(column, "", "");
+      gap: 2rem;
+      .all-products {
+        padding: 0px;
+      }
+      .sub-categories-list{
+        margin: 1rem 0px 1.3rem 0px;
+      }
+    }
+  }
+}
+
+.product-details-container::-webkit-scrollbar {
+  display: none;
+}

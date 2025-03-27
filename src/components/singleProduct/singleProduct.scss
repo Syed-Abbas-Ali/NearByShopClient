@@ -1,0 +1,195 @@
+@import "../../app.scss";
+
+.single-product {
+  @include flex-center(column, "", "");
+  gap: 8px;
+  background-color: white;
+  border: 2px solid rgb(238, 238, 238);
+  border-radius: 8px;
+  padding: 8px;
+  cursor: pointer;
+  position: relative;
+  .trending-btn {
+    position: absolute;
+    backdrop-filter: blur(10px);
+    background: rgba(89, 88, 88, 0.1);
+    letter-spacing: 0.4px;
+    color: $white-color;
+    z-index: 9;
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 15px;
+    left: 4px;
+    top: 4px;
+    padding: 5px;
+  }
+  .default-product {
+    height: 164px;
+    width: 100%;
+    background-color: white;
+    border-radius: 4px;
+    position: relative;
+    .product-image {
+      height: 100%;
+      width: 100%;
+      border-radius: 4px;
+      object-fit: contain;
+    }
+
+    .action-btns {
+      position: absolute;
+      height: 100%;
+      top: 0px;
+      right: -4px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+      div {
+        backdrop-filter: blur(10px);
+        background: rgba(89, 88, 88, 0.1);
+        padding: 6px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+    // .option-card {
+    //   position: absolute;
+    //   right: 0px;
+    //   top: 0px;
+    //   @include flex-center(column, "", "");
+    //   height: 100%;
+    //   div {
+    //     padding: 8px 6px;
+    //     backdrop-filter: blur(10px);
+    //     background: rgba(0, 0, 0, 0.1);
+    //     border-top-left-radius: 5px;
+    //     border-bottom-left-radius: 5px;
+    //     @include flex-center(row, center, center);
+    //     img {
+    //       height: 24px;
+    //       width: 24px;
+    //       flex-shrink: 0px;
+    //       @media screen and (max-width: 768px) {
+    //         height: 22px;
+    //         width: 22px;
+    //       }
+    //     }
+    //   }
+    // }
+  }
+  .product-details {
+    display: flex;
+    flex-direction: column;
+    margin-top: 4px;
+    @media (min-width: 768px) {
+      gap: 1px;
+    }
+    @media (min-width: 1050px) {
+      gap: 2px;
+    }
+    @media (min-width: 1350px) {
+      gap: 4px;
+    }
+    h3 {
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 16.8px;
+      text-align: left;
+      color: $secondary-color;
+      @media (min-width: 768px) {
+        font-size: 13px;
+      }
+      @media (min-width: 1050px) {
+        font-size: 15px;
+      }
+      @media (min-width: 1350px) {
+        font-size: 17px;
+      }
+    }
+    .prices-and-offers {
+      @include flex-center(row, "", center);
+      gap: 5px;
+      margin-top: 4px;
+      h2 {
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 19.6px;
+        color: $secondary-color;
+        @media (min-width: 768px) {
+          font-size: 16px;
+        }
+        @media (min-width: 1050px) {
+          font-size: 18px;
+        }
+        @media (min-width: 1350px) {
+          font-size: 20px;
+        }
+      }
+      .actual-price {
+        font-size: 10px;
+        font-weight: 400;
+        line-height: 14px;
+        color: $light-grey;
+        text-decoration: line-through;
+        @media (min-width: 768px) {
+          font-size: 12px;
+        }
+        @media (min-width: 1050px) {
+          font-size: 14px;
+        }
+        @media (min-width: 1350px) {
+          font-size: 16px;
+        }
+      }
+      .offer-text {
+        font-size: 10px;
+        font-weight: 500;
+        line-height: 14px;
+        color: $app-primary-color;
+        @media (min-width: 768px) {
+          font-size: 11.5px;
+        }
+        @media (min-width: 1050px) {
+          font-size: 12.5px;
+        }
+        @media (min-width: 1350px) {
+          font-size: 14px;
+        }
+      }
+    }
+    .location {
+      @include flex-center(row, "", center);
+      gap: 4px;
+      margin-top: 6px;
+      img {
+        height: 12px;
+        @media (min-width: 768px) {
+          height: 14px;
+        }
+        @media (min-width: 1050px) {
+          height: 16px;
+        }
+        @media (min-width: 1350px) {
+          height: 20px;
+        }
+      }
+      p {
+        font-size: 8px;
+        font-weight: 400;
+        line-height: 8.22px;
+        @media (min-width: 768px) {
+          font-size: 9px;
+        }
+        @media (min-width: 1050px) {
+          font-size: 10px;
+        }
+        @media (min-width: 1350px) {
+          font-size: 11px;
+        }
+      }
+    }
+  }
+}

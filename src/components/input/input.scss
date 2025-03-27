@@ -1,0 +1,41 @@
+@import "../../app.scss";
+
+.input-el {
+  padding: 0px;
+  position: relative;
+  input {
+    width: 100%;
+    height: 40px;
+    border: 1px solid $border;
+    color: $secondary-color;
+    font-weight: 500;
+    line-height: 14.09px;
+    padding-left: 16px;
+    outline: none;
+    letter-spacing: 0.5px;
+    border-radius: 5px;
+    @media (min-width:768px) {
+      font-size: 14px;
+    }
+    @media (min-width:1020px) {
+      font-size: 16px;
+    }
+  }
+  input::placeholder {
+    color: $placeholder;
+    letter-spacing: 0.5px;
+    @media (min-width:768px) {
+      font-size: 14px;
+    }
+    @media (min-width:1020px) {
+      font-size: 16px;
+    }
+  }
+  img{
+    height: 16px;
+    position: absolute;
+    right: 16px;
+    top: 12px;
+    cursor: pointer;
+  }
+}

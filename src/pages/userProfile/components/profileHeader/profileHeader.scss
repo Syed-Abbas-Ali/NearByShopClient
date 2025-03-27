@@ -1,0 +1,46 @@
+@import "../../../../app.scss";
+
+.profile-header {
+  @include flex-center(row, "", center);
+  gap: 24px;
+  margin-bottom: 28px;
+  .profile-image {
+    width: 75px;
+    height: 75px;
+    border-radius: 55px;
+    flex-shrink: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .user-details {
+    .name-heading {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      h2 {
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 20px;
+        color: $app-second-color;
+      }
+      img{
+        cursor: pointer;
+      }
+    }
+    .phone-number {
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 20px;
+      letter-spacing: 1px;
+      color: #6a6c6d;
+    }
+    .mail {
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 20px;
+      color: #868889;
+    }
+  }
+}

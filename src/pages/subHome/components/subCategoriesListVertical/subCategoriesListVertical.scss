@@ -1,0 +1,43 @@
+@import "../../../../app.scss";
+
+.sub-categories-list {
+  padding: 0px;
+  width: 70px;
+  max-height: 100vh;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 20px;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  .active-sub-category {
+    background-image: linear-gradient(to bottom, #fff0e7, #ffd9c0);
+    p {
+      color: #ffffff;
+    }
+  }
+  .inactive-sub-category {
+    background-color: transparent;
+    p {
+      color: #1f1f1f;
+    }
+  }
+  .sub-category-icon-card {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+    padding: 4px 4px;
+    img {
+      width: 40px;
+      height: 40px;
+    }
+    p {
+      text-align: center;
+      font-size: 10px;
+      font-weight: 500;
+      line-height: 10px;
+    }
+  }
+}

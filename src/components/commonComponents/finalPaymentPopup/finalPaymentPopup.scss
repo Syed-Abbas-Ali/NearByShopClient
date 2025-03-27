@@ -1,0 +1,47 @@
+@import "../../../app.scss";
+
+.final-payment-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999999999999;
+  .content-card {
+    background-color: $white-color;
+    padding: 20px;
+    border-radius: 8px;
+    width: 500px;
+    min-height: 500px;
+    max-width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    .cancel-icon-card {
+      display: flex;
+      justify-content: flex-end;
+      img {
+        cursor: pointer;
+      }
+    }
+    .plan-details-card {
+      min-height: 400px;
+      max-width: 90%;
+      max-height: 70vh;
+      width: 100%;
+    }
+    .pay-now-btn {
+      text-align: center;
+      button {
+        background-color: $app-primary-color;
+        color: $white-color;
+        padding: 6px 16px;
+        font-weight: 500;
+        border-radius: 4px;
+      }
+    }
+  }
+}

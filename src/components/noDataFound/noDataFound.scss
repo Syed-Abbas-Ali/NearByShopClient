@@ -1,0 +1,18 @@
+@import "././../../app.scss";
+
+.no-data-found {
+  padding: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+  height: 500px;
+  img {
+    height: 200px;
+    width: 200px;
+  }
+  h3{
+    font-weight: 400;
+  }
+}

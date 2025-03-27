@@ -1,0 +1,43 @@
+@import "../../../app.scss";
+
+.swiper-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+  overflow: hidden;
+
+  .swiper-wrapper {
+    display: flex;
+    transition: transform 0.4s ease-in-out;
+    user-select: none; // Prevent text selection while swiping
+  }
+
+  img {
+    width: 100%;
+    border-radius: 10px;
+  }
+
+  // Dots Indicator
+  .dots {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+    display: flex;
+    gap: 5px;
+
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      background: #C1C1C1;
+      border-radius: 50%;
+      transition: 0.3s;
+
+      &.active {
+        background: #E1E5EE;
+        transform: scale(1.3);
+      }
+    }
+  }
+}

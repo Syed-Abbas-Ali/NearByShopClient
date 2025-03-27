@@ -1,0 +1,37 @@
+@import "../../app.scss";
+
+.top-header {
+  padding: 0px;
+  display: flex;
+  align-items: center;
+  height: 70px;
+  padding: 16px;
+  justify-content: space-between;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 5px -5px;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  background-color: $white-color;
+  z-index: 999999;
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    background-color: $border;
+    border-radius: 4px;
+    width: 36px;
+  }
+  .header-text {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    h3 {
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 20px;
+      color: $app-second-color;
+    }
+  }
+}

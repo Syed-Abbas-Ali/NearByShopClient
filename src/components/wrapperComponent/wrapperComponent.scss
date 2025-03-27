@@ -1,0 +1,25 @@
+@import "../../app.scss";
+
+.wrapper-component {
+  padding: 0px;
+  .child-component {
+    margin: auto;
+    padding: 0px;
+    overflow-y: scroll;
+    max-height: calc(100vh - 140px);
+    margin-bottom: 30px;
+    @media (min-width: 768px) {
+      max-height: calc(100vh - 70px);
+      margin-bottom: 0px;
+    }
+  }
+  .margin-top-yes {
+    margin-top: 70px;
+  }
+  .margin-top-no {
+    margin-top: 0px;
+  }
+  .child-component::-webkit-scrollbar {
+    display: none;
+  }
+}

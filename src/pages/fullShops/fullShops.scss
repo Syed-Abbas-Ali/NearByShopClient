@@ -1,0 +1,35 @@
+@import "../../app.scss";
+
+.full-shops-card {
+  .content-card {
+    margin-top: 70px;
+    max-width: 1500px;
+    @media screen and (min-width: 1500px) {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .sub-categories-card {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      .near-shops-container {
+        max-height: 100vh;
+        overflow: auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+        flex-grow: 1;
+        padding-bottom: 20px;
+        @media screen and (min-width: 800px) {
+          grid-template-columns: 1fr 1fr;
+        }
+        @media screen and (min-width: 1300px) {
+          grid-template-columns: 1fr 1fr 1fr;
+        }
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,64 @@
+@import "../../app.scss";
+
+.loading-skelton {
+  padding: 0px;
+  display: grid;
+  gap: 30px;
+  max-height: 100vh;
+  overflow: hidden;
+  @media screen and (min-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media screen and (min-width: 900px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media screen and (min-width: 1200px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .skelton-item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    .image-card {
+      border-radius: 8px;
+      height: 250px;
+      background-color: $border;
+      animation: pulse 1s infinite;
+      @media screen and (min-width: 600px) {
+        height: 300px;
+      }
+      @media screen and (min-width: 900px) {
+        height: 370px;
+      }
+      @media screen and (min-width: 1200px) {
+        height: 400px;
+      }
+    }
+    .name-card {
+      background-color: $border;
+      height: 35px;
+      width: 60%;
+      border-radius: 4px;
+      animation: pulse 1s infinite;
+    }
+    .des-card {
+      border-radius: 4px;
+      margin-top: 10px;
+      background-color: $border;
+      height: 60px;
+      width: 90%;
+      animation: pulse 1s infinite;
+    }
+  }
+}
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}

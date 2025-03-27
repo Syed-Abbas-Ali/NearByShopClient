@@ -1,0 +1,108 @@
+@import "../../../app.scss";
+
+.user-location-select-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999999999999;
+  .content-card {
+    padding: 20px;
+    background-color: $white-color;
+    border-radius: 8px;
+    width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    .heading-card {
+      display: flex;
+      justify-content: space-between;
+      p {
+        color: $app-second-color;
+        font-size: 20px;
+        font-weight: 500;
+        text-decoration: underline;
+      }
+      padding: 6px 0px;
+      border-bottom: 2px solid $border;
+    }
+    .search-input-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+      border: 2px solid $border;
+      padding: 10px 14px;
+      border-radius: 8px;
+      position: relative;
+      input {
+        width: 100%;
+        border: none;
+        outline: none;
+        font-size: 14px;
+        font-weight: 500;
+        color: $app-second-color;
+      }
+      .searched-results {
+        background-color: $white-color;
+        width: 100%;
+        z-index: 9999999999999;
+        left: 0px;
+        list-style: none;
+        border: 1px solid $border;
+        border-radius: 4px;
+        margin-top: 8px;
+        max-height: 300px;
+        padding: 0px 10px;
+        overflow-y: auto;
+        position: absolute;
+        top: 30px;
+        border: 2px solid $border;
+        li{
+          border-bottom: 1px solid $border;
+          &:last-child{
+              border: none;
+          }
+        }
+      }
+    }
+    .location-content-card {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+      .compass-card {
+        display: flex;
+        justify-content: center;
+        padding-top: 6px;
+        img{
+          height: 20px;
+        }
+      }
+      .giving-text {
+        h3 {
+          font-size: 16px;
+          color: $app-second-color;
+        }
+        p {
+          font-size: 14px;
+        }
+      }
+      .submit-btn-card{
+        padding-top: 4px;
+        button{
+            padding: 4px 12px;
+            border-radius: 4px;
+            background-color: transparent;
+            color: $app-primary-color;
+            font-size: 12px;
+            font-weight: 500;
+            border: 2px solid $app-primary-color;
+        }
+      }
+    }
+  }
+}

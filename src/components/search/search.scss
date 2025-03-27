@@ -1,0 +1,42 @@
+@import "../../app.scss";
+
+.search-card {
+  .search-input {
+    @include flex-center(row, "", center);
+    padding: 0.4rem 1rem 0.4rem 0.8rem;
+    border: 0.1rem solid $border;
+    gap: 14px;
+    border-radius: 0.5rem;
+    @media (min-width: 768px) {
+      padding: 0.4rem 1rem 0.4rem 0.6rem;
+    }
+    .filter {
+      cursor: pointer;
+      @media (min-width: 768px) {
+        display: none;
+      }
+    }
+    .search{
+      height: 14px;
+    }
+    input {
+      height: 1.5rem;
+      width: 100%;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 22px;
+      color: $app-second-color;
+      border: none;
+      outline: none;
+    }
+    input::placeholder {
+      color: #585858;
+      font-weight: 500;
+      font-size: 14px;
+    }
+    input[type="search"]::-webkit-search-cancel-button {
+      cursor: pointer;
+      font-size: 20px;
+    }
+  }
+}

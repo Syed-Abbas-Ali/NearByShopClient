@@ -1,0 +1,44 @@
+@import "../../../../app.scss";
+
+.profile-edit-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999999999999999999;
+  .content {
+    padding: 20px;
+    border-radius: 8px;
+    background-color: $white-color;
+    max-width: 500px;
+    max-height: 80vh;
+    height: 400px;
+    width: 90%;
+    .cancel-icon-card {
+      text-align: end;
+      cursor: pointer;
+    }
+    .fields-card {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .save-action-card {
+      margin-top: 20px;
+      text-align: center;
+      button {
+        background-color: $app-primary-color;
+        border-radius: 4px;
+        padding: 10px 14px;
+        color: $white-color;
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
+  }
+}

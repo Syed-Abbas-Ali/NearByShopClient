@@ -1,0 +1,87 @@
+@import "../../../app.scss";
+
+.offer-form {
+  margin-top: 1rem;
+  .main-labels-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+    .main-label-text {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 18px;
+      color: $secondary-color;
+    }
+    .discount-input{
+      padding: 8px 10px;
+      border-radius: 4px;
+    }
+    .dates-card {
+      gap: 20px;
+      display: flex;
+      .dates {
+        width: 50%;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        p {
+          font-size: 12px;
+          font-weight: 500;
+          line-height: 15px;
+          color: $secondary-color;
+        }
+        input {
+          height: 40px;
+          border: 2px solid $border;
+          padding: 5px 10px;
+          border-radius: 4px;
+          width: 100%;
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 15px;
+          color: $secondary-color;
+        }
+      }
+    }
+  }
+  .final-amount {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    .main-label {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 18px;
+      color: $secondary-color;
+    }
+    .total-price {
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 30px;
+      span {
+        font-weight: 600;
+      }
+    }
+    .single-price {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 20px;
+      span {
+        font-weight: 600;
+      }
+    }
+    .proceed-btn {
+      background-color: $app-primary-color;
+      color: $white-color;
+      padding: 12px 0px;
+      width: 100%;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 15px;
+      border-radius: 4px;
+      letter-spacing: 0.4px;
+    }
+  }
+}

@@ -1,0 +1,27 @@
+@import "../../app.scss";
+
+.sub-home-page {
+  .search-wrapper {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 10px 0px 10px;
+    .search-card{
+      flex-grow: 1;
+    }
+    .back-icon {
+      height: 22px;
+      width: 24px;
+      cursor: pointer;
+    }
+  }
+  .categories-card {
+    padding: 10px 10px 0px 10px;
+    margin-top: 20px;
+  }
+  .sub-categories-and-products {
+    display: flex;
+    margin-top: 10px;
+    gap: 10px;
+  }
+}

@@ -1,0 +1,63 @@
+@import "../../../app.scss";
+
+.search-component {
+  height: 100vh;
+  overflow-y: scroll;
+  background-color: $border;
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  left: 0px;
+  z-index: 999999999999;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  .cancel-icon{
+    height: 30px;
+    margin-left: auto;
+    cursor: pointer;
+  }
+  .search-input-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 2px solid $app-second-color;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background-color: transparent;
+    input {
+      outline: none;
+      width: 100%;
+      height: 34px;
+      border: none;
+      background: transparent;
+      font-size: 16px;
+      color: $app-second-color;
+    }
+    button {
+      background-color: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .search-send-icon {
+      img {
+        transform: rotate(90deg);
+      }
+    }
+  }
+  .search-results-text {
+    ul {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      // padding-left: 35px;
+      li {
+        color: $app-second-color;
+        padding: 4px 5px;
+      }
+    }
+  }
+}

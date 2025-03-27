@@ -1,0 +1,46 @@
+@import "../../app.scss";
+
+.toggle-yes-no {
+  .switch {
+    background-color: #E1E5EE;
+    height: 20px;
+    border-radius: 12px;
+    width: 40px;
+    position: relative;
+    display: inline-block;
+    transition: all 0.3s linear;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .switch::after {
+    height: 20px;
+    width: 20px;
+    background-color: $app-primary-color;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    content: "No";
+    font-size: 9px;
+    text-align: center; 
+    border-radius: 10px;
+    transition: all 0.3s linear;
+    color: $white-color;
+  }
+
+  input[type="checkbox"]:checked + .switch::after {
+    translate: 20px 0px;
+    content: "Yes";
+    background-color: $white-color;
+    color: $app-primary-color;
+  }
+
+  input[type="checkbox"]:checked + .switch {
+    background-color: $app-primary-color;
+  }
+
+  input[type="checkbox"] {
+    display: none;
+  }
+}

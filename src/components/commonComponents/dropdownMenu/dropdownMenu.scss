@@ -1,0 +1,15 @@
+@import "../../../app.scss"; // Import global styles first
+
+.dropdown-container {
+  border: 1px solid #d9d9d9;
+  padding: 8px 12px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; // Pushes text left & icon right
+  width: 100%; // Adjust width as needed
+  cursor: pointer;
+  background-color: white; // Optional: Set background color
+  color: black !important; // Set text color to black
+  font-size: 16px !important; // Adjust font size
+}

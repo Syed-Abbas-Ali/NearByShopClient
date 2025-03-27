@@ -1,0 +1,39 @@
+@import "../../../app.scss";
+
+.social-share-card {
+  .share-text {
+    font-size: 20px;
+    text-align: center;
+    color: $app-second-color;
+  }
+  .copy-link-card {
+    background-color: grey !important;
+  }
+  .makeStyles-copyContainer-5 {
+    border: 1px solid $border;
+  }
+  .makeStyles-iconContainer-3 {
+    padding: 0px;
+    display: flex;
+    justify-content: center;
+  }
+  .makeStyles-copyContainer-5 {
+    background-color: $white-color;
+    width: 300px;
+  }
+  .makeStyles-copyIcon-7 {
+    color: $white-color;
+    padding: 6px 2px;
+    background-color: rgb(37, 37, 230);
+    border-radius: 20px;
+    font-family: $font-family;
+  }
+  .makeStyles-copyUrl-6 {
+    color: $app-second-color;
+  }
+  .makeStyles-copyUrl-6 {
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}

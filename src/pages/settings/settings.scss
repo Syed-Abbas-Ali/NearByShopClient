@@ -1,0 +1,108 @@
+@import "../../app.scss";
+
+.settings-page {
+  padding: 0px;
+  .header-card {
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    left: 0px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 5px -5px;
+    .back-icon-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      button {
+        background-color: transparent;
+      }
+      span {
+        color: $secondary-color;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 20px;
+        letter-spacing: -0.5px;
+      }
+    }
+    button {
+      background-color: transparent;
+      padding: 4px;
+    }
+  }
+  .settings-page-content {
+    margin-top: 70px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    .user-details {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      h3 {
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 24px;
+        letter-spacing: 0px;
+        color: $secondary-color;
+      }
+      .number-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        h3 {
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 20px;
+          letter-spacing: 0px;
+          color: #757575;
+        }
+        button {
+          background-color: transparent;
+        }
+      }
+    }
+    .links-card {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        h3 {
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 24px;
+          letter-spacing: 0px;
+          color: #000;
+        }
+        button {
+          background: transparent;
+        }
+      }
+    }
+    .logout-card {
+      span {
+        color: $app-primary-color;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 24px;
+        letter-spacing: 0px;
+        text-decoration: underline;
+      }
+    }
+    .version-card {
+      h3 {
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 16px;
+        letter-spacing: 0.04px;
+        color: #757575;
+      }
+    }
+  }
+}

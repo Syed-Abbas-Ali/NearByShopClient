@@ -1,0 +1,316 @@
+@import "../../app.scss";
+
+.edit-heading {
+  top: 0px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 70px;
+  position: fixed;
+  left: 0px;
+  width: 100%;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 5px -5px;
+  padding: 0px 1rem;
+  z-index: 99999;
+  background-color: $white-color;
+  img {
+    height: 26px;
+    cursor: pointer;
+    @media (max-width: 768px) {
+      height: 24px;
+    }
+  }
+  h3 {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 14.4px;
+  }
+}
+
+.product-edit-card {
+  margin-top: 70px;
+  height: 100%;
+  overflow-y: scroll;
+  padding: 32px 24px;
+  @include flex-center(column, "", "");
+  gap: 24px;
+  max-height: calc(100vh - 70px);
+  overflow-y: scroll;
+  @media (min-width: 1200px) {
+    margin: 70px auto;
+    margin-bottom: 0px;
+    max-width: 1200px;
+  }
+
+  &::-webkit-scrollbar {
+    display: none;
+    // width: 6px;
+    // height: 6px;
+  }
+
+  // &::-webkit-scrollbar-thumb {
+  //   background-color: #888;
+  //   border-radius: 10px;
+  // }
+
+  // &::-webkit-scrollbar-track {
+  //   background-color: #f1f1f1;
+  //   border-radius: 10px;
+  // }
+
+  input,
+  textarea {
+    outline: none;
+    resize: none;
+    color: $secondary-color !important;
+  }
+  .upload-image-card {
+    @include flex-center(column, "", "");
+    gap: 16px;
+    @media (min-width: 723px) {
+      gap: 32px;
+    }
+    .upload-input-card {
+      background-color: $border;
+      height: 250px;
+      cursor: pointer;
+      border: 1px solid $border;
+      border-radius: 8px;
+      position: relative;
+      @include flex-center(column, center, center);
+      gap: 16px;
+      @media (min-width: 723px) {
+        height: 300px;
+        width: 90%;
+        margin: auto;
+      }
+      @media (min-width: 850px) {
+        max-width: 80%;
+      }
+      @media (min-width: 1000px) {
+        max-width: 70%;
+      }
+      @media (min-width: 1300px) {
+        max-width: 60%;
+        height: 400px;
+      }
+      .cancel-icon {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+      }
+      .main-product-image {
+        height: 100%;
+        width: 100%;
+        border-radius: 8px;
+      }
+      .pre-upload {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        justify-content: center;
+        img {
+          height: 50px;
+        }
+        button {
+          font-size: 12px;
+          font-weight: 500;
+          line-height: 18px;
+          padding: 8px 15px;
+          background-color: $app-primary-color;
+          color: $white-color;
+          border-radius: 4px;
+          @media (min-width: 723px) {
+            font-size: 13px;
+          }
+          @media (min-width: 1020px) {
+            font-size: 14px;
+          }
+        }
+      }
+    }
+    .sub-images {
+      @include flex-center(row, center, "");
+      gap: 10px;
+      .image-div {
+        height: 100px;
+        width: 100px;
+        cursor: pointer;
+        @media (min-width: 650px) {
+          height: 120px;
+        }
+        @media (min-width: 850px) {
+          width: 15%;
+          height: 150px;
+        }
+        img {
+          height: 100%;
+          width: 100%;
+          border-radius: 4px 0px 0px 0px;
+        }
+      }
+    }
+  }
+  .text-form {
+    @include flex-center(column, "", "");
+    gap: 16px;
+    .product-names-card {
+      @media (min-width: 1000px) {
+        display: flex;
+        gap: 40px;
+      }
+      .text-form-card {
+        flex-grow: 1;
+        @include flex-center(column, "", "");
+        gap: 4px;
+        textarea {
+          border: 1px solid $border;
+          border-radius: 4px;
+          padding: 6px 8px;
+          font-size: 12px;
+          font-weight: 400;
+          line-height: 14.4px;
+          color: $placeholder;
+          font-family: "Poppins", sans-serif;
+        }
+        textarea::placeholder {
+          font-size: 12px;
+          font-weight: 400;
+          line-height: 14.4px;
+          color: $secondary-color !important;
+        }
+      }
+    }
+    label {
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 14.4px;
+      color: $app-second-color;
+    }
+    .products-stock {
+      display: flex;
+      .stock-input-card {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        input {
+          border: 1px solid $border;
+          border-radius: 4px;
+          padding: 10px 8px;
+          font-size: 12px;
+          font-weight: 400;
+          line-height: 14.4px;
+          color: $placeholder;
+          font-family: "Poppins", sans-serif;
+        }
+        input::placeholder {
+          font-size: 12px;
+          font-weight: 400;
+          line-height: 14.4px;
+          color: $secondary-color !important;
+        }
+      }
+      .stock-check-box {
+        width: 50%;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        input {
+          height: 20px;
+          width: 20px;
+          cursor: pointer;
+        }
+        label {
+          cursor: pointer;
+        }
+      }
+      gap: 16px;
+      @media (min-width: 1000px) {
+        gap: 40px;
+      }
+    }
+    .double-input-card {
+      @include flex-center(flex, "", "");
+      gap: 16px;
+      @media (min-width: 1000px) {
+        gap: 40px;
+      }
+      input {
+        border: 1px solid $border;
+        border-radius: 4px;
+        padding: 9px 9px;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 14.4px;
+        color: $placeholder;
+      }
+      input::placeholder {
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 14.4px;
+        color: $secondary-color !important;
+      }
+      div {
+        @include flex-center(column, "", "");
+        gap: 4px;
+        width: 50%;
+      }
+    }
+    .product-categories {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      @media (min-width: 1000px) {
+        flex-direction: row;
+        gap: 40px;
+      }
+      .select-card-div {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        @media (min-width: 1000px) {
+          width: 50%;
+        }
+      }
+    }
+    .radio-buttons-card {
+      @include flex-center(column, "", "");
+      gap: 4px;
+      h3 {
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 14.4px;
+        color: $app-second-color;
+      }
+      .radio-buttons {
+        @include flex-center(row, "", center);
+        gap: 20px;
+        div {
+          @include flex-center(row, "", center);
+          gap: 4px;
+        }
+      }
+    }
+    .action-buttons {
+      @include flex-center(row, "", center);
+      gap: 20px;
+      button {
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 22.5px;
+        background-color: $app-primary-color;
+        padding: 8.5px 31px;
+        border-radius: 4px;
+        color: $white-color;
+      }
+      button:nth-child(2) {
+        padding: 7.5px 31px;
+        background-color: transparent;
+        border: 2px solid $app-second-color;
+        color: $app-second-color;
+      }
+    }
+  }
+}

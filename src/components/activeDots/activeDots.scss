@@ -1,0 +1,17 @@
+@import "../../app.scss";
+
+.active-dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  span {
+    display: inline-block;
+    height: 8px;
+    width: 8px;
+    border-radius: 4px;
+    background-color: #e1e5ee;
+  }
+  .active-span {
+    background-color: #c1c1c1;
+  }
+}

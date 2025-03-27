@@ -1,0 +1,129 @@
+@import "../../../app.scss";
+
+.wishlist-product {
+  padding: 1rem;
+  border-bottom: 2px solid $border;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  .product-div {
+    display: flex;
+    max-width: 400px;
+    gap: 1.5rem;
+    .image-default-card {
+      flex-shrink: 0;
+      width: 150px;
+      height: 150px;
+      border: 2px solid rgb(238, 238, 238);
+      border-radius: 4px;
+      padding: 10px;
+      .product-image{
+        height: 100%;
+        width: 100%;
+        border-radius: 4px;
+        object-fit: contain;
+      }
+    }
+    .product-details {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      .product-name {
+        font-size: 17px;
+        font-weight: 500;
+        line-height: 23.8px;
+        color: $secondary-color;
+      }
+      .price-card {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 6px;
+        .discount-price {
+          font-size: 22px;
+          font-weight: 600;
+          line-height: 30.8px;
+          color: $secondary-color;
+        }
+        .actual-price {
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 19.6px;
+          color: #cac4d0;
+          text-decoration: line-through;
+        }
+        .offer-percentage {
+          color: $primary-color;
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 19.6px;
+        }
+      }
+      .location-div {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 20px;
+        p {
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 16.44px;
+          color: $secondary-color;
+          width: 150px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          height: 20px;
+          overflow: hidden;
+        }
+        img {
+          height: 20px;
+        }
+      }
+    }
+  }
+  .delete-card {
+    position: relative;
+    .popup-div {
+      background-color: $white-color;
+      padding: 0.7rem;
+      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+      border-radius: 8px;
+      z-index: 999;
+      position: absolute;
+      right: 30px;
+      top: 0px;
+      min-width: 250px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      p {
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 19.6px;
+      }
+      .action-buttons-card {
+        display: flex;
+        gap: 8px;
+        button {
+          font-size: 12px;
+          font-weight: 400;
+          line-height: 16.8px;
+          padding: 4px 8px;
+          background-color: transparent;
+          border-radius: 4px;
+        }
+        button:nth-child(1) {
+          color: $secondary-color;
+          border: 2px solid $secondary-color;
+        }
+        button:nth-child(2) {
+          color: #ff6161;
+          border: 2px solid #ff6161;
+        }
+      }
+    }
+    img {
+      cursor: pointer;
+    }
+  }
+}

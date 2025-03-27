@@ -1,0 +1,61 @@
+@import "../../app.scss";
+
+.user-profile-page {
+  .header-card {
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    left: 0px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 5px -5px;
+    .back-icon-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      button {
+        background-color: transparent;
+      }
+      span {
+        color: $secondary-color;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 20px;
+        letter-spacing: -0.5px;
+      }
+    }
+    button{
+      background-color: transparent;
+      padding: 4px;
+    }
+  }
+  .user-profile-card {
+    padding: 1rem;
+    margin-top: 70px;
+    max-width: 1500px;
+    @media screen and (min-width: 1500px) {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    @media (min-width: 768px) {
+      margin: 70px auto;
+      gap: 1rem;
+    }
+    hr {
+      margin-top: 30px;
+      margin-bottom: 35px;
+    }
+  }
+  hr {
+    height: 0px;
+    border: 1px solid $border;
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+}

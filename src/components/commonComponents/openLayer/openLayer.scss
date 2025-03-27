@@ -1,0 +1,12 @@
+@import "../../../app.scss";
+
+.open-layer-div {
+  .user-current-location {
+    border: 1px solid $border;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-top: 16px;
+    font-weight: 400;
+    padding: 10px;
+  }
+}

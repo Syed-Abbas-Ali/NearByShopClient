@@ -1,0 +1,67 @@
+@import "../../app.scss";
+
+.wish-list-heading-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 70px;
+  padding: 1rem;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 5px -5px;
+  h3 {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 30px;
+    color: $secondary-color;
+  }
+  img{
+    cursor: pointer;
+  }
+}
+
+.wishlist {
+  padding: 1rem;
+  .wishlist-card-container {
+    max-width: 1500px;
+    margin: 0px auto;
+    min-height: calc(100vh - 150px);
+    background-color: $white-color;
+    border-radius: 8px;
+  
+    .products-list {
+      max-height: 79vh;
+      overflow-y: scroll;
+      display: grid;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+      @media (min-width: 768px) {
+        &::-webkit-scrollbar {
+          width: 5px;
+          cursor: pointer;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: #f1f1f1;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: #888;
+          border-radius: 10px;
+        }
+        &::-webkit-scrollbar-thumb:hover {
+          background: #555;
+        }
+      }
+      @media (min-width: 850px) {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: 5px;
+      }
+      @media (min-width: 1350px) {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        column-gap: 10px;
+      }
+    }
+  }
+}

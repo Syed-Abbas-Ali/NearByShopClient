@@ -1,0 +1,365 @@
+@import "../../app.scss";
+
+.single-product-details-mobile {
+  padding: 0.5rem;
+  min-height: 300px;
+  border: 2px solid rgb(238, 238, 238);
+  @include flex-center(column, "", "");
+  gap: 1.1rem;
+  border-radius: 8px;
+  // @media (min-width: 900px) {
+  //   @include flex-center(row, "", "");
+  // }
+  @media (min-width: 900px) {
+    display: none;
+  }
+  .product-images-container {
+    width: 100%;
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    .product-image-card {
+      width: 100%;
+      height: 430px;
+      border-radius: 4px;
+      background-color: $white-color;
+      position: relative;
+      @media (min-width: 768px) {
+        height: 400px;
+      }
+      img {
+        height: 100%;
+        width: 100%;
+        border-radius: 4px;
+        object-fit: contain;
+      }
+      .action-btns {
+        position: absolute;
+        height: auto;
+        top: 0px;
+        right: -4px;
+        display: flex;
+        height: 100%;
+        flex-direction: column;
+        justify-content: center;
+        gap: 10px;
+        div {
+          backdrop-filter: blur(10px);
+          background: rgba(89, 88, 88, 0.1);
+          padding: 6px;
+          border-radius: 6px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
+    .sub-images-card {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      @media (max-width: 768px) {
+        display: none;
+      }
+      @media (min-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      @media (min-width: 1050px) and (max-width: 1350px) {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      @media (min-width: 1350px) {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      .image-card {
+        height: 149px;
+        background-color: $border;
+        border-radius: 8px;
+        img {
+          height: 100%;
+          width: 100%;
+          cursor: pointer;
+        }
+      }
+    }
+    @media (min-width: 768px) {
+      width: 50%;
+    }
+  }
+
+  .show-product-details-card {
+    min-height: 150px;
+    @include flex-center(column, "", "");
+    gap: 0.5rem;
+    @media (min-width: 768px) {
+      width: 50%;
+    }
+    .div-one {
+      @include flex-center(row, "", center);
+      gap: 8px;
+      width: 100%;
+      .offer-price {
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 21.13px;
+        color: $secondary-color;
+      }
+      .real-price {
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 18px;
+        color: $light-grey;
+        text-decoration: line-through;
+      }
+      .offer-percentage {
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 17.07px;
+        color: $offer-color;
+      }
+    }
+    .div-two {
+      @include flex-center(column, "", "");
+      gap: 8px;
+      h4 {
+        font-size: 18px;
+        font-weight: 500;
+        color: $headingTypeOne;
+      }
+      p {
+        font-size: 14px;
+        font-weight: 400;
+        color: #858585;
+      }
+      .colors-div {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 4px;
+        p {
+          line-height: 16px;
+          font-size: 14px;
+          font-weight: 500;
+          color: $app-second-color;
+        }
+        ul {
+          display: flex;
+          gap: 4px;
+          li {
+            list-style-type: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 4px;
+          }
+        }
+      }
+      .extra-details {
+        display: flex;
+        gap: 16px;
+        margin-top: 8px;
+        button {
+          width: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          background-color: transparent;
+          padding: 9px 9px;
+          border-radius: 5px;
+          border: 1px solid #e0e0e0;
+          span {
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            color: #151d36;
+          }
+        }
+      }
+      .button-card {
+        margin-top: 8px;
+        button {
+          display: flex;
+          justify-content: center;
+          width: 100%;
+          @include flex-center(row, "", center);
+          gap: 0.5rem;
+          font-size: 16px;
+          font-weight: 400;
+          letter-spacing: 0.2px;
+          line-height: 21px;
+          border-radius: 5px;
+          background-color: $app-primary-color;
+          color: $white-color;
+          padding: 10px 12px;
+          font-family: $font-family;
+          img {
+            height: 24px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.single-product-details-desktop {
+  display: flex;
+  gap: 50px;
+  @media (max-width: 900px) {
+    display: none;
+  }
+  .images-div {
+    width: 50%;
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    .product-image-card {
+      width: 100%;
+      height: 250px;
+      border-radius: 4px;
+      background-color: $white-color;
+      position: relative;
+      @media (min-width: 768px) {
+        height: 400px;
+      }
+      img {
+        height: 100%;
+        width: 100%;
+        border-radius: 4px;
+        object-fit: contain;
+      }
+      .action-btns {
+        position: absolute;
+        height: 100%;
+        top: 0px;
+        right: -4px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 10px;
+        div {
+          backdrop-filter: blur(10px);
+          background: rgba(89, 88, 88, 0.1);
+          padding: 6px;
+          border-radius: 6px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
+    .sub-images-card {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      @media (max-width: 768px) {
+        display: none;
+      }
+      @media (min-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      @media (min-width: 1050px) and (max-width: 1350px) {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      @media (min-width: 1350px) {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      .image-card {
+        height: 149px;
+        background-color: $border;
+        border-radius: 8px;
+        img {
+          height: 100%;
+          width: 100%;
+          cursor: pointer;
+        }
+      }
+    }
+    @media (min-width: 768px) {
+      width: 50%;
+    }
+  }
+  .content-div {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+    .text-content {
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+      .section-one {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        h1 {
+          font-weight: 500;
+          font-size: 40px;
+          line-height: 140%;
+          letter-spacing: 0%;
+          color: $app-second-color;
+        }
+        p {
+          font-weight: 400;
+          font-size: 16px;
+          line-height: 140%;
+          letter-spacing: 0%;
+          color: $app-second-color;
+        }
+      }
+      h2 {
+        color: $app-second-color;
+        font-weight: 500;
+        font-size: 28px;
+        line-height: 100%;
+        letter-spacing: -2%;
+        span {
+          font-weight: 700;
+          font-size: 28px;
+          line-height: 100%;
+          letter-spacing: -2%;
+        }
+      }
+    }
+    .extra-details {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      button:nth-child(2),
+      button:nth-child(3) {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background-color: transparent;
+        padding: 9px 16px;
+        border-radius: 5px;
+        background-color: #f6f6f6;
+        span {
+          font-size: 14px;
+          font-weight: 500;
+          letter-spacing: 0.2px;
+          color: #151d36;
+        }
+      }
+      button:nth-child(1) {
+        display: flex;
+        justify-content: center;
+        @include flex-center(row, "", center);
+        gap: 0.5rem;
+        font-size: 16px;
+        font-weight: 400;
+        letter-spacing: 0.2px;
+        line-height: 21px;
+        border-radius: 5px;
+        background-color: $app-primary-color;
+        color: $white-color;
+        padding: 10px 16px;
+        font-family: $font-family;
+        img {
+          height: 24px;
+        }
+      }
+    }
+  }
+}

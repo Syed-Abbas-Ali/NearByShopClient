@@ -1,0 +1,72 @@
+@import "../../../app.scss";
+
+.categories-card-div {
+  @include flex-center(column, "", "");
+  gap: 20px;
+  .header {
+    @include flex-center(row, space-between, center);
+    h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.5rem;
+      @media (min-width: 768px) {
+        font-size: 1.1rem;
+      }
+    }
+    img {
+      cursor: pointer;
+      @media (min-width: 768px) {
+        width: 30px;
+        height: 30px;
+      }
+      @media (min-width: 1050px) {
+        width: 32px;
+        height: 32px;
+      }
+      @media (min-width: 1350px) {
+        width: 34px;
+        height: 34px;
+      }
+    }
+  }
+  .categories-list-scroll {
+    gap: 15px;
+    @include flex-center(row, "", center);
+    overflow-x: auto;
+    .single-category-card {
+      flex-shrink: 0;
+      @include flex-center(column, "", center);
+      gap: 0.8rem;
+      .default-card {
+        width: 72px;
+        height: 55px;
+        background-color: $border;
+        border-radius: 8px;
+        @media (min-width: 768px) {
+          width: 100px;
+          height: 80px;
+        }
+      }
+      p {
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 18px;
+        text-align: center;
+        color: $secondary-color;
+        letter-spacing: 0.1px;
+        @media (min-width: 768px) {
+          font-size: 13px;
+        }
+        @media (min-width: 1050px) {
+          font-size: 14px;
+        }
+        @media (min-width: 1350px) {
+          font-size: 15px;
+        }
+      }
+    }
+  }
+  .categories-list-scroll::-webkit-scrollbar {
+    display: none;
+  }
+}

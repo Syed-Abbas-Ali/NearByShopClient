@@ -1,0 +1,140 @@
+@import "../../app.scss";
+
+.location-verification-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
+  padding: 20px 5%;
+  background: linear-gradient(to top, #fff0e7, #ffd9c0);
+  .location-verification-card {
+    width: 100%;
+    min-width: 380px;
+    max-width: 1500px;
+    box-shadow: 0px 4px 8px #fff0e7, 0px 8px 16px #ffd9c0;
+    padding: 28.5px;
+    border-radius: 8px;
+    height: auto;
+    background-color: $white-color;
+    max-height: 90vh;
+    overflow-y: auto;
+    @include flex-center(column, "", "");
+    gap: 20px;
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    .location-map-div {
+      position: relative;
+      .map-comp{
+        width: 100%;
+        height: 200px;
+        border-radius: 8px;
+        background-color: $border;
+        background-color: aqua;
+        position: absolute;
+        z-index: 2;
+      }
+      .map-div {
+        width: 100%;
+        height: 200px;
+        border-radius: 8px;
+        background-color: $border;
+      }
+      .select-location-sample-card {
+        border: $border;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding: 30px 20px;
+        margin-bottom: 20px;
+        gap: 20px;
+        background-color: $border;
+        border-radius: 10px;
+        img {
+          height: 60px;
+        }
+        h3 {
+          font-weight: 400;
+          font-size: 16px;
+          text-align: center;
+        }
+        .select-location-text-btn {
+          border: 2px solid $app-primary-color;
+          padding: 6px 10px;
+          border-radius: 4px;
+          background-color: $white-color;
+          cursor: pointer;
+        }
+      }
+    }
+    .fields-card {
+      @include flex-center(column, "", "");
+      gap: 24px;
+      .action-card {
+        button {
+          width: 100%;
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 16.44px;
+          color: $white-color;
+          height: 40px;
+          letter-spacing: 0.5px;
+          border-radius: 4px;
+          background-color: $app-primary-color;
+          @media (min-width: 768px) {
+            font-size: 15px;
+          }
+          @media (min-width: 1020px) {
+            font-size: 16px;
+          }
+        }
+      }
+      .question-card {
+        @include flex-center(row, space-between, center);
+        p {
+          font-size: 12px;
+          font-weight: 500;
+          line-height: 14.09px;
+          color: $secondary-color;
+          @media (min-width: 768px) {
+            font-size: 13px;
+          }
+          @media (min-width: 1020px) {
+            font-size: 14px;
+          }
+        }
+      }
+      .fields-container {
+        row-gap: 10px;
+        column-gap: 15px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        @media screen and (max-width: 900px) {
+          grid-template-columns: repeat(2, 1fr);
+          column-gap: 13px;
+        }
+        @media screen and (max-width: 768px) {
+          grid-template-columns: repeat(1, 1fr);
+        }
+        .input-single-card {
+          @include flex-center(column, "", "");
+          gap: 7px;
+        }
+        label {
+          color: $app-second-color;
+          font-size: 12px;
+          font-weight: 500;
+          line-height: 14.09px;
+          @media (min-width: 768px) {
+            font-size: 13px;
+          }
+          @media (min-width: 1020px) {
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+}

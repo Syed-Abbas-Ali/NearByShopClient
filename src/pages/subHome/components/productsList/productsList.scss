@@ -1,0 +1,17 @@
+@import "../../../../app.scss";
+
+.products-list{
+    padding: 0px;
+    padding-right: 10px;
+    padding-top: 10px;
+    flex-grow: 1;
+    max-height: 100vh;
+    overflow-y: scroll;
+    &::-webkit-scrollbar{
+        display: none;
+    }
+    .products-list-card{
+        margin-top: 20px;
+        padding-bottom: 30px;
+    }
+}

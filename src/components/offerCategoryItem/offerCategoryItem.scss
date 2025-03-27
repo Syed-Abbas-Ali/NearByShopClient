@@ -1,0 +1,82 @@
+@import "../../app.scss";
+
+.offer-content-card {
+  height: 170px;
+  border-radius: 8px;
+  padding: 8px;
+  background-color: $border;
+  width: 95%;
+  flex-shrink: 0;
+  display: flex;
+  gap: 14px;
+  @media (min-width: 768px) {
+    width: 47.5%;
+  }
+  @media (min-width: 1020px) {
+    width: 32%;
+  }
+  @media (min-width: 1300px) {
+    width: 24%;
+  }
+  .default-image {
+    width: 40%;
+    flex-shrink: 0;
+    height: 100%;
+    background-color: $white-color;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: contain;
+      border-radius: 4px;
+    }
+  }
+  .offer-details {
+    width: 55%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    .action-btns {
+      position: absolute;
+      right: 0px;
+      top: 0px;
+      .delete-discount {
+        background-color: transparent;
+        img {
+          height: 20px;
+        }
+      }
+    }
+    .shop-name-card {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      h3 {
+        font-size: 18px;
+        font-weight: 500;
+      }
+      p {
+        width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap; // Required for ellipsis to work
+        height: 14px;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 100%;
+        letter-spacing: 0%;
+        color: $app-second-color;
+      }
+      h4 {
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
+  }
+}

@@ -1,0 +1,212 @@
+@import "../../app.scss";
+
+.seller-profile-view {
+  header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background-color: #fff;
+    height: 70px;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    padding: 0px 1rem;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 5px -5px;
+    left: 0px;
+    button {
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+    }
+    h3 {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 20px;
+      color: $secondary-color;
+      letter-spacing: -0.5px;
+    }
+  }
+  .content-card {
+    min-height: calc(100vh - 130px);
+    max-height: calc(100vh - 130px);
+    overflow-y: scroll;
+    margin-top: 70px;
+    margin-bottom: 60px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    .profile-data-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      .profile-pic-card {
+        height: 104px;
+        width: 104px;
+        background-color: $border;
+        border-radius: 54px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        img {
+          height: 90px;
+        }
+      }
+      .profile-details {
+        flex-grow: 1;
+        h1 {
+          font-weight: 500;
+          font-size: 16px;
+          line-height: 20px;
+          letter-spacing: -0.5px;
+          color: $secondary-color;
+          margin-bottom: 8px;
+        }
+        h3 {
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 20px;
+          letter-spacing: -0.5px;
+          color: $secondary-color;
+          margin-bottom: 3px;
+        }
+        .ratings-card {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 8px;
+          .stars-card {
+            padding: 0px;
+          }
+          button {
+            border: 1px solid $app-primary-color;
+            background-color: transparent;
+            color: $app-primary-color;
+            padding: 2px 4px;
+            font-weight: 500;
+            font-size: 8px;
+            line-height: 16px;
+            letter-spacing: 0px;
+            border-radius: 4px;
+          }
+        }
+        .phone-number-card {
+          display: flex;
+          align-items: center;
+          gap: 50px;
+          .chat-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            p {
+              font-weight: 500;
+              font-size: 12px;
+              line-height: 18px;
+              letter-spacing: 0%;
+              color: #151d36;
+            }
+          }
+        }
+        .follow-card {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-top: 20px;
+          .follow-btn {
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 18px;
+            letter-spacing: 0%;
+            padding: 6px 12px;
+            border-radius: 5px;
+          }
+          .active-btn {
+            color: $app-primary-color;
+            background-color: transparent;
+            border: 1px solid $app-primary-color;
+          }
+          .in-active-btn {
+            color: $white-color;
+            background-color: $app-primary-color;
+          }
+          .count-card {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            img {
+              height: 20px;
+              width: 20px;
+            }
+            p {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+            }
+            .number {
+              font-weight: 500;
+              font-size: 12px;
+              line-height: 20px;
+              letter-spacing: 1px;
+              color: $app-second-color;
+            }
+            .text {
+              font-weight: 500;
+              font-size: 8px;
+              line-height: 20px;
+              letter-spacing: 1px;
+              color: #858585;
+            }
+          }
+        }
+      }
+    }
+    .all-products-card {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      .products-card {
+        .products-header {
+          font-weight: 600;
+          font-size: 16px;
+          line-height: 24px;
+          letter-spacing: 0%;
+          color: $secondary-color;
+        }
+      }
+    }
+  }
+  .video-section {
+    h3 {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 21px;
+      letter-spacing: 0%;
+      color: $secondary-color;
+      margin-bottom: 8px;
+    }
+    .social-media-links {
+      margin-top: 27px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      p {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        span {
+          font-weight: 400;
+          font-size: 12px;
+          line-height: 18px;
+          letter-spacing: -0.5px;
+          color: #007fff;
+        }
+      }
+    }
+  }
+}

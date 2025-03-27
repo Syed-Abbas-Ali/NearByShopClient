@@ -1,0 +1,106 @@
+@import "../../app.scss";
+
+.current-bill-verification-page {
+  padding: 20px 16px;
+  height: 100vh;
+  background: linear-gradient(to top, #fff0e7, #ffd9c0);
+  @include flex-center(row, center, center);
+  @media (min-width: 1000px) {
+    @include flex-center(row, flex-start, flex-start);
+    padding: 0px;
+  }
+  .current-bill-verification-card-container {
+    @media (min-width: 1000px) {
+      height: 100%;
+      width: 50%;
+      background: linear-gradient(to top, #fff0e7, #ffd9c0);
+      @include flex-center(row, center, center);
+    }
+    .current-bill-verification-card {
+      width: 100%;
+      min-width: 380px;
+      max-width: 400px;
+      box-shadow: 0px 4px 8px #fff0e7, 0px 8px 16px #ffd9c0;
+      padding: 28.5px;
+      border-radius: 8px;
+      height: auto;
+      background-color: $white-color;
+      @include flex-center(column, "", "");
+      gap: 20px;
+      @media (min-width: 1000px) {
+        width: 450px;
+        max-width: 500px;
+        flex-shrink: 0;
+      }
+      .label-card {
+        @include flex-center(column, "", "");
+        gap: 7px;
+        p {
+          color: $app-second-color;
+          font-size: 12px;
+          font-weight: 500;
+          line-height: 18px;
+          @media (min-width:768px) {
+            font-size: 13px;
+          }
+          @media (min-width:1020px) {
+            font-size: 14px;
+          }
+        }
+      }
+      .fields-card {
+        @include flex-center(column, "", "");
+        gap: 24px;
+        .action-card {
+          button {
+            width: 100%;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 16.44px;
+            color: $white-color;
+            height: 40px;
+            letter-spacing: 0.5px;
+            background-color: $app-primary-color;
+            border-radius: 4px;
+            @media (min-width:768px) {
+              font-size: 15px;
+            }
+            @media (min-width:1020px) {
+              font-size: 16px;
+            }
+          }
+        }
+        .fields-container {
+          @include flex-center(column, "", "");
+          gap: 10px;
+          .input-single-card,
+          .name-card {
+            @include flex-center(column, "", "");
+            gap: 7px;
+          }
+          label {
+            color: $app-second-color;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 14.09px;
+            @media (min-width:768px) {
+              font-size: 13px;
+            }
+            @media (min-width:1020px) {
+              font-size: 14px;
+            }
+          }
+          .name-card {
+            div {
+              @include flex-center(row, "", "");
+              gap: 16px;
+              div {
+                width: 50%;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

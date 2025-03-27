@@ -1,0 +1,14 @@
+@import "../../../app.scss"; // Import global styles first
+
+.ant-picker {
+  border: 1px solid #d9d9d9 !important;
+  padding: 8px 12px !important;
+  border-radius: 4px;
+  width: 100%;
+  cursor: pointer;
+  color: black !important; // Ensures the text inside the picker is black
+}
+
+.ant-picker-input input {
+  color: black !important; // Ensures the input text is black
+}

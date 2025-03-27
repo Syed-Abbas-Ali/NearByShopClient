@@ -1,0 +1,71 @@
+@import "../../app.scss";
+
+.thankyou-page {
+  padding: 20px 16px;
+  height: 100vh;
+  @include flex-center(row, center, center);
+  background: linear-gradient(to top, #FFF0E7, #FFD9C0);
+  .thankyou-card {
+    width: 100%;
+    max-width: 400px;
+    background: linear-gradient(to top, #FFF0E7, #FFD9C0);
+    background-color: $white-color;
+    padding: 15px;
+    border-radius: 8px;
+    height: auto;
+    @include flex-center(row, "", center);
+    gap: 36px;
+    .thankyou-content {
+      border: 2px solid $border;
+      border-radius: 8px;
+      border-radius: 8px;
+      padding: 30px 20px;
+      width: 100%;
+      .image-card {
+        @include flex-center(column, center, center);
+        img {
+          height: 200px;
+          width: 200px;
+          border-radius: 10px;
+        }
+      }
+      h2 {
+        font-size: 32px;
+        margin-top: 10px;
+        font-weight: 500;
+        line-height: 48px;
+        text-align: center;
+        color: $app-primary-color;
+        margin-bottom: 16px;
+      }
+      h3 {
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 27px;
+        text-align: center;
+        color: $app-second-color;
+        margin-bottom: 8px;
+      }
+      p {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 21px;
+        text-align: center;
+        margin-bottom: 24px;
+      }
+      .go-to-website-card {
+        @include flex-center(row, center, "");
+        button {
+          font-size: 15px;
+          font-weight: 600;
+          line-height: 22.5px;
+          text-align: center;
+          padding: 8.5px 20px;
+          background-color: $app-primary-color;
+          color: $white-color;
+          border-radius: 4px;
+        }
+      }
+    }
+  }
+}

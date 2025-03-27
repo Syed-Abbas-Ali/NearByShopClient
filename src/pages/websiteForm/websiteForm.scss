@@ -1,0 +1,75 @@
+@import "../../app.scss";
+
+.website-form-page {
+  padding: 20px 16px;
+  height: 100vh;
+  @include flex-center(row, center, center);
+  overflow-y: scroll;
+  padding-bottom: 1rem;
+  .website-form-card {
+    width: 100%;
+    max-width: 400px;
+    border: 2px solid $primary-color;
+    padding: 32px 14px;
+    border-radius: 8px;
+    height: auto;
+    @include flex-center(column, "", "");
+    h2 {
+      font-size: 25px;
+      font-weight: 700;
+      line-height: 26px;
+      text-align: center;
+      color: $primary-color;
+      margin-bottom: 16px;
+    }
+    .map {
+      height: 200px;
+      width: 100%;
+      background-color: $border;
+      border-radius: 8px;
+      margin-bottom: 24px;
+    }
+    .shop-question {
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 14.09px;
+      color: $secondary-color;
+      margin-bottom: 24px
+    }
+    .fields-card {
+      @include flex-center(column, "", "");
+      gap: 24px;
+      .fields-container {
+        @include flex-center(column, "", "");
+        gap: 10px;
+        .input-single-card,
+        .name-card {
+          @include flex-center(column, "", "");
+          gap: 7px;
+        }
+        label {
+          color: $primary-color;
+          font-size: 12px;
+          font-weight: 500;
+          line-height: 14.09px;
+        }
+        .name-card {
+          div {
+            @include flex-center(row, "", "");
+            gap: 16px;
+            div {
+              width: 50%;
+            }
+          }
+        }
+      }
+    }
+    .next-button{
+        margin-top: 24px;
+        background-color: $primary-color;
+        color: $white-color;
+        padding: 8px;
+        border-radius: 4px;
+    }
+  }
+}

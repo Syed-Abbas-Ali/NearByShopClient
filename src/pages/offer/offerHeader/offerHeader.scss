@@ -1,0 +1,42 @@
+@import "../../../app.scss";
+
+.top-header-div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    height: 70px;
+    // position: fixed;
+    top: 0px;
+    width: 100%;
+    padding: 0px 1rem;
+    box-shadow: rgba(0, 0, 0, 0.10) 0px 5px 5px -5px;
+    left: 0px;
+    z-index: 99999;
+    .back-name {
+      display: flex;
+      gap: 13px;
+      align-items: center;
+      img {
+        height: 22px;
+        width: 24px;
+        cursor: pointer;
+      }
+      h3 {
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 24px;
+        color: $app-second-color;
+      }
+    }
+    button {
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 15px;
+      padding: 12px 14px;
+      border-radius: 4px;
+      background-color: $app-primary-color;
+      color: $white-color;
+      font-family: $font-family;
+    }
+  }

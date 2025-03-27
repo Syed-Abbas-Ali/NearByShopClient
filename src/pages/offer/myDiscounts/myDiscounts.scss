@@ -1,0 +1,38 @@
+@import "../../../app.scss";
+
+.my-discounts-container {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  .my-discounts-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    h3 {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 24px;
+      color: $app-second-color;
+    }
+    p {
+      margin-top: 0.5rem;
+      text-align: end;
+      color: $app-primary-color;
+      font-size: 14px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+  }
+  .my-discounts-list-div {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    height: 170px;
+    overflow-y: hidden;
+    gap: 10px;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}

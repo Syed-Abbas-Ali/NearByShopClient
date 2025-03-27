@@ -1,0 +1,137 @@
+@import "../../app.scss";
+
+.shop-card {
+  padding: 10px;
+  background-color: #f5f5f5;
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  height: auto;
+  .shop-image {
+    height: 140px;
+    width: 140px;
+    flex-shrink: 0;
+    background-color: $white-color;
+    border-radius: 8px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .tick-icon {
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+    }
+    img{
+      height: 90%;
+      width: 90%;
+    }
+  }
+  .details-card {
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 1;
+    gap: 4px;
+    .details {
+      h3 {
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 16.8px;
+        color: $app-second-color;
+      }
+      .stars-card {
+        display: flex;
+        align-items: center;
+        gap: 1px;
+        div {
+          cursor: pointer;
+          font-size: 22px;
+          color: #ffcb45;
+        }
+        p {
+          margin-left: 6px;
+          font-size: 10px;
+          font-weight: 400;
+          line-height: 16.8px;
+          color: #858585;
+        }
+      }
+      .location-text {
+        display: flex;
+        margin-top: 2px;
+        gap: 4px;
+        img {
+          height: 16px;
+        }
+        p {
+          font-size: 12px;
+          font-weight: 400;
+          line-height: 16.8px;
+          color: #858585;
+          height: 20px;
+          width: 150px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+        }
+      }
+      .distance {
+        color: #858585;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 16.8px;
+        margin-top: 8px;
+        span {
+          color: $app-second-color;
+          font-size: 12px;
+          font-weight: 500;
+        }
+      }
+      .follow {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        gap: 10px;
+        button {
+          background-color: $app-primary-color;
+          color: $white-color;
+          font-size: 12px;
+          font-weight: 500;
+          line-height: 18px;
+          padding: 4px 10px;
+          border-radius: 4px;
+        }
+        div {
+          display: flex;
+          gap: 4px;
+          p {
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 20px;
+            letter-spacing: 1px;
+            color: $app-second-color;
+          }
+          span {
+            font-size: 10px;
+            font-weight: 500;
+            line-height: 20px;
+            letter-spacing: 1px;
+            color: #858585;
+          }
+        }
+      }
+    }
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10%;
+      flex-shrink: 0;
+      button {
+        cursor: pointer;
+        background-color: transparent;
+      }
+    }
+  }
+}
