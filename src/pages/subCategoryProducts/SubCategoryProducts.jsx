@@ -41,8 +41,9 @@ const SubCategoryProducts = () => {
     navigate(-1);
   };
   const handleCategory = (categoryName) => {
-    navigate(`/sub-category-page/${categoryName}`);
+    // navigate(`/sub-category-page/${categoryName}`);
   };
+  
   return (
     <div className="sub-category-products">
       <div className="category-products-content">

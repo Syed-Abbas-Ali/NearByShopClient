@@ -6,7 +6,7 @@ import filterIcon from "../../../assets/filterNew1.svg";
 import { useDispatch } from "react-redux";
 import { setIsFilterPopupOpen } from "../../../apis&state/state/globalStateName";
 
-const FilterInputComponent = () => {
+const FilterInputComponent = ({handleChange}) => {
   const dispatch = useDispatch();
   const openPopup = () => {
     dispatch(setIsFilterPopupOpen());
@@ -16,7 +16,7 @@ const FilterInputComponent = () => {
       <div className="search-icon">
         <img src={searchIcon} alt="" />
       </div>
-      <input type="text" placeholder="Search" />
+      <input type="text" placeholder="Search" onChange={(e)=>handleChange(e.target.value)}/>
       <div className="filter-icon">
         <img src={filterIcon} alt="" onClick={openPopup}/>
       </div>

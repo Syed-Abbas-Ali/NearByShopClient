@@ -38,8 +38,6 @@ const Profile = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const handlePageChange = (page, totalPages) => {
-    console.log(page)
-    console.log(totalPages)
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }

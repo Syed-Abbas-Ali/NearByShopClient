@@ -3,7 +3,7 @@ import "./subCategoriesList.scss";
 import { useGetAllCategoriesAndSubCategoriesQuery } from "../../../apis&state/apis/masterDataApis";
 import { useNavigate } from "react-router-dom";
 
-const SubCategoriesList = ({ categoryName = "" }) => {
+const SubCategoriesList = ({ categoryName = "", selectedCategories,handleSelect }) => {
   const navigate = useNavigate();
   const { data } = useGetAllCategoriesAndSubCategoriesQuery();
   const [subcategoryList, setSubcategoryList] = useState([]);
@@ -13,33 +13,55 @@ const SubCategoriesList = ({ categoryName = "" }) => {
         (item) => item.name === categoryName
       );
       setSubcategoryList(subcategoryItems);
+    } else {
+      setSubcategoryList([]);
     }
   }, [data]);
 
-
   const handleCategory = (categoryName) => {
-    navigate(`/sub-category-page/${categoryName}`);
+    handleSelect(categoryName)
   };
+
+  // console.log( )
 
   return (
     <div className="categories-list">
       <h3>Sub Categories</h3>
-      <div className="category-items">
-        {subcategoryList?.length > 0 &&
-          subcategoryList[0]?.subcategories?.map((category) => {
-            return (
-              <div
-                className="single-category"
-                onClick={() => handleCategory(category?.name)}
-              >
-                <div className="category-image">
-                  <img src={category.imageUrl} alt="" />
+      {selectedCategories ? (
+        <div className="category-items">
+          {selectedCategories?.length > 0 &&
+            selectedCategories?.map((category) => {
+              return (
+                <div
+                  className="single-category"
+                  onClick={() => handleCategory(category)}
+                >
+                  <div className="category-image">
+                    <img src={category.imageUrl} alt="" />
+                  </div>
+                  <p>{category?.name}</p>
                 </div>
-                <p>{category?.name}</p>
-              </div>
-            );
-          })}
-      </div>
+              );
+            })}
+        </div>
+      ) : (
+        <div className="category-items">
+          {subcategoryList?.length > 0 &&
+            subcategoryList[0]?.subcategories?.map((category) => {
+              return (
+                <div
+                  className="single-category"
+                  onClick={() => handleCategory(category?.name)}
+                >
+                  <div className="category-image">
+                    <img src={category.imageUrl} alt="" />
+                  </div>
+                  <p>{category?.name}</p>
+                </div>
+              );
+            })}
+        </div>
+      )}
     </div>
   );
 };

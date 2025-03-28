@@ -15,7 +15,8 @@ const PriceRange = ({
 
   const handleChange = (event, newValue) => {
     setVal(newValue);
-    handleRange(newValue[1]);
+    let [minPrice,maxPrice]=newValue
+    handleRange({minPrice,maxPrice});
   };
 
   return (
