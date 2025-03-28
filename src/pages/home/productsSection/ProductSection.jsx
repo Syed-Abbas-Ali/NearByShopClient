@@ -4,7 +4,7 @@ import forwardIcon from "../../../assets/forwardIcon.svg";
 import SingleProduct from "../../../components/singleProduct/SingleProduct";
 import { useSelector } from "react-redux";
 import { useState } from "react";
-import Pagination from "../../../components/pagination/Pagination";
+import { Pagination } from "antd";
 
 const ProductSection = ({
   latitude,
