@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./categoriesList.scss";
 import { useGetAllCategoriesAndSubCategoriesQuery } from "../../../apis&state/apis/masterDataApis";
 import { useNavigate } from "react-router-dom";
@@ -7,8 +7,15 @@ const CategoriesList = ({
   activeCategory = "",
   handleCategory,
   labelText = "Categories",
+  setAllCategories,
 }) => {
   const { data } = useGetAllCategoriesAndSubCategoriesQuery();
+
+  useEffect(() => {
+    if (data?.data) {
+      setAllCategories(data?.data);
+    }
+  }, [data]);
   return (
     <div className="categories-list">
       <h3>{labelText}</h3>
@@ -17,7 +24,7 @@ const CategoriesList = ({
           return (
             <div
               className="single-category"
-              onClick={() => handleCategory(category?.name)}
+              onClick={() => handleCategory(category)}
             >
               <div
                 className="category-image"

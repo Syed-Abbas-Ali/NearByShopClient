@@ -24,10 +24,11 @@ import Navbar from "../../components/navbar1/Navbar";
 import FilterInputComponent from "../../components/commonComponents/filterInputComponent/FilterInputComponent";
 import AppBanner from "../../components/commonComponents/auth&VerificatonComponents/appBanner/AppBanner";
 import BottomNavbar from "../../components/bottomNavbar/BottomNavbar";
+import ProductSection from "./productsSection/ProductSection";
+import SubCategoriesList from "../../components/commonComponents/subCategoriesList/SubCategoriesList";
 
 const Home = () => {
   const navigate = useNavigate();
-  const [isShowSearch, setIsShowSearch] = useState(false);
   const { isFilterPopupOpen } = useSelector((state) => state.globalState);
 
   const {
@@ -36,155 +37,68 @@ const Home = () => {
     },
   } = useSelector((state) => state);
 
-  const [categoryWiseProducts, setCategoryWiseProducts] = useState([]);
-
-  const { data, isLoading, isError } = useGetAllProductsApiQuery(
-    {
-      latitude,
-      longitude,
-      maxPrice: 1000000,
-      radius: 100000000,
-      page: 1,
-    },
-    {
-      skip: !latitude || !longitude,
-    }
-  );
-
-  const { data: allCategoriesData } =
-    useGetAllCategoriesAndSubCategoriesQuery();
-
-  useEffect(() => {
-    if (data?.data?.items?.length > 0) {
-      const newProductsObject = {};
-      data?.data?.items?.forEach((product) => {
-        if (newProductsObject[product.category]) {
-          newProductsObject[product.category].push(product);
-        } else {
-          newProductsObject[product.category] = [product];
-        }
-      });
-      setCategoryWiseProducts(Object.entries(newProductsObject));
-    }
-  }, [data]);
-
-  // const handleCategory = () => {
-  //   navigate("/sub-home");
-  // };
-
-  const handleSearchShow = (value) => {
-    if (value === "FOCUS") {
-      setIsShowSearch(true);
-    } else if (value === "CANCEL") {
-      setIsShowSearch(false);
-    }
-  };
+  const [searchData, setSearchData] = useState(null);
+  const [allCategories, setAllCategories] = useState(null);
+  const [selectedCategories, setSelectedCategories] = useState(null);
+  const [selectedSubCtegories, setSelectedSubCategory] = useState(null);
 
   const handleCategory = (categoryName) => {
-    navigate(`/sub-category-page/${categoryName}`);
+    setSelectedCategories(categoryName);
+    setSelectedSubCategory("");
   };
 
   return (
-    // <WrapperComponent>
-    //   {isShowSearch && <SearchComponent handleSearchShow={handleSearchShow} />}
-    //   <div className="home-page">
-    //     {isFilterPopupOpen && <Filters />}
-    //     <div className="search-card">
-    //       <Search handleSearchShow={handleSearchShow} />
-    //     </div>
-    //     <UserLocationPointer />
-
-    //     {/* <Video /> */}
-    //     <AutoSlider />
-    //     <CategoriesList handleCategory={handleCategory} />
-    //     <div className="all-products">
-    //       {categoryWiseProducts.map((categoryObj, index) => {
-    //         return (
-    //           <div className="each-category-container" key={index}>
-    //             <div className="category-name-header-card">
-    //               <h3>{categoryObj[0]}</h3>
-    //               <img src={forwardIcon} alt="" />
-    //             </div>
-    //             <div className="products-scroll">
-    //               {categoryObj[1]?.map((product) => {
-    //                 return (
-    //                   <SingleProduct product={product} key={product._id} />
-    //                 );
-    //               })}
-    //             </div>
-    //           </div>
-    //         );
-    //       })}
-    //     </div>
-    //     {/* <Loader /> */}
-    //     {/* <Categories handleCategory={handleCategory}/>
-    //     <div className="all-products">
-    //       {categories.map((categoryObj, index) => {
-    //         return (
-    //           <div className="each-category-container" key={index}>
-    //             <div className="category-name-header-card">
-    //               <h3>{categoryObj.category}</h3>
-    //               <img src={forwardIcon} alt="" />
-    //             </div>
-    //             <div className="products-scroll">
-    //               {data?.data.map((product) => {
-    //                 return <SingleProduct product={product} key={product._id}/>;
-    //               })}
-    //             </div>
-    //           </div>
-    //         );
-    //       })}
-    //     </div> */}
-    //     {/* <AllCategories handleCategory={handleCategory} /> */}
-    //     {/* <CategoriesList /> */}
-    //     {/* <div className="all-products-list ">
-    //       <h3 className="heading-of-products">
-    //         Now you can buy products from Near By your favorite shops !
-    //       </h3>
-    //       <div className="grid-card">
-    //         {data &&
-    //           data?.data?.items?.map((product) => {
-    //             return <SingleProduct product={product} key={product._id} />;
-    //           })}
-    //       </div>
-    //     </div> */}
-    //   </div>
-    // </WrapperComponent>
-    <>
-      <Navbar />
-      <div className="home-page">
-        <div className="section-one">
-          <FilterInputComponent />
-          <UserLocationPointer />
-        </div>
-        <div className="section-two">
+    <WrapperComponent>
+      <div className="home-container">
+        <div className="hero-section">
           <AutoSlider />
-          <div className="products-category-section">
-            <CategoriesList handleCategory={handleCategory} />
-            <div className="all-products">
-              {categoryWiseProducts.map((categoryObj, index) => {
-                return (
-                  <div className="each-category-container" key={index}>
-                    <div className="category-name-header-card">
-                      <h3>{categoryObj[0]}</h3>
-                      <img src={forwardIcon} alt="" />
-                    </div>
-                    <div className="products-scroll">
-                      {categoryObj[1]?.map((product) => {
-                        return (
-                          <SingleProduct product={product} key={product._id} />
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+        </div>
+
+        <div className="search-filter">
+          <FilterInputComponent
+            handleChange={(value) => setSearchData(value)}
+          />
+          {isFilterPopupOpen && <Filters />}
+        </div>
+        <div className="categories-section">
+          <CategoriesList
+            handleCategory={handleCategory}
+            setAllCategories={setAllCategories}
+          />
+          {selectedCategories && (
+            <SubCategoriesList
+              selectedCategories={selectedCategories?.subcategories}
+              handleSelect={(pre) => setSelectedSubCategory(pre)}
+            />
+          )}
+        </div>
+
+        <div className="all-products">
+          {selectedCategories ? (
+            <ProductSection
+              latitude={latitude}
+              longitude={longitude}
+              category={selectedCategories?.name}
+              singleCategory={true}
+              subCategory={selectedSubCtegories?.name}
+              searchData={searchData}
+            />
+          ) : (
+            allCategories?.map((item) => {
+              return (
+                <ProductSection
+                  latitude={latitude}
+                  longitude={longitude}
+                  category={selectedCategories?.name || item?.name}
+                  singleCategory={selectedCategories ? true : false}
+                  searchData={searchData}
+                />
+              );
+            })
+          )}
         </div>
       </div>
-      <BottomNavbar />
-    </>
+    </WrapperComponent>
   );
 };
 

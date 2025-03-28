@@ -117,7 +117,6 @@ const Navbar = () => {
   useEffect(() => {
     if (!socketMethods) return;
     socketMethods.on("notification", (data) => {
-      console.log(data);
       setTotalNotification((prev) => [...prev, data]);
       toast.success("new notification");
     });

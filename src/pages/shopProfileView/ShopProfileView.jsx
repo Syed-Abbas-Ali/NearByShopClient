@@ -23,7 +23,7 @@ import locationIcon from "../../assets/locationIcon.svg";
 import BusinessDetailsVideo from "../../components/commonComponents/businessDetailsVideo/BusinessDetailsVideo";
 import RatingPopup from "./ratingPopup/RatingPopup";
 import { ShowRating } from "../../components/rating/Rating";
-import phoneCallIcon from "../../assets/phoneCall2.svg"
+import phoneCallIcon from "../../assets/phoneCall2.svg";
 import {
   useCreateRoomMutation,
   useGetChatListQuery,
@@ -31,22 +31,34 @@ import {
 import { useGetProfileApiQuery } from "../../apis&state/apis/authenticationApiSlice";
 import SingleProduct from "../../components/singleProduct/SingleProduct";
 import FilterInputComponent from "../../components/commonComponents/filterInputComponent/FilterInputComponent";
+import Pagination from "../../components/pagination/Pagination";
+import SearchComponent from "../../components/search/Search";
 
 const ShopProfileView = () => {
   const { shopId } = useParams();
   const navigate = useNavigate();
   const [addReviewText, setAddReviewText] = useState();
   const [isShowPopup, setIsShowPopup] = useState(false);
+
+    const [search, setSearch] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+  
+    const handlePageChange = (page, totalPages) => {
+      if (page >= 1 && page <= totalPages) {
+        setCurrentPage(page);
+      }
+    };
   const {
     mapDetailsState: {
       userMapDetails: { latitude, longitude },
     },
   } = useSelector((state) => state);
 
-
   const { data: products } = useGetAllProductsApiQuery({
     page: 1,
     shopId,
+    keyword: search,
+    pageNum: currentPage
   });
 
   const [addReview] = useAddReviewToShopMutation();
@@ -152,7 +164,7 @@ const ShopProfileView = () => {
               {singleShopDetails?.data?.shopDetails?.last_name}
             </h3>
             <div className="phone-number-card">
-            <div
+              <div
                 className="chat-card"
                 onClick={() => handleNavigate("/chat")}
               >
@@ -201,7 +213,7 @@ const ShopProfileView = () => {
         </div>
         <div className="all-products-card">
           <div>
-            <FilterInputComponent />
+          <SearchComponent setSearch={setSearch} />
           </div>
           <div className="products-card">
             <h3 className="products-header">Products</h3>
@@ -211,6 +223,27 @@ const ShopProfileView = () => {
               })}
             </div>
           </div>
+          {products?.data?.items?.length == 0 && (
+              <div
+                style={{
+                  width: "100%",
+                  height: "200px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textAlign: "center",
+                }}
+              >
+                no-data
+              </div>
+            )}
+          {products?.data?.totalPages > 1 && (
+            <Pagination
+              totalPages={products?.data?.totalPages}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+            />
+          )}
         </div>
       </div>
       {/* <p>

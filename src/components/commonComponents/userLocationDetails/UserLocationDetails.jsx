@@ -30,6 +30,13 @@ const UserLocationDetails = () => {
   };
 
   const fetchMarkerAddress = (lat, lon) => {
+    dispatch(
+      setUserMapDetails({
+        locationAddress: "",
+        latitude: lat,
+        longitude: lon,
+      })
+    );
     fetch(
       `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`
     )

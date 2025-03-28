@@ -188,7 +188,7 @@ const App = () => {
       <Suspense fallback={<Fallback />}>
         <div className="app-container">
           {/* <SearchComponent/> */}
-          {/* <UserLocationDetails /> */}
+          <UserLocationDetails />
 
           {/* {isChatbotOpen && <Chatbot />}
           {!isChatbotOpen && !needNotChatBot.includes(pathname) && (

@@ -186,8 +186,10 @@ export const shopApiSlice = createApi({
 
     // Get All Seller Products
     getAllSellerProductsApi: builder.query({
-      query: ({shopUid,keyword,pageNum}) => ({
-        url: `shop/${shopUid}/add-item?keyword=${keyword??""}&pageNum=${pageNum}`,
+      query: ({ shopUid, keyword, pageNum }) => ({
+        url: `shop/${shopUid}/add-item?keyword=${
+          keyword ?? ""
+        }&pageNum=${pageNum}`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${accessTokenValue()}`,
@@ -247,13 +249,19 @@ export const shopApiSlice = createApi({
         latitude = "",
         longitude = "",
         radius = "",
+        rating = "",
+        minPrice = "",
         maxPrice = "",
         shopId = "",
-        page = "1",
+        pageNum = "1",
         category = "",
         subCategory = "",
+        isVarified = "",
+        keyword,discount
       }) => ({
-        url: `items/?latitude=${latitude}&longitude=${longitude}&radius=${radius}&maxPrice=${maxPrice}&page=${page}&limit=10&shopId=${shopId}&category=${category}&subCategory=${subCategory}`,
+        url: `items/?latitude=${latitude}&longitude=${longitude}&radius=${radius}&rating=${rating}&minPrice=${minPrice}&maxPrice=${maxPrice}&page=${pageNum}&limit=10&shopId=${shopId}&category=${category}&subCategory=${subCategory}&itemName=${
+          keyword ?? ""
+        }&isVarified=${isVarified}&discount=${discount??""}`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${accessTokenValue()}`,

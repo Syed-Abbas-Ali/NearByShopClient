@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { setIsFilterPopupOpen } from "../../apis&state/state/globalStateName";
 import { useLocation } from "react-router-dom";
 
-const Search = ({ handleSearchShow, setSearch }) => {
+const SearchComponent = ({ handleSearchShow, setSearch }) => {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
   const handleFilterOpen = () => {
@@ -44,4 +44,4 @@ const Search = ({ handleSearchShow, setSearch }) => {
   );
 };
 
-export default Search;
+export default SearchComponent;
