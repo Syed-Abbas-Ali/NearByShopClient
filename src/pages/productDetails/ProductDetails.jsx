@@ -18,6 +18,7 @@ import TopSearchComponent from "../../components/commonComponents/topSearchCompo
 import WrapperComponent from "../../components/wrapperComponent/WrapperComponent";
 import SearchComponent from "../../components/search/Search";
 import Pagination from "../../components/pagination/Pagination";
+import CircularLoader from "../../components/circularLoader/CircularLoader";
 
 const ProductDetails = () => {
   const { productUid } = useParams();
@@ -32,21 +33,26 @@ const ProductDetails = () => {
     }
   };
 
-  const { data, isLoading, isError } = useGetSingleProductApiQuery(productUid);
+  const {
+    data,
+    isLoading: productLoading,
+    isError,
+  } = useGetSingleProductApiQuery(productUid);
   const { data: shopDetails } = useGetShopProfileApiQuery(data?.data?.shopId, {
     skip: !data?.data?.shopId,
   });
-  const { data: relatedProducts } = useGetAllProductsApiQuery(
-    {
-      page: 1,
-      category: data?.data?.category,
-      keyword: search,
-      pageNum: currentPage,
-    },
-    {
-      skip: !data?.data?.category,
-    }
-  );
+  const { data: relatedProducts, isLoading: isProductListLoading } =
+    useGetAllProductsApiQuery(
+      {
+        page: 1,
+        category: data?.data?.category,
+        keyword: search,
+        pageNum: currentPage,
+      },
+      {
+        skip: !data?.data?.category,
+      }
+    );
 
   const handleBack = () => {
     navigate(-1);
@@ -58,15 +64,20 @@ const ProductDetails = () => {
       <div className="product-details-container">
         <div className="content-card">
           <div className="product-details-content">
-            <SingleProductDetails
-              singleProductDetails={data?.data}
-              shopData={shopDetails}
-              shopIdValue={data?.data?.shopId || null}
-            />
+            {productLoading ? (
+              <CircularLoader />
+            ) : (
+              <SingleProductDetails
+                singleProductDetails={data?.data}
+                shopData={shopDetails}
+                shopIdValue={data?.data?.shopId || null}
+              />
+            )}
             <div className="filter-card">
               {/* <FilterInputComponent /> */}
               <SearchComponent setSearch={setSearch} />
             </div>
+            {isProductListLoading && <CircularLoader />}
             <div className="all-products grid-card">
               {relatedProducts?.data?.items.map((item, index) => {
                 return <SingleProduct product={item} key={index} />;

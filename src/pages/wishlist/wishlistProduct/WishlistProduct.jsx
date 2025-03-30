@@ -11,7 +11,7 @@ import { getAddress } from "../../../utils/global";
 const WishlistProduct = ({ product }) => {
   const navigate = useNavigate();
   const [isPopupShow, setIsPopupShow] = useState(null);
-  const [deleteProductFromWishlist] = useDeleteWishlistProductMutation();
+  const [deleteProductFromWishlist,{isLoading}] = useDeleteWishlistProductMutation();
   const handleDelete = (e) => {
     e.stopPropagation();
     setIsPopupShow((prev) => !prev);
@@ -74,7 +74,7 @@ const WishlistProduct = ({ product }) => {
                 CANCEL
               </button>
               <button onClick={(e) => handleActionButton(e, "YES")}>
-                YES REMOVE
+               {isLoading?"loading...":" YES REMOVE"}
               </button>
             </div>
           </div>

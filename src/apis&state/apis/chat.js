@@ -43,6 +43,16 @@ export const chatApiSlice = createApi({
       }),
       providesTags: ["sendMessage"],
     }),
+    checkRoomExist: builder.query({
+      query: (sellerId) => ({
+        url: `room-exist/${sellerId}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessTokenValue()}`,
+        },
+      }),
+      // providesTags: ["checkRoomExist"],
+    }),
 
     // Get all categories master data
     sendMessage: builder.mutation({
@@ -87,6 +97,7 @@ export const {
   useGetChatListQuery,
   useSendMessageMutation,
   useGetSingleChatQuery,
+  useCheckRoomExistQuery,
   useGetNotificationListQuery,
   useSetIsReadMutation
 } = chatApiSlice;

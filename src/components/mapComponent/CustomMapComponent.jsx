@@ -465,6 +465,21 @@ function LocationMarker({ handleSetLocationDetails }) {
       setPosition(e.latlng);
       map.flyTo(e.latlng, map.getZoom());
 
+      console.log("Selected Location:", {
+        latitude: e.latlng.lat,
+        longitude: e.latlng.lng,
+        // address: data.display_name,
+      });
+      handleSetLocationDetails({
+        latitude: e.latlng.lat,
+        longitude: e.latlng.lng,
+        storeAddress: {
+          storeLocation: {
+            latitude: e.latlng.lat,
+            longitude: e.latlng.lng,
+          },
+        },
+      });
       // Fetch address for the clicked location
       try {
         const response = await fetch(
@@ -483,8 +498,8 @@ function LocationMarker({ handleSetLocationDetails }) {
           shop_address: data.display_name,
           storeAddress: {
             storeLocation: {
-                latitude: e.latlng.lat,
-                longitude: e.latlng.lng,
+              latitude: e.latlng.lat,
+              longitude: e.latlng.lng,
             },
             storeAddress: data.display_name,
           },

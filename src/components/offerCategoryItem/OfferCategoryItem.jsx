@@ -3,10 +3,11 @@ import "./offerCategoryItem.scss";
 
 import deleteIcon from "../../assets/deleteBinIcon.png";
 import editIcon from "../../assets/editNewIcon.svg";
-import { useDeleteDiscountMutation } from "../../apis&state/apis/discounts";
+import { useDeleteDiscountMutation, useGetDiscountsQuery } from "../../apis&state/apis/discounts";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { userTypeValue } from "../../utils/authenticationToken";
+import { useSelector } from "react-redux";
 
 const defaultBackground =
   "linear-gradient(90deg, rgb(149,221,193) 0%, rgb(14,104,167) 100%)";
@@ -24,11 +25,7 @@ const OfferCategoryItem = ({ discountItem, isSeller = false }) => {
       toast.error("Something went wrong!");
     }
   };
-  const handleDiscount = () => {
-    navigate(
-      `/offer-edit/${"shopUid"}&${discountItem._id}/${discountItem.banner_uid}`
-    );
-  };
+
   const handleEditDiscount = (e) => {
     e.stopPropagation();
     navigate(
@@ -41,11 +38,7 @@ const OfferCategoryItem = ({ discountItem, isSeller = false }) => {
   return (
     <div
       className="offer-content-card"
-      onClick={() =>
-        userTypeValue()
-          ? handleSellerProfile(discountItem.shopId)
-          : handleDiscount()
-      }
+      onClick={() => handleSellerProfile(discountItem.shopId)}
       style={{ background: discountItem?.backgroundColor || defaultBackground }}
     >
       <div className="default-image">
@@ -73,7 +66,7 @@ const OfferCategoryItem = ({ discountItem, isSeller = false }) => {
             className="shop-address"
             style={{ color: discountItem?.textColor || defaultText }}
           >
-            {discountItem?.shop_address?.slice(0,20)}...
+            {discountItem?.shop_address?.slice(0, 20)}...
           </p>
           <h4 style={{ color: discountItem?.textColor || defaultText }}>
             {discountItem?.deal}

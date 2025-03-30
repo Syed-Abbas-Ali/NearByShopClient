@@ -14,32 +14,28 @@ import {
 import { useGetAllShopsApiQuery } from "../../apis&state/apis/shopApiSlice";
 import { userTypeValue } from "../../utils/authenticationToken";
 import CategoriesList from "../../components/commonComponents/categoriesList/CategoriesList";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import WrapperComponent from "../../components/wrapperComponent/WrapperComponent";
+import Filters from "../../components/filters/Filters";
+import { setIsFilterPopupOpen } from "../../apis&state/state/globalStateName";
+import SubCategoriesList from "../../components/commonComponents/subCategoriesList/SubCategoriesList";
+import FilterInputComponent from "../../components/commonComponents/filterInputComponent/FilterInputComponent";
 
 const Offer = () => {
+  const { isFilterPopupOpen } = useSelector((state) => state.globalState);
   const [showExistingDiscounts, setExistingRecords] = useState(false);
-  const [categoryWiseDiscounts, setCategoryWiseDiscounts] = useState([]);
+  const [allCategories, setAllCategories] = useState(null);
+  const [selectedCategories, setSelectedCategories] = useState(null);
+  const [selectedSubCtegories, setSelectedSubCategory] = useState(null);
+  const [searchData, setSearchData] = useState(null);
+
   const navigate = useNavigate();
-  const {
-    mapDetailsState: {
-      userMapDetails: { latitude, longitude },
-    },
-  } = useSelector((state) => state);
-  const { data } = useGetDiscountsQuery(
-    {
-      latitude,
-      longitude,
-      minPrice: 1,
-      maxPrice: 1000000,
-      radius: 100000000,
-      page: 1,
-    },
-    {
-      skip: !latitude || !longitude,
-    }
-  );
+
+  const dispatch = useDispatch();
+  const openPopup = () => {
+    dispatch(setIsFilterPopupOpen());
+  };
   const handleExistingDiscounts = () => {
     setExistingRecords((prev) => !prev);
   };
@@ -56,24 +52,9 @@ const Offer = () => {
     }
   );
 
-  useEffect(() => {
-    if (data?.data?.length > 0) {
-      const newDiscountObject = {};
-      data?.data?.forEach((discount) => {
-        if (discount?.categoryName) {
-          if (newDiscountObject[discount.categoryName]) {
-            newDiscountObject[discount.categoryName].push(discount);
-          } else {
-            newDiscountObject[discount.categoryName] = [discount];
-          }
-        }
-      });
-      setCategoryWiseDiscounts(Object.entries(newDiscountObject));
-    }
-  }, [data]);
-
   const handleCategory = (categoryName) => {
-    navigate(`/offer-sub-category/${categoryName}`);
+    setSelectedCategories(categoryName);
+    setSelectedSubCategory("");
   };
 
   return (
@@ -109,8 +90,35 @@ const Offer = () => {
               allDiscounts={allDiscounts?.data}
             />
           )}
-          <CategoriesList handleCategory={handleCategory} />
-          <OfferItemCard categoryWiseDiscounts={categoryWiseDiscounts} />
+          <div className="search-filter">
+            <FilterInputComponent
+              handleChange={(value) => setSearchData(value)}
+            />
+            {isFilterPopupOpen && <Filters />}
+          </div>
+          <CategoriesList
+            handleCategory={handleCategory}
+            setAllCategories={setAllCategories}
+            activeCategory={selectedCategories?.name}
+          />
+          {selectedCategories && (
+            <SubCategoriesList
+              selectedCategories={selectedCategories?.subcategories}
+              handleSelect={(pre) => setSelectedSubCategory(pre)}
+              selected={selectedSubCtegories}
+            />
+          )}
+          <button onClick={openPopup}>filter</button>
+          {!selectedCategories &&
+            allCategories?.map((item) => {
+              return <OfferItemCard categoryList={item?.name} />;
+            })}
+          {selectedCategories && (
+            <OfferItemCard
+              categoryList={selectedCategories?.name}
+              subcategory={selectedSubCtegories?.name}
+            />
+          )}
         </div>
         <BottomNavbar />
       </div>

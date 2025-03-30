@@ -259,7 +259,7 @@ export const shopApiSlice = createApi({
         isVarified = "",
         keyword,discount
       }) => ({
-        url: `items/?latitude=${latitude}&longitude=${longitude}&radius=${radius}&rating=${rating}&minPrice=${minPrice}&maxPrice=${maxPrice}&page=${pageNum}&limit=10&shopId=${shopId}&category=${category}&subCategory=${subCategory}&itemName=${
+        url: `items/?latitude=${latitude}&longitude=${longitude}&radius=${radius??5000}&rating=${rating}&minPrice=${minPrice}&maxPrice=${maxPrice}&page=${pageNum}&limit=10&shopId=${shopId}&category=${category}&subCategory=${subCategory}&itemName=${
           keyword ?? ""
         }&isVarified=${isVarified}&discount=${discount??""}`,
         method: "GET",
@@ -302,6 +302,16 @@ export const shopApiSlice = createApi({
       }),
       providesTags: ["follow"],
     }),
+    getFollowingNumber: builder.query({
+      query: (shopId) => ({
+        url: `follow/following-by-shop?shopId=${shopId}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessTokenValue()}`,
+        },
+      }),
+      providesTags: ["getFollowingNumber"],
+    }),
 
     // Get All Following Sellers For Login User
     addToFollowing: builder.mutation({
@@ -312,7 +322,7 @@ export const shopApiSlice = createApi({
           Authorization: `Bearer ${accessTokenValue()}`,
         },
       }),
-      invalidatesTags: ["follow"],
+      invalidatesTags: ["follow","getFollowingNumber"],
     }),
 
     // Get Shop Reviews
@@ -369,6 +379,7 @@ export const {
 
   useGetAllFollowingApiQuery,
   useAddToFollowingMutation,
+  useGetFollowingNumberQuery,
 
   useGetAllNearByShopsApiQuery,
 

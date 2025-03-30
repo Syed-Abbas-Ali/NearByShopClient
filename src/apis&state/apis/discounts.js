@@ -18,12 +18,12 @@ export const discountsApiSlice = createApi({
         minPrice = "10",
         maxPrice = "150000",
         shopId = "",
-        categoryName = "",
+        category = "",
         subCategory = "",
       }) => ({
         url: `discount?latitude=&longitude=&radius=&minPrice=&maxPrice=${
           shopId && `&shopId=${shopId}`
-        }&categoryName=${categoryName}&subCategory=${subCategory}`,
+        }&category=${category}&subCategory=${subCategory}`,
         headers: {
           Authorization: `Bearer ${accessTokenValue()}`,
         },
@@ -40,12 +40,12 @@ export const discountsApiSlice = createApi({
         minPrice = "1",
         maxPrice = "150000",
         shopId = "",
-        categoryName = "",
+        category= "",
         subCategory = "",
       }) => ({
         url: `discount?latitude=${latitude}&longitude=${longitude}&radius=${radius}&minPrice=${minPrice}&maxPrice=${maxPrice}${
           shopId ? `&shopId=${shopId}` : ""
-        }&categoryName=${categoryName}&subCategory=${subCategory}`,
+        }&category=${category}&subCategory=${subCategory}`,
         headers: {
           Authorization: `Bearer ${accessTokenValue()}`,
         },

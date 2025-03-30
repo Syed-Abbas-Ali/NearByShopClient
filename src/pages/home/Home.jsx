@@ -64,11 +64,13 @@ const Home = () => {
           <CategoriesList
             handleCategory={handleCategory}
             setAllCategories={setAllCategories}
+            activeCategory={selectedCategories?.name}
           />
           {selectedCategories && (
             <SubCategoriesList
               selectedCategories={selectedCategories?.subcategories}
               handleSelect={(pre) => setSelectedSubCategory(pre)}
+              selected={selectedSubCtegories}
             />
           )}
         </div>
