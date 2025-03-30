@@ -6,7 +6,7 @@ import { useAddRatingToShopMutation } from "../../../apis&state/apis/shopApiSlic
 
 const RatingPopup = ({ setIsShowPopup, shopId }) => {
   const [value, setValue] = useState(0);
-  const [postRating] = useAddRatingToShopMutation();
+  const [postRating, { isLoading }] = useAddRatingToShopMutation();
 
   const handleRatingSubmit = async () => {
     const finalRatingData = {
@@ -34,7 +34,9 @@ const RatingPopup = ({ setIsShowPopup, shopId }) => {
           <GiveRating setValue={setValue} value={value} />
         </div>
         <div className="submit-btn">
-          <button onClick={handleRatingSubmit}>Submit</button>
+          <button onClick={handleRatingSubmit}>
+            {isLoading ? "..." : "Submit"}
+          </button>
         </div>
       </div>
     </div>

@@ -18,7 +18,7 @@ const Wishlist = () => {
     navigate(-1);
   };
   return (
-    <>
+    <WrapperComponent>
       <div className="wish-list-heading-card">
         <img src={backIcon} alt="" onClick={handleBack} />
         <h3>
@@ -38,9 +38,11 @@ const Wishlist = () => {
               );
             })}
           </div>
+
+          {!data?.data || data?.data?.length==0?"no-data":''}
         </div>
       </div>
-    </>
+    </WrapperComponent>
   );
 };
 

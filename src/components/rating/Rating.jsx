@@ -16,10 +16,10 @@ export const GiveRating = ({ setValue, value }) => {
   );
 };
 
-export const ShowRating = () => {
+export const ShowRating = ({rating}) => {
   return (
     <Box sx={{ "& > legend": { mt: 2 } }}>
-      <Rating name="half-rating" defaultValue={3.5} precision={0.1} />
+      <Rating name="half-rating" defaultValue={rating??0} readOnly/>
     </Box>
   );
 };

@@ -7,12 +7,10 @@
     gap: 4px;
     background-color: #fff;
     height: 70px;
-    position: fixed;
-    top: 0px;
+    // position: fixed;
     width: 100%;
     padding: 0px 1rem;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 5px -5px;
-    left: 0px;
     button {
       padding: 6px;
       display: flex;
@@ -32,7 +30,7 @@
     min-height: calc(100vh - 130px);
     max-height: calc(100vh - 130px);
     overflow-y: scroll;
-    margin-top: 70px;
+    // margin-top: 70px;
     margin-bottom: 60px;
     padding: 16px;
     display: flex;

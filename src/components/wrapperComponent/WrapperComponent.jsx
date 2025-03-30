@@ -7,10 +7,9 @@ import Footer from "../footer/Footer";
 
 const WrapperComponent = ({ children }) => {
   const { pathname } = useLocation();
-  const ignoreNavbar =
+  const ignoreNavbar =false
     // pathname.startsWith("/offer") ||
-    pathname.startsWith("/wishlist") ||
-    pathname.startsWith("/user-profile");
+    // pathname.startsWith("/user-profile");
 
   // const ignoreBottomNavbar = pathname.startsWith("/chat");
 

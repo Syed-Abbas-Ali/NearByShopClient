@@ -3,7 +3,7 @@ import "./subCategoriesList.scss";
 import { useGetAllCategoriesAndSubCategoriesQuery } from "../../../apis&state/apis/masterDataApis";
 import { useNavigate } from "react-router-dom";
 
-const SubCategoriesList = ({ categoryName = "", selectedCategories,handleSelect }) => {
+const SubCategoriesList = ({ categoryName = "", selectedCategories,handleSelect,selected }) => {
   const navigate = useNavigate();
   const { data } = useGetAllCategoriesAndSubCategoriesQuery();
   const [subcategoryList, setSubcategoryList] = useState([]);
@@ -24,6 +24,10 @@ const SubCategoriesList = ({ categoryName = "", selectedCategories,handleSelect 
 
   // console.log( )
 
+  let selectedStyle={
+    background:"orange",
+    color:"white"
+  }
   return (
     <div className="categories-list">
       <h3>Sub Categories</h3>
@@ -35,6 +39,7 @@ const SubCategoriesList = ({ categoryName = "", selectedCategories,handleSelect 
                 <div
                   className="single-category"
                   onClick={() => handleCategory(category)}
+                  style={selected?.name==category?.name?{...selectedStyle}:{}}
                 >
                   <div className="category-image">
                     <img src={category.imageUrl} alt="" />

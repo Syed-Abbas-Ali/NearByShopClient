@@ -4,7 +4,10 @@ import callerIcon from "../../assets/caller.svg";
 import userProfile from "../../assets/userProfile2.svg";
 import chatIcon from "../../assets/chatOne.svg";
 import { useNavigate } from "react-router-dom";
-import { useCreateRoomMutation } from "../../apis&state/apis/chat";
+import {
+  useCheckRoomExistQuery,
+  useCreateRoomMutation,
+} from "../../apis&state/apis/chat";
 import toast from "react-hot-toast";
 import { useGetProfileApiQuery } from "../../apis&state/apis/authenticationApiSlice";
 import checkIcon from "../../assets/checkV1.svg";
@@ -26,17 +29,21 @@ const SingleProductDetails = ({
   shopData,
   shopIdValue,
 }) => {
-
   const {
     data: userProfileData,
     isLoading: isUserProfileDataLoading,
     isError: isUserProfileDataError,
   } = useGetProfileApiQuery();
-    const isAuthenticated = useSelector(
-      (state) => state.authState.isAuthenticated
-    );
+  const isAuthenticated = useSelector(
+    (state) => state.authState.isAuthenticated
+  );
+
+  const { data: roomExistData, isLoading: roomExistLoading,refetch } =
+    useCheckRoomExistQuery(shopIdValue, {
+      skip: !shopIdValue,
+    });
   const navigate = useNavigate();
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
   const [addToWishlist] = useAddToWishlistMutation();
   const [deleteToWishlist] = useDeleteWishlistProductMutation();
   const [previewImagesList, setPreviewImagesList] = useState([]);
@@ -55,27 +62,31 @@ const SingleProductDetails = ({
       setPreviewImagesList(newImagesList);
     }
   }, [singleProductDetails]);
-  const handleNavigate = async (path) => {
+
+  const handleNavigate = async (roomId) => {
     if (!shopData) {
       toast.error("Something went wrong!");
       return;
     }
     try {
-      const roomDetails = {
-        sellerId: shopData?.data?.shopDetails?.shop_owner_id,
-        userName:
-          userProfileData?.data?.firstName +
-          " " +
-          userProfileData?.data?.lastName,
-        shopName: shopData?.data?.shopDetails?.shop_name,
-        shopId: shopData?.data?.shopDetails?.shop_id,
-      };
-      const response = await createChatRoom(roomDetails);
-      // navigate(path);
-      if (response?.data) {
-        // navigate(path);
-        dispatch(setRoomChatAndActive(response?.data?.data?.roomId))
-        toast.success("Chat created successfully!");
+      if (roomId) {
+        dispatch(setRoomChatAndActive(roomId));
+      } else {
+        const roomDetails = {
+          sellerId: shopData?.data?.shopDetails?.shop_owner_id,
+          userName:
+            userProfileData?.data?.firstName +
+            " " +
+            userProfileData?.data?.lastName,
+          shopName: shopData?.data?.shopDetails?.shop_name,
+          shopId: shopData?.data?.shopDetails?.shop_id,
+        };
+        const response = await createChatRoom(roomDetails);
+        if (response?.data) {
+          dispatch(setRoomChatAndActive(response?.data?.data?.roomId));
+          refetch()
+          toast.success("Chat created successfully!");
+        }
       }
     } catch (e) {
       console.log(e);
@@ -84,8 +95,8 @@ const SingleProductDetails = ({
 
   const handleWishlist = async () => {
     try {
-      if(!isAuthenticated){
-        navigate("/login")
+      if (!isAuthenticated) {
+        navigate("/login");
       }
       const response = await addToWishlist(singleProductDetails.itemUid);
       if (response?.data) {
@@ -262,10 +273,19 @@ const SingleProductDetails = ({
               <img src={userProfile} />
               <span>Seller Profile</span>
             </button>
-            <button onClick={() => handleNavigate("/chat")}>
-              <img src={chatIcon} />
-              <span>Chat</span>
-            </button>
+            {roomExistLoading ? (
+              <button>
+                <img src={chatIcon} />
+                <span>Loading...</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => handleNavigate(roomExistData?.data?.roomId)}
+              >
+                <img src={chatIcon} />
+                <span>Chat</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

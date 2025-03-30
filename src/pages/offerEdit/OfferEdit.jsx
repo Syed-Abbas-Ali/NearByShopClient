@@ -296,6 +296,12 @@ const OfferEdit = () => {
       setSubCategories(allSubCategoriesList);
     }
   }, [categoryData]);
+
+  useEffect(()=>{
+    if(singleDiscountData?.data){
+      setProductDetails(singleDiscountData?.data)
+    }
+  },[singleDiscountData])
   const handleChangeDate = (e) => {
     handleDates(e);
   };
