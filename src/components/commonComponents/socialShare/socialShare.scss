@@ -1,6 +1,10 @@
 @import "../../../app.scss";
 
 .social-share-card {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  justify-content: center;
   .share-text {
     font-size: 20px;
     text-align: center;

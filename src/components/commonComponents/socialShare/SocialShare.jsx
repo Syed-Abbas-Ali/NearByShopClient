@@ -1,21 +1,38 @@
 import React from "react";
-// import { ShareSocial } from "react-share-social";
+import {
+  FacebookShareButton,
+  WhatsappShareButton,
+  TelegramShareButton,
+  EmailShareButton,
+  FacebookIcon,
+  WhatsappIcon,
+  TelegramIcon,
+  EmailIcon
+} from "react-share";
 import "./socialShare.scss";
 
-const SocialShare = ({ url, title }) => {
+const SocialShare = ({ url = "https://google.com", title = "Check this out!" }) => {
   const handleClick = (e) => {
-    e.stopPropagation(); // Prevents the event from propagating
+    e.stopPropagation();
   };
+
   return (
     <div className="social-share-card" onClick={handleClick}>
-      {/* <ShareSocial
-        url={"https://google.com"}
-        socialTypes={["facebook", "whatsapp", "telegram", "email"]}
-        style={{
-          backgroundColor: "none",
-          iconSize: 32,
-        }}
-      /> */}
+      <FacebookShareButton url={url} quote={title}>
+        <FacebookIcon size={32} round />
+      </FacebookShareButton>
+
+      <WhatsappShareButton url={url} title={title}>
+        <WhatsappIcon size={32} round />
+      </WhatsappShareButton>
+
+      <TelegramShareButton url={url} title={title}>
+        <TelegramIcon size={32} round />
+      </TelegramShareButton>
+
+      <EmailShareButton url={url} subject={title} body={title}>
+        <EmailIcon size={32} round />
+      </EmailShareButton>
     </div>
   );
 };

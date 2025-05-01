@@ -42,6 +42,21 @@ const Home = () => {
   const [selectedCategories, setSelectedCategories] = useState(null);
   const [selectedSubCtegories, setSelectedSubCategory] = useState(null);
 
+  const [isWideScreen, setIsWideScreen] = useState(window.innerWidth < 900);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsWideScreen(window.innerWidth < 900);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+ 
+
+
   const handleCategory = (categoryName) => {
     setSelectedCategories(categoryName);
     setSelectedSubCategory("");
@@ -50,15 +65,26 @@ const Home = () => {
   return (
     <WrapperComponent>
       <div className="home-container">
-        <div className="hero-section">
+        {/* dont remove this */}
+        {/* <div className="hero-section">
           <AutoSlider />
-        </div>
+        </div> */}
 
         <div className="search-filter">
+
+        {
+          isWideScreen && (
+            <div className="location-searchbar">
+            <UserLocationPointer/>
+            </div>
+    )
+  }
           <FilterInputComponent
             handleChange={(value) => setSearchData(value)}
           />
           {isFilterPopupOpen && <Filters />}
+     
+  
         </div>
         <div className="categories-section">
           <CategoriesList

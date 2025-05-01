@@ -18,9 +18,15 @@
       flex-direction: column;
       gap: 20px;
       .sub-category-heading {
-        font-size: 14px;
+        font-size: 16px;
         color: $secondary-color;
         font-weight: 500;
+        
+        h3     { @media (max-width: 700px) {
+          font-size: 15px ;
+      
+  }
+}
       }
       .category-discount-cards {
         display: grid;

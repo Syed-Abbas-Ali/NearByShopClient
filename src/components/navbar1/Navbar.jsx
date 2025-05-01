@@ -46,13 +46,21 @@ const desktopNavbarLinks = [
     path: "/",
   },
   {
-    name: "Wish List",
+    name: "Wishlist",
     path: "/wishlist",
   },
   {
     name: "Deals",
     path: "/offer",
   },
+  {
+    name: "Chats",
+    path: "/chat",
+  },
+  {
+    name: "Notifications",
+    path: "/notifications",
+  }
 ];
 
 const Navbar = () => {
@@ -128,9 +136,12 @@ const Navbar = () => {
     <>
       <header className="mobile-navbar">
         <div className="logo-card" onClick={handleLogo}>
-          <img src={logo} alt="" />
+          <img className= "logo-imgs" src={logo} alt="" />
+          <div className="user-Location">
+          <UserLocationPointer />
+          </div>
         </div>
-        {/* <UserLocationDetails /> */}
+       
         <nav>
           <ul>
             {mobileNavIcons.map((link, index) => (
@@ -144,9 +155,13 @@ const Navbar = () => {
       <header className="desktop-navbar">
         <div className="logo-card-container">
           <div className="logo-card" onClick={handleLogo}>
-            <img src={logo} alt="" />
+            <img className= "logo-imgs"src={logo} alt="" />
           </div>
+
+
           <UserLocationPointer />
+        
+          
         </div>
         {/* <UserLocationDetails /> */}
         <div className="right-card">

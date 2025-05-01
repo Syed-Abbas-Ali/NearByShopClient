@@ -46,7 +46,8 @@
       justify-content: center;
       gap: 6px;
       padding: 10px;
-      background-color: $border;
+      border: 2px solid $border;
+   
       border-radius: 8px;
       flex-grow: 1;
       img {

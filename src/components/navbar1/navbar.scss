@@ -16,9 +16,16 @@
     display: none;
   }
   .logo-card {
-    img {
+    display: flex;
+    gap: 16px ;
+    .logo-imgs {
       width: 48px;
       height: 36px;
+    }
+    .user-Location{
+      @media (max-width: 500px){
+      display: none;
+      }
     }
   }
   nav {
@@ -59,10 +66,13 @@
     align-items: center;
     gap: 40px;
     .logo-card {
-      img {
+      gap:16px;
+      
+      .logo-imgs {
         width: 48px;
         height: 36px;
       }
+    
     }
   }
 

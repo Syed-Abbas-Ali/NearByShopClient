@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import "./autoSlider.scss"
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -72,17 +73,19 @@ const banners = [
 
 const AutoSlider = () => {
   return (
-    <Carousel>
+    <div className="heading-carousel">
+    <Carousel >
       {banners.map((banner) => (
         <Carousel.Item key={banner.id}>
           <img
             src={banner.asset}
             alt={`Slide ${banner.id + 1}`}
-            style={{ width: "100%", height: "200px", objectFit: "cover",borderRadius:"8px" }}
+            style={{ width: "100%", objectFit: "cover",borderRadius:"8px" }}
           />
         </Carousel.Item>
       ))}
     </Carousel>
+    </div>
   );
 };
 
