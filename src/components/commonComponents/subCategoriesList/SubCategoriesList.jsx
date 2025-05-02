@@ -25,7 +25,7 @@ const SubCategoriesList = ({ categoryName = "", selectedCategories,handleSelect,
   // console.log( )
 
   let selectedStyle={
-    background:"orange",
+    background:"#ffd9c0",
     color:"white"
   }
   return (
@@ -39,9 +39,9 @@ const SubCategoriesList = ({ categoryName = "", selectedCategories,handleSelect,
                 <div
                   className="single-category"
                   onClick={() => handleCategory(category)}
-                  style={selected?.name==category?.name?{...selectedStyle}:{}}
+                  
                 >
-                  <div className="category-image">
+                  <div className="category-image" style={selected?.name==category?.name?{...selectedStyle}:{}}>
                     <img src={category.imageUrl} alt="" />
                   </div>
                   <p>{category?.name}</p>
@@ -58,7 +58,7 @@ const SubCategoriesList = ({ categoryName = "", selectedCategories,handleSelect,
                   className="single-category"
                   onClick={() => handleCategory(category?.name)}
                 >
-                  <div className="category-image">
+                  <div className="category-image" >
                     <img src={category.imageUrl} alt="" />
                   </div>
                   <p>{category?.name}</p>
