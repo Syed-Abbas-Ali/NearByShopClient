@@ -37,7 +37,7 @@ const signupFields = [
 const Signup = () => {
   const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState();
-  const [createUser] = useSignupApiMutation();
+  const [createUser,{isLoading,isError}] = useSignupApiMutation();
   const [errors, setErrors] = useState({});
   const [userDetails, setUserDetails] = useState({
     firstName: "",

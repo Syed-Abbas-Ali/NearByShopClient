@@ -9,6 +9,8 @@ import {
 // Assets
 import chatbotIcon from "./assets/chatbotIcon.svg";
 
+import ChatComponent from "./pages/chat/ChatComponent";
+
 // Lazy-loaded Pages
 import {
   HomePage,
@@ -97,7 +99,7 @@ const protectionPages = [
   { path: "/seller-plan-purchase/:shopUid", element: <PlanPurchasePage /> },
   { path: "/profile", element: <UserProfileDetailsPage /> },
   { path: "/notifications", element: <NotificationsPage /> },
-  { path: "/chat", element: <ChatPage /> },
+  { path: "/chat", element: <ChatComponent /> },
   { path: "/chat-details", element: <ChatDetailsPage /> },
   { path: "/shop-profile-view/:shopId", element: <ShopProfileViewPage /> },
   { path: "/settings", element: <SettingsPage /> },

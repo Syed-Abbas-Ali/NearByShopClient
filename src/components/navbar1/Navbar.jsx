@@ -21,7 +21,7 @@ import {
   useSetIsReadMutation,
 } from "../../apis&state/apis/chat";
 import NotificationCard from "./components/notification/NotificationCard";
-import Chat from "./components/chat/Chat";
+// import Chat from "./components/chat/Chat";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleChatActive } from "../../apis&state/state/chatState";
 
@@ -209,15 +209,11 @@ const Navbar = () => {
             </div>
           )}
 
-          {isChatActive && token && (
+          {/* {isChatActive && token && (
             <div className="chat-component-popUp">
-              <Chat
-                setChatActive={setChatActive}
-                setActiveRoomId={setActiveRoomId}
-                activeRoomId={activeRoomId}
-              />
+              
             </div>
-          )}
+          )} */}
 
           <div className="chat-icon" onClick={handleChatActive}>
             <img src={chatIcon} alt="" />
