@@ -1,7 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Search from "../../../search/Search";
+import Search from "../../../../components/search/Search";
 import arrowLeftLarge from "../../../../assets/arrowLeftLarge.svg";
 import chatBlueTick from "../../../../assets/chatBlueTick.svg";
 import chatGreyTick from "../../../../assets/chatGreyTick.svg";

@@ -16,9 +16,9 @@ export const OfferPage = React.lazy(() => import("../pages/offer/Offer"));
 export const OfferEditPage = React.lazy(() =>
   import("../pages/offerEdit/OfferEdit")
 );
-export const ChatPage = React.lazy(() => import("../components/navbar1/components/chat/Chat"));
+export const ChatPage = React.lazy(() => import("../pages/chat/ChatComponent"));
 export const ChatDetailsPage = React.lazy(() =>
-  import("../components/navbar1/components/chatDetails/ChatDetails")
+  import("../pages/chat/ChatComponent")
 );
 export const OfferSubCategoryPage = React.lazy(() =>
   import("../pages/offersSubCategory/OfferSubCategory")
