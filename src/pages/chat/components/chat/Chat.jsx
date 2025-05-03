@@ -148,8 +148,9 @@ const Chat = ({setChatActive,activeRoomId, setActiveRoomId}) => {
     setChatToggle((prev) => !prev);
     setActiveRoomId(singleRoomDetails.roomId);
   };
+
   const handleGoBack = () => {
-    setChatActive(false);
+    navigate(-1);
   };
   const { data: chatList } = useGetChatListQuery({
     currentUserType,

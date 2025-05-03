@@ -17,6 +17,10 @@
       border: 2px solid rgb(238, 238, 238);
       border-radius: 4px;
       padding: 10px;
+      @media(max-width:450px){
+        width: 75px;
+      height: 75px;
+      }
       .product-image{
         height: 100%;
         width: 100%;
