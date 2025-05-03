@@ -108,6 +108,9 @@ const Navbar = () => {
       console.log(err);
     }
   };
+  const handleLoginActive=()=>{
+    navigate("/login");
+  }
 
   const handleChatActive = () => {
     if (!token) {
@@ -228,10 +231,16 @@ const Navbar = () => {
                 <span>Become a Seller</span>
               </div>
             )}
-            <div className="profile-image" onClick={() => navigate("/profile")}>
-              <img src={userBorderIcon} alt="" />
-              <span>Profile</span>
-            </div>
+            {userTypeValue() === "USER" && token ?  (
+  <div>
+    <button onClick={() => navigate("/login")} >Login</button>
+  </div>
+):(
+  <div className="profile-image" onClick={() => navigate("/profile")}>
+    <img src={userBorderIcon} alt="Profile" />
+    <span>Profile</span>
+  </div>
+) }
           </div>
         </div>
       </header>
