@@ -66,7 +66,7 @@ const desktopNavbarLinks = [
 const Navbar = () => {
   let token = accessTokenValue();
   const socketMethods = useContext(SocketContext);
-  const {isChatActive}=useSelector(state=>state.chatState)
+  const {roomId}=useSelector(state=>state.chatState)
   const navigate = useNavigate();
   const dispatch=useDispatch()
   const { pathname } = useLocation();

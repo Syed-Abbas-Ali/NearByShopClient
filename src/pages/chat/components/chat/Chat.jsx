@@ -1,6 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Search from "../../../../components/search/Search";
 import arrowLeftLarge from "../../../../assets/arrowLeftLarge.svg";
 import chatBlueTick from "../../../../assets/chatBlueTick.svg";
@@ -15,6 +15,7 @@ import {
   accessTokenValue,
   userTypeValue,
 } from "../../../../utils/authenticationToken";
+import { useSelector } from "react-redux";
 
 const users = [
   {
@@ -139,9 +140,11 @@ const users = [
   },
 ];
 
-const Chat = ({setChatActive,activeRoomId, setActiveRoomId}) => {
-    const socketMethods = useContext(SocketContext);  
+const Chat = ({ activeRoomId, setActiveRoomId }) => {
+  const { roomId } = useSelector((state) => state.chatState);
+  const socketMethods = useContext(SocketContext);
   const navigate = useNavigate();
+  const location = useLocation();
   const [chatToggle, setChatToggle] = useState(true);
   const [currentUserType, setCurrentUserType] = useState("");
   const handleSingleChat = (singleRoomDetails) => {
@@ -162,19 +165,23 @@ const Chat = ({setChatActive,activeRoomId, setActiveRoomId}) => {
       const decodedToken = jwtDecode(token);
       socketMethods.emit("connect_socket", {
         userId: decodedToken?.userId || "",
-        roomId: activeRoomId??"",
+        roomId: activeRoomId ?? "",
       });
     };
 
     if (socketMethods) {
       handleConnectionPort();
     }
-  }, [socketMethods,activeRoomId]);
+  }, [socketMethods, activeRoomId]);
   useEffect(() => {
-    if (chatList?.data[0]?.roomId) {
+    if (chatList?.data[0]?.roomId && !roomId) {
       setActiveRoomId(chatList.data[0].roomId);
     }
+    if (!activeRoomId && roomId) {
+      setActiveRoomId(roomId);
+    }
   }, [chatList]);
+
   return (
     <>
       <div className="chat-bg-card-div">
@@ -193,8 +200,16 @@ const Chat = ({setChatActive,activeRoomId, setActiveRoomId}) => {
               </div>
               {userTypeValue() === "SELLER" && (
                 <div className="tabs-list">
-                  <button className={currentUserType==="" ? "active-btn" : ""} onClick={() => setCurrentUserType("")}>User</button>
-                  <button className={currentUserType!=="" ? "active-btn" : ""} onClick={() => setCurrentUserType("seller")}>
+                  <button
+                    className={currentUserType === "" ? "active-btn" : ""}
+                    onClick={() => setCurrentUserType("")}
+                  >
+                    User
+                  </button>
+                  <button
+                    className={currentUserType !== "" ? "active-btn" : ""}
+                    onClick={() => setCurrentUserType("seller")}
+                  >
                     Seller
                   </button>
                 </div>
@@ -243,7 +258,7 @@ const Chat = ({setChatActive,activeRoomId, setActiveRoomId}) => {
           <ChatDetails
             chatToggle={chatToggle}
             setChatToggle={setChatToggle}
-            activeRoomId={activeRoomId}
+            activeRoomId={activeRoomId ?? roomId}
             currentUserType={currentUserType}
           />
         </div>

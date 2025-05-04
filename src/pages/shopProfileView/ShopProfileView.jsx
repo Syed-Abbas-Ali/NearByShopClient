@@ -127,6 +127,7 @@ const ShopProfileView = () => {
     try {
       if (roomId) {
         dispatch(setRoomChatAndActive(roomId));
+        navigate("/chat")
       } else {
         const roomDetails = {
           sellerId: singleShopDetails?.data?.shopDetails?.shop_owner_id,
