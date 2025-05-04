@@ -132,6 +132,11 @@
       padding: 8px;
       display: flex;
       gap: 16px;
+      width: 450px;
+      align-self: center;
+      @media (max-width:400px) {
+        width:368px;
+      }
       .image-default-card {
         height: 150px;
         width: 150px;
