@@ -1,13 +1,15 @@
 import { useDispatch } from "react-redux";
 import "./notificationCard.scss";
 import { setRoomChatAndActive } from "../../../../apis&state/state/chatState";
+import { useNavigate } from "react-router-dom";
 
 const MessageNotification = ({ item, index, handleLogin }) => {
   const dispatch = useDispatch();
+  const navigate=useNavigate()
   const handleProduct = async (id) => {
-    console.log(id);
     dispatch(setRoomChatAndActive(id?.roomId));
     await handleLogin(id?._id);
+    navigate("/chat")
   };
 
   function getFormattedDate(param) {
