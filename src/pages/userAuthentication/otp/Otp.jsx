@@ -21,7 +21,7 @@ const Otp = ({ numberOfDigits = 6 }) => {
   const [verifyOtp] = useVerifyOtpApiMutation();
   const [resendOtp] = useResendOtpApiMutation();
 
-  const [timeLeft, setTimeLeft] = useState(120); // 2 minutes = 120 seconds
+  const [timeLeft, setTimeLeft] = useState(120); 
   const [isActive, setIsActive] = useState(false);
   const timerRef = useRef(null);
 
