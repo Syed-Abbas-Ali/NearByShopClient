@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./signup.scss";
 import Input from "../../../components/input/Input";
 import googleIcon from "../../../assets/googleIcon.svg";
@@ -15,6 +15,7 @@ const signupFields = [
     label: "Name",
     name: "name",
     placeholderText: "",
+    pattern:"[A-Za-z\s]+"
   },
   {
     label: "Email",
@@ -111,6 +112,9 @@ const Signup = () => {
     navigate("/login");
   };
 
+  useEffect(()=>{
+console.log(errors)
+  },[errors])
   return (
     <div className="signup-page">
       {showPopup && <TermsAndConditions setShowPopup={setShowPopup} />}
@@ -131,6 +135,8 @@ const Signup = () => {
                             ...item,
                             name: "firstName",
                             placeholderText: "First Name",
+                            pattern:"[A-Za-z\s]+",
+                            isString:true
                           }}
                           handleInput={handleInput}
                           value={userDetails["firstName"]}
@@ -138,9 +144,12 @@ const Signup = () => {
                         <Input
                           handleInput={handleInput}
                           initialData={{
+                            type:"text",
                             ...item,
                             name: "lastName",
                             placeholderText: "Last Name",
+                            pattern:"[A-Za-z\s]+",
+                            isString:true
                           }}
                           value={userDetails["lastName"]}
                         />
@@ -194,7 +203,7 @@ const Signup = () => {
                   </label>
                 </div>
                 <p className="form-error-message">
-                  {errors.termsAndConditions}
+                  {errors?.termsAndCondition}
                 </p>
               </div>
             </div>
