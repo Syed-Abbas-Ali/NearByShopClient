@@ -125,7 +125,7 @@ const SingleProduct = ({ product }) => {
         </div>
         <div className="location">
           <img src={locationIcon} alt="location" />
-          <p>{address}</p>
+          <p>{product.shop_address.slice(0,20)+"..."}</p>
         </div>
       </div>
     </div>
