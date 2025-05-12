@@ -13,9 +13,15 @@ export const signupValidationSchema = Yup.object({
     .email("Invalid email address")
     .required("Email is required"),
   password: Yup.string()
-    .min(6, "Password must be at least 6 characters long")
-    .max(25, "Password must be at most 25 characters long")
-    .required("Password is required"),
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters")
+    .max(15, "Password must not exceed 15 characters")
+    .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .matches(/\d/, "Password must contain at least one number")
+    .matches(
+      /[@$!%*?&]/,
+      "Password must contain at least one special character (@$!%*?&)"
+    ),
   termsAndCondition: Yup.boolean()
     .oneOf([true], "You must accept the terms and conditions")
     .required("You must accept the terms and conditions"),
@@ -26,8 +32,15 @@ export const loginValidationSchema = Yup.object({
     .email("Invalid email address")
     .required("Email is required"),
   password: Yup.string()
-    .min(6, "Password must be at least 6 characters long")
-    .required("Password is required"),
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters")
+    .max(15, "Password must not exceed 15 characters")
+    .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .matches(/\d/, "Password must contain at least one number")
+    .matches(
+      /[@$!%*?&]/,
+      "Password must contain at least one special character (@$!%*?&)"
+    ),
 });
 
 export const forgetPasswordValidationSchema = Yup.object({
@@ -159,7 +172,7 @@ export const shopValidationSchema = Yup.object().shape({
     .max(30, "Category must be at most 30 characters")
     .required("Shop category is required"),
 
-    storeDescription: Yup.string()
+  storeDescription: Yup.string()
     .trim()
     .min(10, "Shop description must be at least 10 characters")
     .required("Shop description is required"),
@@ -181,28 +194,33 @@ export const shopValidationSchema = Yup.object().shape({
     .max(50, "City must be at most 50 characters")
     .required("City is required"),
 
-    storeLocation: Yup.object()
+  storeLocation: Yup.object()
     .required("Store location is required") // Ensure the whole object is required
-    .test("is-not-empty", "Store location is required", (value) => !!value && Object.keys(value).length > 0),
+    .test(
+      "is-not-empty",
+      "Store location is required",
+      (value) => !!value && Object.keys(value).length > 0
+    ),
 });
 
-
 export const discountValidationSchema = Yup.object().shape({
-  amount: Yup.number().positive().integer().required('Amount is required'),
-  currency: Yup.string().matches(/^(INR|USD|EUR|GBP)$/, 'Invalid currency').required('Currency is required'),
-  receipt: Yup.string().required('Receipt is required'),
-  paymentFor: Yup.string().oneOf(['discount', 'offer', 'deal'], 'Invalid payment type').required('PaymentFor is required'),
-  deal: Yup.string().required('Deal date is required'),
-  StartDate: Yup.date().required('Start date is required'),
-  EndDate: Yup
-    .date()
-    .required('End date is required')
-    .min(Yup.ref('StartDate'), 'End date must be after start date'),
-  categoryId: Yup.string().required('Category ID is required'),
-  subCategory: Yup.string().required('Sub-category name is required'),
-  textColor: Yup
-    .string()
-    .matches(/^rgb\(\d{1,3},\d{1,3},\d{1,3}\)$/, 'Invalid RGB color format')
-    .required('Text color is required'),
-  backgroundColor: Yup.string().required('Background color is required'),
+  amount: Yup.number().positive().integer().required("Amount is required"),
+  currency: Yup.string()
+    .matches(/^(INR|USD|EUR|GBP)$/, "Invalid currency")
+    .required("Currency is required"),
+  receipt: Yup.string().required("Receipt is required"),
+  paymentFor: Yup.string()
+    .oneOf(["discount", "offer", "deal"], "Invalid payment type")
+    .required("PaymentFor is required"),
+  deal: Yup.string().required("Deal date is required"),
+  StartDate: Yup.date().required("Start date is required"),
+  EndDate: Yup.date()
+    .required("End date is required")
+    .min(Yup.ref("StartDate"), "End date must be after start date"),
+  categoryId: Yup.string().required("Category ID is required"),
+  subCategory: Yup.string().required("Sub-category name is required"),
+  textColor: Yup.string()
+    .matches(/^rgb\(\d{1,3},\d{1,3},\d{1,3}\)$/, "Invalid RGB color format")
+    .required("Text color is required"),
+  backgroundColor: Yup.string().required("Background color is required"),
 });
