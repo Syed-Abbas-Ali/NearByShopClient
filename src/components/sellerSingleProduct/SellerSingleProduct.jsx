@@ -21,7 +21,7 @@ const SellerSingleProduct = ({ product, handleSingleProductClick }) => {
         </div>
         <div className="location">
           <img src={locationIcon} alt="location" />
-          <p>{product.shop_address.slice(0,15)}</p>
+          <p>{product.shop_address?.slice(0,15)}</p>
         </div>
       </div>
     </div>

@@ -87,6 +87,7 @@ const ChatDetails = ({
         roomId: activeRoomId ?? roomId,
         data: messageData,
       });
+      
       if (response?.data) {
         if (socketMethods) {
           socketMethods.emit("send_message", {
@@ -142,7 +143,7 @@ const ChatDetails = ({
             <img src={chatUser1} alt="" />
           </div>
           <div className="user-name">
-            <h3>Virat Kohli</h3>
+            <h3>{chatDetails?.data?.shopName}</h3>
             <p>Merchant</p>
           </div>
         </div>
