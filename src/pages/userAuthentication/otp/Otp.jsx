@@ -21,6 +21,42 @@ const Otp = ({ numberOfDigits = 6 }) => {
   const [verifyOtp] = useVerifyOtpApiMutation();
   const [resendOtp] = useResendOtpApiMutation();
 
+  const [timeLeft, setTimeLeft] = useState(120); 
+  const [isActive, setIsActive] = useState(false);
+  const timerRef = useRef(null);
+
+  useEffect(() => {
+    if (isActive && timeLeft > 0) {
+      timerRef.current = setInterval(() => {
+        setTimeLeft(prev => prev - 1);
+      }, 1000);
+    }
+
+    if (timeLeft === 0) {
+      clearInterval(timerRef.current);
+      setIsActive(false);
+    }
+
+    return () => clearInterval(timerRef.current);
+  }, [isActive, timeLeft]);
+
+  const handleStart = () => {
+    if (timeLeft > 0) setIsActive(true);
+  };
+
+  const handleReset = () => {
+    clearInterval(timerRef.current);
+    setIsActive(false);
+    setTimeLeft(120); 
+  };
+
+  const formatTime = (seconds) => {
+    const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const secs = String(seconds % 60).padStart(2, '0');
+    return `${mins}:${secs}`;
+  };
+
+
   function handleChange(value, index) {
     const newArr = [...otp];
     newArr[index] = value;
@@ -42,6 +78,7 @@ const Otp = ({ numberOfDigits = 6 }) => {
   }
 
   useEffect(() => {
+    handleStart()
     if (otp.join("") !== "" && otp.join("") !== correctOTP) {
       setOtpError("❌ Wrong OTP. Please check again.");
     } else {
@@ -78,6 +115,7 @@ const Otp = ({ numberOfDigits = 6 }) => {
       const response = await resendOtp();
       if (response?.data) {
         toast.success("Resent the OPT!");
+        handleReset()
       } else if (response?.error) {
         const errorMessage = response?.error.data.errors[0].message;
         toast.error(errorMessage);
@@ -113,7 +151,7 @@ const Otp = ({ numberOfDigits = 6 }) => {
           </div>
           <div className="timer-card">
             <div className="timer-text">
-              <p className="time">Time : 30s</p>
+              <p className="time">Time : {formatTime(timeLeft)}</p>
               <p className="resend" onClick={handleResend}>
                 Resend OTP
               </p>
