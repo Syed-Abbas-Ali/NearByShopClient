@@ -44,6 +44,7 @@ console.log(latitude)
 console.log(longitude)
   },[latitude])
   return (
+    <div style={{ display: data?.data?.items?.length > 0 ? "block" : "none" }}>
     <div className="product-section">
       {isLoading && <p className="loader">Loading...</p>}
       {!data?.data?.items?.length && singleCategory && (
@@ -79,6 +80,7 @@ console.log(longitude)
           onPageChange={handlePageChange}
         />
       )}
+    </div>
     </div>
   );
 };

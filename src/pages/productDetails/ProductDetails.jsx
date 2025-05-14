@@ -78,11 +78,11 @@ const ProductDetails = () => {
               <SearchComponent setSearch={setSearch} />
             </div>
             {isProductListLoading && <CircularLoader />}
-            <div className="all-products grid-card">
+            {/* <div className="all-products grid-card">
               {relatedProducts?.data?.items.map((item, index) => {
                 return <SingleProduct product={item} key={index} />;
               })}
-            </div>
+            </div> */}
             {relatedProducts?.data?.items?.length == 0 && (
               <div
                 style={{
