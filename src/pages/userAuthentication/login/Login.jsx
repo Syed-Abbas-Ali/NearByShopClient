@@ -9,6 +9,7 @@ import AppBanner from "../../../components/commonComponents/auth&VerificatonComp
 import FormHeader from "../../../components/commonComponents/auth&VerificatonComponents/formHeader/FormHeader";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../../../apis&state/state/authSlice";
+import toast from "react-hot-toast";
 
 const loginFields = [
   {
@@ -44,6 +45,13 @@ const Login = () => {
       const finalData = { ...loginData };
       const response = await userLogin(finalData);
 
+      console.log(response)
+      console.log(response?.error?.status==422)
+      if(response?.error?.status==422){
+        sessionStorage.setItem("user", JSON.stringify(response?.error?.data?.data));
+        toast.error(response?.error?.data?.message)
+        navigate("/otp");
+      }
       if (response?.data) {
         sessionStorage.setItem("user", JSON.stringify(response.data.data));
         dispatch(setLogin());

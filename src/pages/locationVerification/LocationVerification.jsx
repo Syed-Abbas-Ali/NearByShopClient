@@ -35,21 +35,21 @@ const locationFields = [
     name: "storeDescription",
     placeholderText: "Enter shop description",
   },
-  {
-    label: "Shop email",
-    name: "shopEmail",
-    placeholderText: "Enter shop email",
-  },
-  {
-    label: "State",
-    name: "state",
-    placeholderText: "Enter your state",
-  },
-  {
-    label: "City",
-    name: "city",
-    placeholderText: "Enter your city",
-  },
+  // {
+  //   label: "Shop email",
+  //   name: "shopEmail",
+  //   placeholderText: "Enter shop email",
+  // },
+  // {
+  //   label: "State",
+  //   name: "state",
+  //   placeholderText: "Enter your state",
+  // },
+  // {
+  //   label: "City",
+  //   name: "city",
+  //   placeholderText: "Enter your city",
+  // },
 ];
 
 const LocationVerification = () => {
@@ -74,9 +74,9 @@ const LocationVerification = () => {
     // xLink: "",
     // instagramLink: "",
     shopDescription: "",
-    shopEmail: "",
-    state: "",
-    city: "",
+    // shopEmail: "",
+    // state: "",
+    // city: "",
   });
 
   const handleInput = async (inputObject) => {

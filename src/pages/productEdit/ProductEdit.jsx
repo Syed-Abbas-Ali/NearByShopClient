@@ -152,7 +152,6 @@ const ProductEdit = () => {
     description: "",
     mainPrice: "",
     discountPrice: "",
-    stock: "",
     isAvailable: "",
   });
 
@@ -167,7 +166,6 @@ const ProductEdit = () => {
         discountPrice: product?.discountPrice,
         category: product?.category,
         subCategory: product?.subCategory,
-        stock: product?.stock,
         isAvailable: product?.isAvailable,
         productType: product?.productType,
         image: product?.image,
@@ -276,7 +274,7 @@ const ProductEdit = () => {
 
   const handleInput = async (e) => {
     const { value, name } = e.target;
-    let NumberRequire = ["stock", "discountPrice", "mainPrice"];
+    let NumberRequire = ["discountPrice", "mainPrice"];
     const finalValue =
       e.target.type === "checkbox"
         ? e.target.checked
@@ -307,13 +305,12 @@ const ProductEdit = () => {
   };
 
   const handleUpdate = async () => {
-    const { mainPrice, discountPrice, stock } = productDetails;
+    const { mainPrice, discountPrice } = productDetails;
     console.log(productDetails)
     let data = {
       ...productDetails,
       mainPrice: Number(mainPrice),
       discountPrice: Number(discountPrice),
-      stock: Number(stock),
       category: productDetails.category,
       subCategory: productDetails.subCategory,
     };
@@ -341,12 +338,11 @@ const ProductEdit = () => {
   };
 
   const handleSave = async () => {
-    const { mainPrice, discountPrice, stock } = productDetails;
+    const { mainPrice, discountPrice } = productDetails;
     let data = {
       ...productDetails,
       mainPrice: Number(mainPrice),
       discountPrice: Number(discountPrice),
-      stock: Number(stock),
       category: categoryData.categoryName,
       subCategory: categoryData.subCategory,
       ...productImageDetails,
@@ -368,7 +364,9 @@ const ProductEdit = () => {
             response?.data?.data?.messageData?.item_uid
           }`
         );
-        // handleBack(-1);
+        // handleBack(-1);else
+      }else{
+        toast.error(response?.error?.data?.errors[0]?.fieldName)
       }
     } catch (err) {
       if (err.inner) {
@@ -511,18 +509,6 @@ const ProductEdit = () => {
             </div>
           </div>
           <div className="products-stock">
-            <div className="stock-input-card">
-              <label>Available Stock</label>
-              <input
-                type="number"
-                placeholder="Enter available stock"
-                name="stock"
-                value={productDetails.stock}
-                onChange={handleInput}
-              />
-              {errors.stock && <p className="error">{errors.stock}</p>}
-              {errors.stock && <p className="error">{errors.stock}</p>}
-            </div>
             <div className="stock-check-box">
               <input
                 type="checkbox"
