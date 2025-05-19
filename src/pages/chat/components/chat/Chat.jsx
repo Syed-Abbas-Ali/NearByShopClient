@@ -17,128 +17,36 @@ import {
 } from "../../../../utils/authenticationToken";
 import { useSelector } from "react-redux";
 
-const users = [
-  {
-    id: 1,
-    name: "Virat Kohli",
-    lastMessage: "Okay Rahul",
-    time: "6:31 PM",
-    isSee: true,
-    imageUrl: chatUser1,
-  },
-  {
-    id: 2,
-    name: "MS Dhoni",
-    lastMessage: "See you tomorrow!",
-    time: "6:15 PM",
-    isSee: false,
-    imageUrl: chatUser1,
-  },
-  {
-    id: 3,
-    name: "Rohit Sharma",
-    lastMessage: "Let’s catch up soon.",
-    time: "5:45 PM",
-    isSee: true,
-    imageUrl: chatUser1,
-  },
-  {
-    id: 4,
-    name: "KL Rahul",
-    lastMessage: "Sounds good to me.",
-    time: "4:50 PM",
-    isSee: true,
-    imageUrl: chatUser1,
-  },
-  {
-    id: 5,
-    name: "Hardik Pandya",
-    lastMessage: "On my way!",
-    time: "4:15 PM",
-    isSee: false,
-    imageUrl: chatUser1,
-  },
-  {
-    id: 6,
-    name: "Rishabh Pant",
-    lastMessage: "Got it!",
-    time: "3:30 PM",
-    isSee: true,
-    imageUrl: chatUser1,
-  },
-  {
-    id: 7,
-    name: "Shikhar Dhawan",
-    lastMessage: "Let me know.",
-    time: "2:20 PM",
-    isSee: true,
-    imageUrl: chatUser1,
-  },
-  {
-    id: 8,
-    name: "Jasprit Bumrah",
-    lastMessage: "All set!",
-    time: "1:45 PM",
-    isSee: false,
-    imageUrl: chatUser1,
-  },
-  {
-    id: 9,
-    name: "Yuvraj Singh",
-    lastMessage: "Take care.",
-    time: "12:50 PM",
-    isSee: false,
-    imageUrl: chatUser1,
-  },
-  {
-    id: 10,
-    name: "Sourav Ganguly",
-    lastMessage: "Will call you back.",
-    time: "11:30 AM",
-    isSee: true,
-    imageUrl: chatUser1,
-  },
-  {
-    id: 11,
-    name: "Sachin Tendulkar",
-    lastMessage: "Great work!",
-    time: "10:15 AM",
-    isSee: true,
-    imageUrl: chatUser1,
-  },
-  {
-    id: 12,
-    name: "Ravindra Jadeja",
-    lastMessage: "See you at the match.",
-    time: "9:45 AM",
-    isSee: false,
-    imageUrl: chatUser1,
-  },
-  {
-    id: 13,
-    name: "Anil Kumble",
-    lastMessage: "Thanks!",
-    time: "8:20 AM",
-    isSee: true,
-    imageUrl: chatUser1,
-  },
-  {
-    id: 14,
-    name: "Zaheer Khan",
-    lastMessage: "Talk soon.",
-    time: "7:10 AM",
-    isSee: true,
-    imageUrl: chatUser1,
-  },
-  {
-    id: 15,
-    name: "Rahul Dravid",
-    lastMessage: "That’s perfect.",
-    time: "6:55 AM",
-    isSee: false,
-    imageUrl: chatUser1,
-  },
-];
+
+
+function formatCreatedAt(createdAt) {
+  const date = new Date(createdAt);
+  const now = new Date();
+
+  // Check if it's today
+  const isToday = date.toDateString() === now.toDateString();
+  if (isToday) {
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  // Get start of current week (Sunday) and end of week (Saturday)
+  const startOfWeek = new Date(now);
+  startOfWeek.setDate(now.getDate() - now.getDay()); // Sunday
+  startOfWeek.setHours(0, 0, 0, 0);
+
+  const endOfWeek = new Date(now);
+  endOfWeek.setDate(now.getDate() + (6 - now.getDay())); // Saturday
+  endOfWeek.setHours(23, 59, 59, 999);
+
+  // If it's within this week
+  if (date >= startOfWeek && date <= endOfWeek) {
+    return date.toLocaleDateString('en-US', { weekday: 'short' }); // "Mon", "Wed", etc.
+  }
+
+  // Otherwise, show full date
+  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`; // e.g., "1/2/2025"
+}
+
 
 const Chat = ({ activeRoomId, setActiveRoomId }) => {
   const { roomId } = useSelector((state) => state.chatState);
@@ -237,16 +145,17 @@ const Chat = ({ activeRoomId, setActiveRoomId }) => {
                               ? user?.shopName
                               : user?.customerName}
                           </h3>
-                          <p>{users[index].time}</p>
+                         
+                          <p>{user?.lastMessage?.time}</p>
                         </div>
                         <p className="tick-message">
                           <img
                             src={
-                              users[index].isSee ? chatBlueTick : chatGreyTick
+                              user?.lastMessage?.isRead ? chatBlueTick : chatGreyTick
                             }
                             alt="tick"
                           />
-                          {users[index].lastMessage}
+                          {user?.lastMessage?.message}
                         </p>
                       </div>
                     </div>

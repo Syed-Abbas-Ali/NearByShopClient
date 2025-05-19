@@ -235,7 +235,7 @@ const SellerProfileEdit = () => {
               your website)
             </p>
           </div>
-          <div className="video-location-section">
+          {/* <div className="video-location-section">
             <div className="about-my-business">
               <h3>About my Business</h3>
               <div className="video-div">
@@ -249,7 +249,7 @@ const SellerProfileEdit = () => {
               </div>
               <div className="location-default-image"></div>
             </div>
-          </div>
+          </div> */}
           <div className="fields-container">
             {shopDetailsFields.map((item, index) => {
               return (
@@ -273,10 +273,10 @@ const SellerProfileEdit = () => {
           </div>
         </div>
         <div className="desktop-video-location-section">
-          <div className="about-my-business">
+          {/* <div className="about-my-business">
             <h3>About my Business</h3>
             <div className="video-div"></div>
-          </div>
+          </div> */}
           <div className="select-location">
             <div className="heading">
               <img src={locationImage} alt="" />

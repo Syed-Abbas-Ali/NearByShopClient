@@ -44,6 +44,7 @@ const SingleProduct = ({ product }) => {
   const handleNavigate = () => {
     navigate(`/product-details/${product.item_uid}`);
   };
+  console.log(product.item_uid)
 
   const handleWishlist = async (e) => {
     e.stopPropagation();
@@ -87,8 +88,9 @@ const SingleProduct = ({ product }) => {
 
   return (
     <div className="single-product" onClick={handleNavigate}>
-      {showSharePopup && <SharePopup setIsShare={setSharePopup} />}
-      <button className="trending-btn">Trending</button>
+      {showSharePopup && <SharePopup setIsShare={setSharePopup} productId={product.item_uid}  />}
+      {/* <button className="trending-btn">Trending</button> */}
+      <div className="product-distance"><p className="distance-div">{"Radius"+ " "+ (product?.distance / 1000).toFixed(1)}km</p></div>
       <div className="default-product">
         {product.image && <img src={product.image} className="product-image" />}
         <div className="action-btns">
@@ -125,7 +127,7 @@ const SingleProduct = ({ product }) => {
         </div>
         <div className="location">
           <img src={locationIcon} alt="location" />
-          <p>{product.shop_address?.slice(0,20)+"..."}</p>
+          <p>{address}</p>
         </div>
       </div>
     </div>

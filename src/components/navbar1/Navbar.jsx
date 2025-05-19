@@ -233,7 +233,7 @@ const Navbar = () => {
             )}
             {userTypeValue() === "USER" && token ?  (
   <div>
-    <button onClick={() => navigate("/login")} >Login</button>
+    {/* <button onClick={() => navigate("/login")} >Login</button> */}
   </div>
 ):(
   <div className="profile-image" onClick={() => navigate("/profile")}>

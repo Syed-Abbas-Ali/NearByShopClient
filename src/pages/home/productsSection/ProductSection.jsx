@@ -50,7 +50,7 @@ console.log(longitude)
       {!data?.data?.items?.length && singleCategory && (
         <p className="loader">no data</p>
       )}
-      {!data?.data?.items?.length && <p></p>}
+      {/* {!data?.data?.items?.length && <p></p>} */}
 
       {data?.data?.items?.length > 0 && (
         <>
@@ -60,7 +60,7 @@ console.log(longitude)
               <img
                 src={forwardIcon}
                 alt="Forward"
-                onClick={() => setCurrentPage(currentPage + 1)}
+                // onClick={() => setCurrentPage(currentPage + 1)}
               />
             )}
           </div>

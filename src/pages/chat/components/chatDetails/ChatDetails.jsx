@@ -5,6 +5,8 @@ import messageSendIcon from "../../../../assets/messageSendIcon.svg";
 import emojiPickerImage from "../../../../assets/emojiPickerImage.svg";
 import EmojiPicker from "emoji-picker-react";
 import chatUser1 from "../../../../assets/chatUser1.svg";
+import chatBlueTick from "../../../../assets/chatBlueTick.svg";
+import chatGreyTick from "../../../../assets/chatGreyTick.svg";
 import {
   useCreateRoomMutation,
   useGetSingleChatQuery,
@@ -127,6 +129,31 @@ const ChatDetails = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+  //this for date and time 
+  const formatCreatedAt = (createdAt) => {
+  const date = new Date(createdAt);
+  const now = new Date();
+
+  const isToday = date.toDateString() === now.toDateString();
+  if (isToday) {
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  const startOfWeek = new Date(now);
+  startOfWeek.setDate(now.getDate() - now.getDay());
+  startOfWeek.setHours(0, 0, 0, 0);
+
+  const endOfWeek = new Date(now);
+  endOfWeek.setDate(now.getDate() + (6 - now.getDay()));
+  endOfWeek.setHours(23, 59, 59, 999);
+
+  if (date >= startOfWeek && date <= endOfWeek) {
+    return date.toLocaleDateString('en-US', { weekday: 'short' }); // e.g., Mon, Wed
+  }
+
+  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+};
+
 
   return (
     <div
@@ -155,9 +182,19 @@ const ChatDetails = ({
             className={`message ${
               msg.senderId === decodedToken.userId ? "right" : "left"
             }`}
-          >
+          > 
+          {console.log(msg.senderId === decodedToken.userId)}
             <p className="message-content">{msg.message}</p>
-            <div className="message-timestamp">10:00 AM</div>
+            <div className="message-timestamp">
+               <img
+                            src={
+                              msg?.isRead ? chatBlueTick : chatGreyTick
+                            }
+                            alt="tick"
+                          />
+              
+              <span>{formatCreatedAt(msg.createdAt)}</span></div>
+
           </div>
         ))}
       </div>
