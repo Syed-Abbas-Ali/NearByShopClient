@@ -2,6 +2,7 @@
 
 .chat-bg-card-div {
   background-color: rgba(0, 0, 0, 0.1);
+  min-height: 100vh;
   .chat-card-container {
     max-width: 1500px;
     min-height: 60vh;
@@ -18,6 +19,7 @@
     .chat-card {
       padding: 1rem;
       background-color: $white-color;
+     
       &::-webkit-scrollbar {
         display: none;
       }

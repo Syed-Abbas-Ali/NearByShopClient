@@ -178,6 +178,7 @@ input::placeholder{
 .app-container {
   padding: 0px;
   background-color: $white-color;
+  min-height: 100vh;
   .chatbot-icon {
     position: fixed;
     bottom: 70px;
