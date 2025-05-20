@@ -1,5 +1,19 @@
 @import "../../app.scss";
 
+ .product-distance{
+    width: 50%;
+   background: linear-gradient(to right, #DCDCDB, #BBBBB9);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   border-radius: 0px 5px 5px 0px ;
+    .distance-div{
+     font-size: 10px;
+     font-weight: 500;
+     color: white
+    }
+  }
+
 .single-product {
   @include flex-center(column, "", "");
   gap: 8px;
@@ -11,6 +25,7 @@
   max-width: 190px;
   cursor: pointer;
   position: relative;
+ 
   .trending-btn {
     position: absolute;
     backdrop-filter: blur(10px);

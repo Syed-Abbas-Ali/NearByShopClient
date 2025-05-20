@@ -158,12 +158,12 @@ const Profile = () => {
             </div>
           </div>
           <div className="video-links-card">
-            <div className="about-video">
+            {/* <div className="about-video">
               <h3>About my Business</h3>
               <div className="video-default-div">
                 <BusinessDetailsVideo />
               </div>
-            </div>
+            </div> */}
             <div className="links">
               {sellerAllShops?.data[0]?.shop_address && (
                 <div>

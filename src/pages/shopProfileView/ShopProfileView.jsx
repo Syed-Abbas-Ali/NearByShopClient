@@ -186,14 +186,14 @@ const ShopProfileView = () => {
                 <h1>
                   {singleShopDetails?.data?.shopDetails?.shop_name || "-----"}
                 </h1>
-                <div className="ratings-card">
+                {/* <div className="ratings-card">
                   <div className="stars-card">
                     <ShowRating rating={singleShopDetails?.data?.rating ?? 0} />
                   </div>
                   <button onClick={() => setIsShowPopup(true)}>
                     Add Rating
                   </button>
-                </div>
+                </div> */}
                 <h3>
                   {singleShopDetails?.data?.shopDetails?.first_name}{" "}
                   {singleShopDetails?.data?.shopDetails?.last_name}
@@ -204,7 +204,7 @@ const ShopProfileView = () => {
                     onClick={() => handleNavigate("/chat")}
                   >
                     <img src={phoneCallIcon} alt="" />
-                    <p>Call</p>
+                    <a href={`tel:+91${singleShopDetails?.data?.shopDetails?.phone}`}>{singleShopDetails?.data?.shopDetails?.phone}</a>
                   </div>
                   {roomExistLoading ? (
                     <button>
@@ -222,7 +222,7 @@ const ShopProfileView = () => {
                     </button>
                   )}
                 </div>
-                <div className="follow-card">
+                {/* <div className="follow-card">
                   <button
                     onClick={handleFollow}
                     className={`follow-btn ${
@@ -240,11 +240,11 @@ const ShopProfileView = () => {
                       <span className="text">(Followers)</span>
                     </p>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           )}
-          <div className="video-section">
+          {/* <div className="video-section">
             <h3>About My Business</h3>
             <BusinessDetailsVideo />
             <div className="social-media-links">
@@ -256,7 +256,7 @@ const ShopProfileView = () => {
                 <img src={youtubeIcon} alt="" /> <span>YouTube Channel</span>
               </p>
             </div>
-          </div>
+          </div> */}
           <div className="all-products-card">
             <div>
               <SearchComponent setSearch={setSearch} />
