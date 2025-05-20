@@ -38,10 +38,13 @@ const SingleProductDetails = ({
     (state) => state.authState.isAuthenticated
   );
 
-  const { data: roomExistData, isLoading: roomExistLoading,refetch } =
-    useCheckRoomExistQuery(shopIdValue, {
-      skip: !shopIdValue,
-    });
+  const {
+    data: roomExistData,
+    isLoading: roomExistLoading,
+    refetch,
+  } = useCheckRoomExistQuery(shopIdValue, {
+    skip: !shopIdValue,
+  });
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [addToWishlist] = useAddToWishlistMutation();
@@ -69,8 +72,10 @@ const SingleProductDetails = ({
       return;
     }
     try {
+      console.log(roomId);
       if (roomId) {
         dispatch(setRoomChatAndActive(roomId));
+        navigate("/chat");
       } else {
         const roomDetails = {
           sellerId: shopData?.data?.shopDetails?.shop_owner_id,
@@ -84,7 +89,8 @@ const SingleProductDetails = ({
         const response = await createChatRoom(roomDetails);
         if (response?.data) {
           dispatch(setRoomChatAndActive(response?.data?.data?.roomId));
-          refetch()
+          refetch();
+          navigate("/chat");
           toast.success("Chat created successfully!");
         }
       }
@@ -206,7 +212,10 @@ const SingleProductDetails = ({
                 <img src={userProfile} />
                 <span>Seller Profile</span>
               </button>
-              <button onClick={() => dispatch(setRoomChatAndActive())}>
+              {/* <button onClick={() => dispatch(setRoomChatAndActive())}> */}
+              <button
+                onClick={() => handleNavigate(roomExistData?.data?.roomId)}
+              >
                 <img src={chatIcon} />
                 <span>Chat</span>
               </button>

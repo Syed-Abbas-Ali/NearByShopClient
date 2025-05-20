@@ -96,7 +96,7 @@ const protectionPages = [
   { path: "/all-shops", element: <FullShopsPage /> },
   { path: "/product-edit/:shopUid", element: <ProductEditPage /> },
   { path: "/seller-profile-edit/:shopUid", element: <SellerProfileEditPage /> },
-  { path: "/seller-plan-purchase/:shopUid", element: <PlanPurchasePage /> },
+  { path: "/seller-plan-purchase/:shopUid?", element: <PlanPurchasePage /> },
   { path: "/profile", element: <UserProfileDetailsPage /> },
   { path: "/notifications", element: <NotificationsPage /> },
   { path: "/chat", element: <ChatComponent /> },
