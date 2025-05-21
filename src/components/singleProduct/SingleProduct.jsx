@@ -120,14 +120,14 @@ const SingleProduct = ({ product }) => {
           <h2>₹{product.price}</h2>
           <p className="actual-price">₹{product.mainPrice}</p>
           <p className="offer-text">
-            {product.discountPercentage &&
-              product.discountPercentage.toFixed(0)}
+            {product?.discountPercentage &&
+              product?.discountPercentage?.toFixed(0)}
             % OFF
           </p>
         </div>
         <div className="location">
           <img src={locationIcon} alt="location" />
-          <p>{address}</p>
+          <p>{product?.shop_address?.slice(0,20)+".."}</p>
         </div>
       </div>
     </div>

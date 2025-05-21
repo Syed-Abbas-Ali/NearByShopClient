@@ -108,7 +108,7 @@ const Offer = () => {
               selected={selectedSubCtegories}
             />
           )}
-          <button onClick={openPopup}>filter</button>
+      
           {!selectedCategories &&
             allCategories?.map((item) => {
               return <OfferItemCard categoryList={item?.name} />;

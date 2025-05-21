@@ -578,7 +578,7 @@ function SearchControl() {
         top: "10px",
         left: "10px",
         zIndex: 1000,
-        width: "300px",
+        width: "240px",
         background: "white",
         padding: "10px",
         borderRadius: "5px",

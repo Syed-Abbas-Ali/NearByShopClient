@@ -139,10 +139,10 @@ const Login = () => {
             </p>
             <div className="action-card">
               <button onClick={handleLogin}>Login</button>
-              <div className="or-card">- Or -</div>
+              {/* <div className="or-card">- Or -</div>
               <button className="google-signup">
                 <img src={googleIcon} alt="google" /> Login with Google
-              </button>
+              </button> */}
             </div>
             <div className="account-question">
               <p>If you not have an account?</p>

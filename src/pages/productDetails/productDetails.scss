@@ -1,9 +1,10 @@
 @import "../../app.scss";
 
 .product-details-container {
-  max-width: 1450px;
+ 
   margin: auto;
-  margin-top: 70px;
+  margin-bottom: 60px;
+  
   padding-top: 20px;
   @include flex-center(column, "", "");
   &::-webkit-scrollbar{

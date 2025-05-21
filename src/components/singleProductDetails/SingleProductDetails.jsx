@@ -50,6 +50,9 @@ const SingleProductDetails = ({
   const [createChatRoom] = useCreateRoomMutation();
   const { data } = useGetAllWishlistProductsIdsApiQuery();
   const [showSharePopup, setShowSharePopup] = useState(false);
+  const [showMore, setShowMore] = useState(false);
+  
+ 
   const isProductInWishlist = data?.data?.includes(
     singleProductDetails?.itemUid || undefined
   );
@@ -128,141 +131,89 @@ const SingleProductDetails = ({
   const handleShare = () => {
     setShowSharePopup((prev) => !prev);
   };
+   const description = singleProductDetails?.description || "";
+     const toggleShow = () => {
+    setShowMore((prev) => !prev);
+  };
+
+  const shouldTruncate = description.length > 100;
+  const displayedText = showMore ? description : description.slice(0, 100);
 
   return (
     <>
       {showSharePopup && <SharePopup setIsShare={setShowSharePopup} />}
-      <div className="single-product-details-mobile">
-        <div className="product-images-container">
-          <div className="product-image-card">
-            {/* <img src={singleProductDetails?.image} alt="" /> */}
-            {previewImagesList && (
-              <ImagesPreviewSwiper previewImagesList={previewImagesList} />
-            )}
-            <div className="action-btns">
-              <div>
-                <img src={checkIcon} alt="tick-icon" />
-              </div>
-              <div>
-                <img
-                  src={isProductInWishlist ? wishlistActiveIcon : heartIcon}
-                  alt="tick-icon"
-                  onClick={
-                    isProductInWishlist
-                      ? handleDeleteWishlistProduct
-                      : handleWishlist
-                  }
-                />
-              </div>
-              <div>
-                <img src={shareIcon} alt="tick-icon" onClick={handleShare} />
-              </div>
-            </div>
-          </div>
-          <div className="sub-images-card">
-            {singleProductDetails?.previweImages?.length <= 0
-              ? [1, 2, 3, 4].map((item, index) => {
-                  return <div className="image-card" key={index}></div>;
-                })
-              : singleProductDetails?.previweImages.map((item, index) => {
-                  return (
-                    <div className="image-card" key={index}>
-                      <img src={item.fileUrl} alt="Product preview" />
-                    </div>
-                  );
-                })}
-          </div>
-        </div>
-        <div className="show-product-details-card">
-          <div className="div-one">
-            <h3 className="offer-price">
-              ₹{singleProductDetails?.price || 950}/-
-            </h3>
-            <p className="real-price">
-              ₹{singleProductDetails?.mainPrice || 1000}/-
-            </p>
-            <p className="offer-percentage">
-              {singleProductDetails?.discountPercentage}% off
-            </p>
-          </div>
-          <div className="div-two">
-            <h4>{singleProductDetails?.title || "Summer Caps"}</h4>
-            <p>
-              {singleProductDetails?.description ||
-                "It seems like there's a syntax issue in your CSS background-image definition."}
-            </p>
-            {/* <div className="colors-div">
-            <p>Available Colors</p>
-            <ul>
-              {["#FF5050", "#7B76FF", "#00C8FF", "#000000", "#F2F2F2"].map(
-                (item, index) => (
-                  <li key={index} style={{ background: item }}></li>
-                )
-              )}
-            </ul>
-          </div> */}
-            <div className="extra-details">
-              <button onClick={handleShopProfile}>
-                <img src={userProfile} />
-                <span>Seller Profile</span>
-              </button>
-              <button onClick={() => dispatch(setRoomChatAndActive())}>
-                <img src={chatIcon} />
-                <span>Chat</span>
-              </button>
-            </div>
-            <div className="button-card">
-              <button>
-                <img src={callerIcon} alt="caller" />
-                Contact Seller
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+   
       <div className="single-product-details-desktop">
         <div className="images-div">
-          {/* <div className="product-images-container"> */}
-          <div className="product-image-card">
-            <img src={singleProductDetails?.image} alt="" />
-            <div className="action-btns">
-              <div>
-                <img src={checkIcon} alt="tick-icon" />
-              </div>
-              <div>
-                <img src={heartIcon} alt="tick-icon" onClick={handleWishlist} />
-              </div>
-              <div>
-                <img src={shareIcon} alt="tick-icon" onClick={handleShare} />
-              </div>
-            </div>
-          </div>
-          <div className="sub-images-card">
-            {singleProductDetails?.previweImages?.length <= 0
-              ? [1, 2, 3, 4].map((item, index) => {
-                  return <div className="image-card" key={index}></div>;
-                })
-              : singleProductDetails?.previweImages.map((item, index) => {
-                  return (
-                    <div className="image-card" key={index}>
-                      <img src={item.fileUrl} alt="Product preview" />
-                    </div>
-                  );
-                })}
-          </div>
-          {/* </div> */}
-        </div>
+  <div className="product-image-card">
+    <img src={previewImagesList[0]} alt="Main product" />
+    <div className="action-btns">
+      <div>
+        <img src={checkIcon} alt="tick-icon" />
+      </div>
+      <div>
+        <img
+          src={isProductInWishlist ? wishlistActiveIcon : heartIcon}
+          alt="wishlist-icon"
+          onClick={
+            isProductInWishlist
+              ? handleDeleteWishlistProduct
+              : handleWishlist
+          }
+        />
+      </div>
+      <div>
+        <img src={shareIcon} alt="share-icon" onClick={handleShare} />
+      </div>
+    </div>
+  </div>
+
+  <div className="sub-images-card">
+    {previewImagesList.slice(1).map((imageUrl, index) => (
+      <div
+        className="image-card"
+        key={index}
+        onClick={() => {
+          const updatedImages = [...previewImagesList];
+          // Swap main image with clicked sub image
+          [updatedImages[0], updatedImages[index + 1]] = [
+            updatedImages[index + 1],
+            updatedImages[0],
+          ];
+          setPreviewImagesList(updatedImages);
+        }}
+      >
+        <img src={imageUrl} alt={`Sub preview ${index + 1}`} />
+      </div>
+    ))}
+  </div>
+</div>
+
         <div className="content-div">
           <div className="text-content">
             <div className="section-one">
               <h1>{singleProductDetails?.title}</h1>
-              <p className="product-description">
-                {singleProductDetails?.description}
-              </p>
+             <p className="product-description">
+      {displayedText}
+      {shouldTruncate && (
+        <>
+          {!showMore && "... "}
+          <span
+            onClick={toggleShow}
+            style={{ color: "blue", cursor: "pointer" }}
+          >
+            {showMore ? "Show Less" : "Show More"}
+          </span>
+        </>
+      )}
+    </p>
             </div>
-            <h2>
-              From ₹<span>{singleProductDetails?.mainPrice}</span>
-            </h2>
+
+            <div className="price-container">
+              <span className="price">₹{singleProductDetails?.price.toFixed(0)}/-</span>
+               <span className="main-price">₹{singleProductDetails?.mainPrice.toFixed(0)}/-</span>
+                <span className="main-discount">{singleProductDetails?.discountPercentage?.toFixed(0)}%off</span>
+            </div>
           </div>
           <div className="extra-details">
             <button>
