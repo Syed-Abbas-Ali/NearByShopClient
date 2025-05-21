@@ -1,9 +1,10 @@
 @import "../../app.scss";
 
 .product-details-container {
-  max-width: 1450px;
+ 
   margin: auto;
-  margin-top: 70px;
+  margin-bottom: 60px;
+  
   padding-top: 20px;
   @include flex-center(column, "", "");
   &::-webkit-scrollbar{
@@ -38,7 +39,14 @@
       @include flex-center(column, "", "");
       gap: 2rem;
       .all-products {
-        padding: 0px;
+        display: flex;
+    row-gap: 18px;
+    column-gap: 10px;
+      flex-wrap: wrap;
+      @media (max-width:420px) {
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+      }
       }
       .sub-categories-list{
         margin: 1rem 0px 1.3rem 0px;

@@ -270,7 +270,8 @@
     padding: 1rem 1rem 0px 1rem;
   }
   .all-products-container {
-    padding: 24px 0rem;
+    padding-top: 24px;
+    margin-bottom: 60px;
     @include flex-center(column, "", "");
     gap: 18px;
     .products-header {
@@ -303,7 +304,16 @@
       }
     }
     .all-products {
-      padding: 0rem 1rem;
+      padding: 0rem 10px;
+        display: flex;
+        row-gap: 10px;
+        column-gap: 10px;
+        flex-wrap: wrap;
+        @media (max-width:424px) {
+          display: grid;
+           grid-template-columns: repeat(2, 1fr);
+        }
+     
     }
   }
 }

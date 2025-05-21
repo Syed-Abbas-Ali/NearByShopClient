@@ -17,7 +17,7 @@ const SellerSingleProduct = ({ product, handleSingleProductClick }) => {
         <div className="prices-and-offers">
           <h2>₹{product.price}</h2>
           <p className="actual-price">₹{product.mainPrice}</p>
-          <p className="offer-text">{product.discountPercentage.toFixed(2)} Off</p>
+          <p className="offer-text">{product.discountPercentage.toFixed(0)} %Off</p>
         </div>
         <div className="location">
           <img src={locationIcon} alt="location" />

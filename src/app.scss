@@ -78,7 +78,7 @@ body::-webkit-scrollbar {
 
 .grid-card {
   display: flex;
-  // grid-template-columns: repeat(2, 1fr)
+
   row-gap: 18px;
   column-gap: 10px;
 
@@ -179,6 +179,7 @@ input::placeholder{
   padding: 0px;
   background-color: $white-color;
   min-height: 100vh;
+
   .chatbot-icon {
     position: fixed;
     bottom: 70px;

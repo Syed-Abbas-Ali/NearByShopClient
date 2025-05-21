@@ -19,6 +19,7 @@
     .chat-card {
       padding: 1rem;
       background-color: $white-color;
+      height: 100vh;
      
       &::-webkit-scrollbar {
         display: none;

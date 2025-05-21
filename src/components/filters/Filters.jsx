@@ -63,13 +63,13 @@ const Filters = () => {
           onClick={handleCancel}
         />
         <div className="filters-content">
-          <h3>Location</h3>
+          {/* <h3>Location</h3> */}
           {/* <div className="search-div">
             <img src={searchImage} alt="" />
             <Selector />
           </div> */}
           
-          <div className="check-box-div">
+          {/* <div className="check-box-div">
             {verifiedArray.map((item, index) => (
               <div key={index}>
                 <input
@@ -82,9 +82,11 @@ const Filters = () => {
                 <label>{item.name}</label>
               </div>
             ))}
-          </div>
+          </div> */}
 
-          <div className="offers-selection">
+
+             {/* dont delete this */}
+          {/* <div className="offers-selection">
             <h3>Shop Rating</h3>
             <div className="offer-selection-card">
               {ratingsList.map((item, index) => (
@@ -102,7 +104,7 @@ const Filters = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
 
           <div className="offers-selection">
             <h3>Discount</h3>
@@ -129,8 +131,9 @@ const Filters = () => {
             <div className="price-range-slider">
               <input
                 type="range"
-                min={5000}
+                min={500}
                 max={10000}
+                defaultValue={5000}
                 name="radius"
                 value={filterData.radius}
                 onChange={handleChange}

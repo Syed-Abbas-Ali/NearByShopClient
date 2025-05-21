@@ -6,11 +6,11 @@
     margin: auto;
     padding: 0px;
     overflow-y: scroll;
-    max-height: calc(100vh - 140px);
+    // max-height: calc(100vh - 140px);
     margin-bottom: 30px;
     @media (min-width: 768px) {
-      max-height: calc(100vh - 70px);
-      margin-bottom: 0px;
+      // max-height: calc(100vh - 70px);
+      margin-bottom: 80px;
     }
   }
   .margin-top-yes {

@@ -73,7 +73,7 @@
     gap: 16px;
     margin-bottom: 70px;
     width: 100%;
-    height: calc(100vh - 140px);
+  
     @media (min-width: 768px) {
       margin-top: 0px;
       max-height: calc(100vh - 226px);
@@ -89,6 +89,7 @@
         font-size: 16px;
         font-weight: 400;
         line-height: 18.75px;
+        word-wrap: break-word;
       }
       .message-timestamp {
         text-align: end;
@@ -112,6 +113,7 @@
 
       .message-content {
         color: #0d1217;
+         word-wrap: break-word;
       }
       .message-timestamp {
         color: #0d1217;
@@ -133,6 +135,7 @@
       min-width: 20%;
       .message-content {
         color: $white-color;
+         word-wrap: break-word;
       }
       .message-timestamp {
         color: $white-color;
