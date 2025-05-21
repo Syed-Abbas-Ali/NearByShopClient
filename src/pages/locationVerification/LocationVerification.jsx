@@ -13,6 +13,8 @@ import {
   locationDetailsValidationSchema,
   shopValidationSchema,
 } from "../../utils/validations";
+import { useGetAllCategoriesAndSubCategoriesQuery } from "../../apis&state/apis/masterDataApis";
+import Selector from "../../components/selector/Selector";
 
 const locationFields = [
   {
@@ -35,21 +37,21 @@ const locationFields = [
     name: "storeDescription",
     placeholderText: "Enter shop description",
   },
-  {
-    label: "Shop email",
-    name: "shopEmail",
-    placeholderText: "Enter shop email",
-  },
-  {
-    label: "State",
-    name: "state",
-    placeholderText: "Enter your state",
-  },
-  {
-    label: "City",
-    name: "city",
-    placeholderText: "Enter your city",
-  },
+  // {
+  //   label: "Shop email",
+  //   name: "shopEmail",
+  //   placeholderText: "Enter shop email",
+  // },
+  // {
+  //   label: "State",
+  //   name: "state",
+  //   placeholderText: "Enter your state",
+  // },
+  // {
+  //   label: "City",
+  //   name: "city",
+  //   placeholderText: "Enter your city",
+  // },
 ];
 
 const LocationVerification = () => {
@@ -61,6 +63,7 @@ const LocationVerification = () => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [showMap, setShowMap] = useState(false);
+  const [categoriesList, setCategoriesList] = useState([]);
 
   const [createNewShop] = useCreateShopMutation();
 
@@ -74,11 +77,29 @@ const LocationVerification = () => {
     // xLink: "",
     // instagramLink: "",
     shopDescription: "",
-    shopEmail: "",
-    state: "",
-    city: "",
+    // shopEmail: "",
+    // state: "",
+    // city: "",
   });
 
+    const { data: categories } = useGetAllCategoriesAndSubCategoriesQuery();
+  
+      useEffect(() => {
+      if (categories?.data?.length > 0) {
+        const allCategoriesList = categories?.data?.map((category) => ({
+          value: category.categoryId,
+          label: category.name,
+        }));
+        setCategoriesList(allCategoriesList);
+      }
+    }, [categories]);
+
+      const handleCategory = (data) => {
+    const { label, value } = data;
+    setShopDetails((prev) => {
+      return { ...prev, category: label };
+    });
+  };
   const handleInput = async (inputObject) => {
     const { name, value } = inputObject.target;
     setShopDetails((prevDetails) => ({
@@ -135,7 +156,6 @@ const LocationVerification = () => {
       storeLocation: shopDetails?.storeLocation,
       storeAddress: shopDetails?.storeAddress,
     };
-    console.log(shopFinalData)
     try {
       await shopValidationSchema.validate(shopFinalData, { abortEarly: false });
       const response = await createNewShop(shopFinalData);
@@ -147,13 +167,11 @@ const LocationVerification = () => {
         toast.error("Something went wrong!");
       }
     } catch (err) {
-      console.log(err);
       if (err.inner) {
         const validationErrors = {};
         err.inner.forEach((error) => {
           validationErrors[error.path] = error.message;
         });
-        console.log(validationErrors);
         setErrors(validationErrors); // Set validation errors to state
       }
     }
@@ -202,11 +220,17 @@ const LocationVerification = () => {
             {locationFields.map((item, index) => (
               <div key={index} className="input-single-card">
                 <label>{item.label}</label>
-                <Input
+                {
+                  item?.name=="category"? <Selector
+                onSelectDropdown={handleCategory}
+                dropdownList={categoriesList}
+                placeholderText={"Select Category"}
+              />:<Input
                   initialData={item}
                   handleInput={handleInput}
                   value={shopDetails[item.name]}
                 />
+                }
                 {item.name in errors && (
                   <p className="form-error-message">{errors[item.name]}</p>
                 )}

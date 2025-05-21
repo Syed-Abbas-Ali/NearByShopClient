@@ -1,15 +1,14 @@
-import React, { useState } from "react";
-import { useShopVerificationRequestMutation } from "../../apis&state/apis/shopApiSlice";
+import { useState } from "react";
 import toast from "react-hot-toast";
-import ActiveDots from "../../components/activeDots/ActiveDots";
-import Input from "../../components/input/Input";
-import FileUploadOne from "../../components/fileUploadOne/FileUploadOne";
-import FormHeader from "../../components/commonComponents/auth&VerificatonComponents/formHeader/FormHeader";
 import { useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import "./shopVerification.scss";
-import { shopVerificationValidationSchema } from "../../utils/validations";
+import { useShopVerificationRequestMutation } from "../../apis&state/apis/shopApiSlice";
 import backIcon from "../../assets/arrowLeftLarge.svg";
+import ActiveDots from "../../components/activeDots/ActiveDots";
+import FormHeader from "../../components/commonComponents/auth&VerificatonComponents/formHeader/FormHeader";
+import FileUploadOne from "../../components/fileUploadOne/FileUploadOne";
+import Input from "../../components/input/Input";
+import { shopVerificationValidationSchema } from "../../utils/validations";
+import "./shopVerification.scss";
 
 const aadharVerificationFields = [
   {
@@ -49,9 +48,6 @@ const ShopVerification = () => {
 
   const handleSubmitButton = async () => {
     try {
-      // await shopVerificationValidationSchema.validate(aadharDetails, {
-      //   abortEarly: false,
-      // });
       const { aadharNumber, gstNumber, aadharPic, electricityBillPic } =
         aadharDetails;
       const finalVerificationDetails = {

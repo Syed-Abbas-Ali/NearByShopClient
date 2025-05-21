@@ -141,7 +141,7 @@ const Chat = ({ activeRoomId, setActiveRoomId }) => {
                       <div className="user-name">
                         <div className="time">
                           <h3>
-                            {userTypeValue() === "USER"
+                            {userTypeValue() === "SELLER"
                               ? user?.shopName
                               : user?.customerName}
                           </h3>

@@ -143,11 +143,11 @@ export const productValidationSchema = Yup.object().shape({
   discountPrice: Yup.number()
     .typeError("Discount price must be a number")
     .min(0, "Discount price must be at least 0"),
-  stock: Yup.number()
-    .typeError("Stock must be a number")
-    .integer("Stock must be an integer")
-    .min(0, "Stock cannot be negative")
-    .required("Stock is required"),
+  // stock: Yup.number()
+  //   .typeError("Stock must be a number")
+  //   .integer("Stock must be an integer")
+  //   .min(0, "Stock cannot be negative")
+  //   .required("Stock is required"),
   isAvailable: Yup.boolean(),
   category: Yup.string().required("Category is required"),
   subCategory: Yup.string().required("Subcategory is required"),
@@ -177,22 +177,22 @@ export const shopValidationSchema = Yup.object().shape({
     .min(10, "Shop description must be at least 10 characters")
     .required("Shop description is required"),
 
-  email: Yup.string()
-    .trim()
-    .email("Invalid email format")
-    .required("Shop email is required"),
+  // email: Yup.string()
+  //   .trim()
+  //   .email("Invalid email format")
+  //   .required("Shop email is required"),
 
-  state: Yup.string()
-    .trim()
-    .min(2, "State must be at least 2 characters")
-    .max(50, "State must be at most 50 characters")
-    .required("State is required"),
+  // state: Yup.string()
+  //   .trim()
+  //   .min(2, "State must be at least 2 characters")
+  //   .max(50, "State must be at most 50 characters")
+  //   .required("State is required"),
 
-  city: Yup.string()
-    .trim()
-    .min(2, "City must be at least 2 characters")
-    .max(50, "City must be at most 50 characters")
-    .required("City is required"),
+  // city: Yup.string()
+  //   .trim()
+  //   .min(2, "City must be at least 2 characters")
+  //   .max(50, "City must be at most 50 characters")
+  //   .required("City is required"),
 
   storeLocation: Yup.object()
     .required("Store location is required") // Ensure the whole object is required

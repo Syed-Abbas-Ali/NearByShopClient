@@ -38,10 +38,13 @@ const SingleProductDetails = ({
     (state) => state.authState.isAuthenticated
   );
 
-  const { data: roomExistData, isLoading: roomExistLoading,refetch } =
-    useCheckRoomExistQuery(shopIdValue, {
-      skip: !shopIdValue,
-    });
+  const {
+    data: roomExistData,
+    isLoading: roomExistLoading,
+    refetch,
+  } = useCheckRoomExistQuery(shopIdValue, {
+    skip: !shopIdValue,
+  });
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [addToWishlist] = useAddToWishlistMutation();
@@ -72,8 +75,10 @@ const SingleProductDetails = ({
       return;
     }
     try {
+      console.log(roomId);
       if (roomId) {
         dispatch(setRoomChatAndActive(roomId));
+        navigate("/chat");
       } else {
         const roomDetails = {
           sellerId: shopData?.data?.shopDetails?.shop_owner_id,
@@ -87,7 +92,8 @@ const SingleProductDetails = ({
         const response = await createChatRoom(roomDetails);
         if (response?.data) {
           dispatch(setRoomChatAndActive(response?.data?.data?.roomId));
-          refetch()
+          refetch();
+          navigate("/chat");
           toast.success("Chat created successfully!");
         }
       }
@@ -142,7 +148,7 @@ const SingleProductDetails = ({
   return (
     <>
       {showSharePopup && <SharePopup setIsShare={setShowSharePopup} />}
-   
+
       <div className="single-product-details-desktop">
         <div className="images-div">
   <div className="product-image-card">
