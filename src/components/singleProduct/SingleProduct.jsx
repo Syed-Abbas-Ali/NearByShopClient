@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./singleProduct.scss";
 import locationIcon from "../../assets/productLocationPointerV1.svg";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 import {
   useAddToWishlistMutation,
   useDeleteWishlistProductMutation,
@@ -44,7 +44,6 @@ const SingleProduct = ({ product }) => {
   const handleNavigate = () => {
     navigate(`/product-details/${product.item_uid}`);
   };
-  console.log(product.item_uid)
 
   const handleWishlist = async (e) => {
     e.stopPropagation();
@@ -86,11 +85,23 @@ const SingleProduct = ({ product }) => {
     product?.item_uid || undefined
   );
 
+  const location = useLocation();       
+
+  const pathSegments = location.pathname.split('/'); 
+
+   const styleHomecard = pathSegments[1]== false
+
+   const styleCardTag= pathSegments[1] == "shop-profile-view"
+
+
   return (
-    <div className="single-product" onClick={handleNavigate}>
+    <div className={styleHomecard ? "homeSingle-product" : "single-product"} onClick={handleNavigate}>
       {showSharePopup && <SharePopup setIsShare={setSharePopup} productId={product.item_uid}  />}
       {/* <button className="trending-btn">Trending</button> */}
-      <div className="product-distance"><p className="distance-div">{"Radius"+ " "+ (product?.distance / 1000).toFixed(1)}km</p></div>
+      <div className="product-distance"><p className="distance-div">
+     {styleCardTag ? "" : `Radius ${ (product?.distance / 1000).toFixed(1) } km`}
+
+        </p></div>
       <div className="default-product">
         {product.image && <img src={product.image} className="product-image" />}
         <div className="action-btns">
