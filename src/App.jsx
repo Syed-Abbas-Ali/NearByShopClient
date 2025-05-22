@@ -92,7 +92,7 @@ const protectionPages = [
   { path: "/offer-products", element: <OfferSubCategoryProductsPage /> },
   { path: "/offer-sub-category-list", element: <OfferSubCategoryListPage /> },
   { path: "/wishlist", element: <WishlistPage /> },
-  { path: "/shop/:shopCategory", element: <ShopPage /> },
+  { path: "/shop/:shopCategory?", element: <ShopPage /> },
   { path: "/all-shops", element: <FullShopsPage /> },
   { path: "/product-edit/:shopUid", element: <ProductEditPage /> },
   { path: "/seller-profile-edit/:shopUid", element: <SellerProfileEditPage /> },

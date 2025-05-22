@@ -1,23 +1,21 @@
 import { jwtDecode } from "jwt-decode";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Search from "../../../../components/search/Search";
 import arrowLeftLarge from "../../../../assets/arrowLeftLarge.svg";
 import chatBlueTick from "../../../../assets/chatBlueTick.svg";
 import chatGreyTick from "../../../../assets/chatGreyTick.svg";
 import chatUser1 from "../../../../assets/chatUser1.svg";
+import Search from "../../../../components/search/Search";
 import ChatDetails from "../chatDetails/ChatDetails";
 import "./chat.scss";
 // socket.js
+import { useSelector } from "react-redux";
 import { useGetChatListQuery } from "../../../../apis&state/apis/chat";
 import SocketContext from "../../../../context/socketContext";
 import {
   accessTokenValue,
   userTypeValue,
 } from "../../../../utils/authenticationToken";
-import { useSelector } from "react-redux";
-
-
 
 function formatCreatedAt(createdAt) {
   const date = new Date(createdAt);
@@ -26,7 +24,7 @@ function formatCreatedAt(createdAt) {
   // Check if it's today
   const isToday = date.toDateString() === now.toDateString();
   if (isToday) {
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   }
 
   // Get start of current week (Sunday) and end of week (Saturday)
@@ -40,13 +38,12 @@ function formatCreatedAt(createdAt) {
 
   // If it's within this week
   if (date >= startOfWeek && date <= endOfWeek) {
-    return date.toLocaleDateString('en-US', { weekday: 'short' }); // "Mon", "Wed", etc.
+    return date.toLocaleDateString("en-US", { weekday: "short" }); // "Mon", "Wed", etc.
   }
 
   // Otherwise, show full date
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`; // e.g., "1/2/2025"
 }
-
 
 const Chat = ({ activeRoomId, setActiveRoomId }) => {
   const { roomId } = useSelector((state) => state.chatState);
@@ -141,17 +138,19 @@ const Chat = ({ activeRoomId, setActiveRoomId }) => {
                       <div className="user-name">
                         <div className="time">
                           <h3>
-                            {userTypeValue() === "SELLER"
+                            {currentUserType !== "seller"
                               ? user?.shopName
                               : user?.customerName}
                           </h3>
-                         
+
                           <p>{user?.lastMessage?.time}</p>
                         </div>
                         <p className="tick-message">
                           <img
                             src={
-                              user?.lastMessage?.isRead ? chatBlueTick : chatGreyTick
+                              user?.lastMessage?.isRead
+                                ? chatBlueTick
+                                : chatGreyTick
                             }
                             alt="tick"
                           />

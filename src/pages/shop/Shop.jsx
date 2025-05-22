@@ -1,27 +1,21 @@
-import React from "react";
-import "./shop.scss";
-import WrapperComponent from "../../components/wrapperComponent/WrapperComponent";
-import AllCategories from "../../components/commonComponents/allCategories/AllCategories";
-import ShopCard from "../../components/shopCard/ShopCard";
-import shopImag from "../../assets/groceries1.svg";
-import backIcon from "../../assets/arrowLeftLarge.svg";
 import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   useAddToFollowingMutation,
   useGetAllFollowingApiQuery,
   useGetAllNearByShopsApiQuery,
 } from "../../apis&state/apis/shopApiSlice";
-import CategoriesList from "../../components/commonComponents/categoriesList/CategoriesList";
-import Search from "../../components/search/Search";
-import { useNavigate, useParams } from "react-router-dom";
-import Navbar from "../../components/navbar1/Navbar";
+import backIcon from "../../assets/arrowLeftLarge.svg";
 import BottomNavbar from "../../components/bottomNavbar/BottomNavbar";
+import CategoriesList from "../../components/commonComponents/categoriesList/CategoriesList";
 import FilterInputComponent from "../../components/commonComponents/filterInputComponent/FilterInputComponent";
+import ShopCard from "../../components/shopCard/ShopCard";
+import "./shop.scss";
 
 const Shop = () => {
   const { shopCategory } = useParams();
   const [followSeller] = useAddToFollowingMutation();
-  const { data: followingData } = useGetAllFollowingApiQuery();
+  // const { data: followingData } = useGetAllFollowingApiQuery();
   const navigate = useNavigate();
   const {
     mapDetailsState: {
@@ -40,7 +34,7 @@ const Shop = () => {
   );
   console.log(data, 100);
   const handleCategory = (categoryName) => {
-    navigate(`/shop/${categoryName}`);
+    navigate(`/shop/${categoryName?.name}`);
   };
   const handleBack = () => {
     navigate(-1);
@@ -93,7 +87,7 @@ const Shop = () => {
             className="back-icon"
             onClick={handleBack}
           />
-         <FilterInputComponent/>
+          <FilterInputComponent />
         </div>
         <CategoriesList
           activeCategory={shopCategory}
