@@ -28,6 +28,8 @@ const SingleProduct = ({ product }) => {
   const [showSharePopup, setSharePopup] = useState(false);
   const [address, setAddress] = useState("Super Grocery, San Francisco");
 
+    const location = useLocation();      
+
   useEffect(() => {
     const fetchAddress = async () => {
       if (product?.location) {
@@ -40,10 +42,19 @@ const SingleProduct = ({ product }) => {
     };
     fetchAddress();
   }, [product]);
+  const pathSegments = location.pathname.split('/'); 
 
-  const handleNavigate = () => {
-    navigate(`/product-details/${product.item_uid}`);
-  };
+   const styleHomecard = pathSegments[1]== false
+
+   const styleCardTag= pathSegments[1] == "shop-profile-view"
+const forTopscroll = pathSegments[1] === "product-details";
+
+const handleNavigate = () => {
+  if (forTopscroll) {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  navigate(`/product-details/${product.item_uid}`);
+};
 
   const handleWishlist = async (e) => {
     e.stopPropagation();
@@ -85,13 +96,11 @@ const SingleProduct = ({ product }) => {
     product?.item_uid || undefined
   );
 
-  const location = useLocation();       
+ 
 
-  const pathSegments = location.pathname.split('/'); 
 
-   const styleHomecard = pathSegments[1]== false
 
-   const styleCardTag= pathSegments[1] == "shop-profile-view"
+
 
 
   return (

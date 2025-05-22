@@ -222,6 +222,7 @@ const OfferEdit = () => {
     const finalUpdateData = {
       ...singleDiscountData?.data,
       deal: productDetails.deal,
+      offer: productDetails.offer,
       categoryName: categoryData.categoryName,
       categoryId: categoryData.categoryId,
       subCategory: categoryData.subCategory,
@@ -262,8 +263,11 @@ const OfferEdit = () => {
     }
   };
 
-  const handleOfferChange = (e) => {
+  const handleDealChange = (e) => {
     setProductDetails((prev) => ({ ...prev, deal: e.target.value }));
+  };
+    const handleOfferChange = (e) => {
+    setProductDetails((prev) => ({ ...prev, offer: e.target.value }));
   };
   const handleColor = (colorText, name) => {
     setColorsObject((prev) => ({ ...prev, [name]: colorText }));
@@ -312,8 +316,10 @@ const OfferEdit = () => {
     handleCategoryDropdown(data);
   };
   const handleDiscountPercentage = (e) => {
+    handleDealChange(e);
     handleOfferChange(e);
   };
+  
   const handleImageChange = async (event) => {
     const selectedFile = event.target.files[0];
     if (selectedFile && selectedFile.size > 1024 * 1024) {
@@ -369,6 +375,7 @@ const OfferEdit = () => {
         <p>Deals</p>
       </div>
       <div className="offer-edit-content">
+        <div className="offer-edit-card">
         <div
           className="offer-image-card"
           style={{ backgroundImage: colorsObject.backgroundColor }}
@@ -411,14 +418,25 @@ const OfferEdit = () => {
               </p>
             </div>
             <div className="second-section">
-              <textarea
+              <input
                 style={{ color: colorsObject.textColor }}
-                placeholder="Edit discount text"
-                onChange={handleOfferChange}
+                placeholder="Enter your Offer"
+                onChange={handleDealChange}
                 value={productDetails.deal}
-              ></textarea>
+              />
               {errors?.deal && (
                 <p className="form-error-message">{errors?.deal}</p>
+              )}
+            </div>
+             <div className="second-section">
+              <input
+                style={{ color: colorsObject.textColor }}
+                placeholder="Enter dates of deal"
+                onChange={handleOfferChange}
+                value={productDetails.offer}
+              />
+              {errors?.offer && (
+                <p className="form-error-message">{errors?.offer}</p>
               )}
             </div>
           </div>
@@ -448,6 +466,7 @@ const OfferEdit = () => {
             )}
           </div>
         </div>
+        </div>
         <div className="input-fields">
           <div className="single-drop-down">
             <span className="label-text">Date</span>
@@ -470,6 +489,7 @@ const OfferEdit = () => {
               />
             </div>
           </div>
+          <div className="sub-drop-down">
           <div className="single-drop-down">
             <span className="label-text">Category</span>
             <DropdownMenu
@@ -496,8 +516,8 @@ const OfferEdit = () => {
               <p className="form-error-message">{errors?.subCategory}</p>
             )}
           </div>
-        </div>
-        <div className="price-details-card">
+          </div>
+          <div className="price-details-card">
           <div className="amount-text">
             <p>Amount</p>
             <h3>Total Amount ₹{totalPayment}</h3>
@@ -513,6 +533,8 @@ const OfferEdit = () => {
             </div>
           )}
         </div>
+        </div>
+        
       </div>
     </div>
   );
