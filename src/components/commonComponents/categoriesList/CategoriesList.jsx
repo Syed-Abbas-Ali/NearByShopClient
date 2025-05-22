@@ -13,9 +13,12 @@ const CategoriesList = ({
 
   useEffect(() => {
     if (data?.data) {
+      console.log(data)
+      if(setAllCategories){
       setAllCategories(data?.data);
+      }
     }
-  }, [data]);
+  }, [data,setAllCategories]);
   return (
     <div className="categories-list">
       <h3>{labelText}</h3>
