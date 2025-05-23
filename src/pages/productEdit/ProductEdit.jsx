@@ -355,10 +355,10 @@ const ProductEdit = () => {
       });
       if (response?.data) {
         toast.success("Product added!");
-        socketMethods.emit("send_notification", {
-          roomId: null,
-          ...response.data?.data,
-        });
+        // socketMethods.emit("send_notification", {
+        //   roomId: null,
+        //   ...response.data?.data,
+        // });
         navigate(
           `/product-edit/${value?.shopUid.split("&")[0]}&${
             response?.data?.data?.messageData?.item_uid
