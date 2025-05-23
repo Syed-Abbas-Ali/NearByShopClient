@@ -51,7 +51,9 @@ const Offer = () => {
       skip: !shopDetails?.shop_id,
     }
   );
-
+useEffect(() => {
+  window.scrollTo({ top: 0, behavior: "smooth" }); // or "auto" for instant scroll
+}, []);
   const handleCategory = (categoryName) => {
     setSelectedCategories(categoryName);
     setSelectedSubCategory("");
