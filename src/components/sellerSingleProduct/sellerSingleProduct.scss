@@ -5,6 +5,7 @@
   gap: 8px;
   background-color: $white-color;
   cursor: pointer;
+  position: relative;
   .default-product {
     height: 164px;
     width: 100%;
@@ -53,6 +54,23 @@
           }
         }
       }
+    }
+  }
+  .seller-shareIcon{
+      position: absolute;
+    backdrop-filter: blur(10px);
+    background: rgba(89, 88, 88, 0.1);
+display: flex
+;
+    color: $white-color;
+    z-index: 9;
+    border-radius: 50%;
+    right: 3px;
+    top: 10px;
+    padding: 3px;
+    .share-icon{
+    width: 30px;
+    height: 30px;
     }
   }
   .product-details {

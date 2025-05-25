@@ -48,6 +48,7 @@ const SingleProduct = ({ product }) => {
 
    const styleCardTag= pathSegments[1] == "shop-profile-view"
 const forTopscroll = pathSegments[1] === "product-details";
+const forSellerShare= pathSegments[1] === "profile";
 
 const handleNavigate = () => {
   if (forTopscroll) {
@@ -138,11 +139,11 @@ const handleNavigate = () => {
         <h3>{product.title}</h3>
         <div className="prices-and-offers">
           <h2>₹{product.price}</h2>
-          <p className="actual-price">₹{product.mainPrice}</p>
+          <p className="actual-price">₹{product.mainPrice?.toFixed(0)}</p>
           <p className="offer-text">
             {product?.discountPercentage &&
               product?.discountPercentage?.toFixed(0)}
-            % OFF
+            %off
           </p>
         </div>
         <div className="location">

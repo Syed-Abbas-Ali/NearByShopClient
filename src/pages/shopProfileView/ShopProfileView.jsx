@@ -34,10 +34,11 @@ import { useGetProfileApiQuery } from "../../apis&state/apis/authenticationApiSl
 import SingleProduct from "../../components/singleProduct/SingleProduct";
 import FilterInputComponent from "../../components/commonComponents/filterInputComponent/FilterInputComponent";
 import Pagination from "../../components/pagination/Pagination";
-import SearchComponent from "../../components/search/Search";
+import SearchComponent from "../../components/search/Search"; 
 import WrapperComponent from "../../components/wrapperComponent/WrapperComponent";
 import CircularLoader from "../../components/circularLoader/CircularLoader";
 import { setRoomChatAndActive } from "../../apis&state/state/chatState";
+import shareIcon from "../../assets/shareIcon.svg"
 
 const ShopProfileView = () => {
   const dispatch = useDispatch();
@@ -183,9 +184,11 @@ const ShopProfileView = () => {
                 <img src={userMask} alt="" />
               </div>
               <div className="profile-details">
+
                 <h1>
                   {singleShopDetails?.data?.shopDetails?.shop_name || "-----"}
                 </h1>
+              
                 {/* <div className="ratings-card">
                   <div className="stars-card">
                     <ShowRating rating={singleShopDetails?.data?.rating ?? 0} />
@@ -194,10 +197,14 @@ const ShopProfileView = () => {
                     Add Rating
                   </button>
                 </div> */}
+                <div>
                 <h3>
                   {singleShopDetails?.data?.shopDetails?.first_name}{" "}
                   {singleShopDetails?.data?.shopDetails?.last_name}
                 </h3>
+                  <img src={shareIcon}/>
+                  </div>
+
                 <div className="phone-number-card">
                   <div
                     className="chat-card"
@@ -265,7 +272,7 @@ const ShopProfileView = () => {
               <h3 className="products-header">Products</h3>
               {isProductListLoading && <CircularLoader />}
 
-              <div className="grid-card">
+              <div className="all-products">
                 {products?.data?.items?.map((item, index) => {
                   return <SingleProduct product={item} key={index} />;
                 })}

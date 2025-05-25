@@ -40,10 +40,30 @@
       gap: 2rem;
       .all-products {
         display: flex;
-    row-gap: 18px;
+    row-gap: 10px;
     column-gap: 10px;
       flex-wrap: wrap;
-      @media (max-width:420px) {
+         @media (max-width:1600px) {
+           display: grid;
+        grid-template-columns: repeat(7,1fr);
+      }
+      @media (max-width:1530px) {
+           display: grid;
+        grid-template-columns: repeat(6,1fr);
+      }
+       @media (max-width:1220px) {
+           display: grid;
+        grid-template-columns: repeat(5,1fr);
+      }
+             @media (max-width:930px) {
+           display: grid;
+        grid-template-columns: repeat(4,1fr);
+      }
+           @media (max-width:690px) {
+           display: grid;
+        grid-template-columns: repeat(3,1fr);
+      }
+      @media (max-width:500px) {
         display: grid;
         grid-template-columns: repeat(2,1fr);
       }

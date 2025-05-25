@@ -223,13 +223,13 @@
   border: 2px solid rgb(238, 238, 238);
   border-radius: 8px;
   padding: 8px;
-  min-width: 190px;
-  max-width: 190px;
+  min-width: 210px;
+  max-width: 210px;
   cursor: pointer;
   position: relative;
 
 
-  @media (max-width:420px) {
+  @media (max-width:1600px) {
     min-width: unset;
   max-width: unset;
   }

@@ -400,9 +400,9 @@ const OfferEdit = () => {
             </button>
           </div>
           <div className="discount-content">
-            <button className="edit-icon">
+            {/* <button className="edit-icon">
               <img src={editIconWhiteV1} alt="" />
-            </button>
+            </button> */}
             <div className="first-section">
               <h3
                 className="shop-name"
