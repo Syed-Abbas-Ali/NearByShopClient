@@ -7,7 +7,7 @@ const CategoriesList = ({
   activeCategory = "",
   handleCategory,
   labelText = "Categories",
-  setAllCategories,
+     setAllCategories = () => {},
 }) => {
   const { data } = useGetAllCategoriesAndSubCategoriesQuery();
 

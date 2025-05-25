@@ -43,7 +43,8 @@ const BottomNavbar = () => {
     },
     {
       name: activeTab("/shop") ? shopActive : shop,
-      path: `/shop/${categoryName}`,
+      // path: `/shop/${categoryName}`,
+      path:`/shop`,
       alt: "Shops",
     },
     {
