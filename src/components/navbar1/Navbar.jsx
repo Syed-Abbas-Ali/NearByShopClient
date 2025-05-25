@@ -60,15 +60,15 @@ const desktopNavbarLinks = [
   {
     name: "Notifications",
     path: "/notifications",
-  }
+  },
 ];
 
 const Navbar = () => {
   let token = accessTokenValue();
   const socketMethods = useContext(SocketContext);
-  const {roomId}=useSelector(state=>state.chatState)
+  const { roomId } = useSelector((state) => state.chatState);
   const navigate = useNavigate();
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
   const { pathname } = useLocation();
   const [notificationActive, setNotificationActive] = useState(false);
   const [chatActive, setChatActive] = useState(false);
@@ -108,15 +108,15 @@ const Navbar = () => {
       console.log(err);
     }
   };
-  const handleLoginActive=()=>{
+  const handleLoginActive = () => {
     navigate("/login");
-  }
+  };
 
   const handleChatActive = () => {
     if (!token) {
       navigate("/login");
     } else {
-      dispatch(toggleChatActive())
+      dispatch(toggleChatActive());
     }
   };
 
@@ -139,12 +139,12 @@ const Navbar = () => {
     <>
       <header className="mobile-navbar">
         <div className="logo-card" onClick={handleLogo}>
-          <img className= "logo-imgs" src={logo} alt="" />
+          <img className="logo-imgs" src={logo} alt="" />
           <div className="user-Location">
-          <UserLocationPointer />
+            <UserLocationPointer />
           </div>
         </div>
-       
+
         <nav>
           <ul>
             {mobileNavIcons.map((link, index) => (
@@ -158,13 +158,10 @@ const Navbar = () => {
       <header className="desktop-navbar">
         <div className="logo-card-container">
           <div className="logo-card" onClick={handleLogo}>
-            <img className= "logo-imgs"src={logo} alt="" />
+            <img className="logo-imgs" src={logo} alt="" />
           </div>
 
-
           <UserLocationPointer />
-        
-          
         </div>
         {/* <UserLocationDetails /> */}
         <div className="right-card">
@@ -187,9 +184,11 @@ const Navbar = () => {
                 alt=""
                 onClick={() => setNotificationActive((prev) => !prev)}
               />
-             {totalNotification?.length>0 && <div className="total-count">
-                {totalNotification && totalNotification?.length}
-              </div>}
+              {totalNotification?.length > 0 && (
+                <div className="total-count">
+                  {totalNotification && totalNotification?.length}
+                </div>
+              )}
               <div
                 className={
                   notificationActive
@@ -231,16 +230,19 @@ const Navbar = () => {
                 <span>Become a Seller</span>
               </div>
             )}
-            {userTypeValue() === "USER" && token ?  (
-  <div>
-    {/* <button onClick={() => navigate("/login")} >Login</button> */}
-  </div>
-):(
-  <div className="profile-image" onClick={() => navigate("/profile")}>
-    <img src={userBorderIcon} alt="Profile" />
-    <span>Profile</span>
-  </div>
-) }
+            {userTypeValue() == null ? (
+              <div>
+                <button onClick={() => navigate("/login")}>Login</button>
+              </div>
+            ) : (
+              <div
+                className="profile-image"
+                onClick={() => navigate("/profile")}
+              >
+                <img src={userBorderIcon} alt="Profile" />
+                <span>Profile</span>
+              </div>
+            )}
           </div>
         </div>
       </header>

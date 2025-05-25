@@ -87,7 +87,7 @@ const ProductEdit = () => {
 
   const { data: categories } = useGetAllCategoriesAndSubCategoriesQuery();
 
-    useEffect(() => {
+  useEffect(() => {
     if (categories?.data?.length > 0) {
       const allCategoriesList = categories?.data?.map((category) => ({
         value: category.categoryId,
@@ -96,7 +96,7 @@ const ProductEdit = () => {
       setCategoriesList(allCategoriesList);
     }
   }, [categories]);
-  
+
   useEffect(() => {
     const handleConnectionPort = () => {
       socketMethods.emit("connect_socket", {
@@ -109,7 +109,6 @@ const ProductEdit = () => {
       handleConnectionPort();
     }
   }, [socketMethods]);
-
 
   useEffect(() => {
     if (categoryData?.categoryName) {
@@ -332,7 +331,7 @@ const ProductEdit = () => {
         err.inner.forEach((error) => {
           validationErrors[error.path] = error.message;
         });
-        setErrors(validationErrors); 
+        setErrors(validationErrors);
       }
     }
   };
@@ -366,7 +365,9 @@ const ProductEdit = () => {
         );
       } else {
         toast.error(response?.error?.data?.errors[0]?.fieldName);
-        navigate(`/seller-plan-purchase/${value?.shopUid.split("&")[0]}`);
+        if (response?.error?.data?.errors[0]?.statusCode == 422) {
+          navigate(`/seller-plan-purchase/${value?.shopUid.split("&")[0]}`);
+        }
       }
     } catch (err) {
       if (err.inner) {
@@ -374,7 +375,7 @@ const ProductEdit = () => {
         err.inner.forEach((error) => {
           validationErrors[error.path] = error.message;
         });
-        setErrors(validationErrors); 
+        setErrors(validationErrors);
       }
     }
   };

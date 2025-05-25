@@ -13,6 +13,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import BusinessDetailsVideo from "../../components/commonComponents/businessDetailsVideo/BusinessDetailsVideo";
 import toast from "react-hot-toast";
+import { useUploadImageMutation } from "../../apis&state/apis/global";
 
 // const socialMediaLinksList = [
 //   {
@@ -43,14 +44,19 @@ const profileBasicFields = [
     name: "shopName",
     placeholderText: "Enter shop name",
   },
-  {
-    label: "Your Name",
-    name: "yourName",
-    placeholderText: "Enter your name",
-  },
+  // {
+  //   label: "First Name",
+  //   name: "first_name",
+  //   placeholderText: "Enter your name",
+  // },
+  //   {
+  //   label: "Last Name",
+  //   name: "last_name",
+  //   placeholderText: "Enter your name",
+  // },
   {
     label: "Contact Number",
-    name: "contactNumber",
+    name: "phone",
     placeholderText: "Enter contact number",
   },
 ];
@@ -66,11 +72,11 @@ const shopDetailsFields = [
     name: "shopDescription",
     placeholderText: "Enter store description",
   },
-  {
-    label: "Shop email",
-    name: "email",
-    placeholderText: "Enter shop email",
-  },
+  // {
+  //   label: "Shop email",
+  //   name: "email",
+  //   placeholderText: "Enter shop email",
+  // },
   {
     label: "Shop Category",
     name: "category",
@@ -129,11 +135,13 @@ const SellerProfileEdit = () => {
   const [updateShopDetails, setUpdateShopDetails] =
     useState(shopDefaultDetails);
   const [updateSellerDetails] = useUpdateShopApiMutation();
+  const [uploadImage] = useUploadImageMutation();
 
   const {
     data: shopDetails,
     isLoading,
     isError,
+    refetch,
   } = useGetSingleShopsApiQuery(value?.shopUid);
 
   const handleInput = (e) => {
@@ -161,6 +169,51 @@ const SellerProfileEdit = () => {
     }
   }, [shopDetails]);
 
+  const handleImageChange = async (event, imageType) => {
+    const selectedFile = event.target.files[0];
+    if (selectedFile && selectedFile.size > 1024 * 1024) {
+      return toast.error("File size should not exceed 1 MB!");
+    }
+    if (
+      selectedFile.name.endsWith(".jpg") ||
+      selectedFile.name.endsWith(".jpeg") ||
+      selectedFile.name.endsWith(".png") ||
+      selectedFile.name.endsWith(".webp")
+    ) {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        // setSelectedImage(event.target.result);
+      };
+      reader.readAsDataURL(selectedFile);
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
+      if (selectedFile) {
+        // const imageUrl = URL.createObjectURL(selectedFile);
+        // setSelectedImage(imageUrl);
+
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        try {
+          const response = await uploadImage({
+            data: formData,
+            type: imageType,
+            itemUid:
+              imageType === "THUMBNAILS" ? value?.shopUid.split("&")[1] : "",
+          });
+          if (response?.data && imageType !== "THUMBNAILS") {
+            refetch();
+            toast.success("Successfully uploaded your profile image!");
+          }
+        } catch (error) {
+          toast.error("Something went wrong");
+        }
+      }
+    } else {
+      toast.error("It will allow .jpg, .jpeg, .png, .webp formats only.");
+    }
+  };
+
   const handleUpdate = async () => {
     const finalSellerUpdateDetails = {
       storeName: updateShopDetails.shopName,
@@ -170,7 +223,7 @@ const SellerProfileEdit = () => {
         longitude: -122.4194,
       },
       storeDescription: updateShopDetails.shopDescription,
-      email: updateShopDetails.email,
+      // email: updateShopDetails.email,
       state: updateShopDetails.state,
       category: updateShopDetails.category,
       city: updateShopDetails.city,
@@ -205,7 +258,17 @@ const SellerProfileEdit = () => {
           <h3 className="page-header">My Account</h3>
           <div className="profile-image-edit">
             <div className="default-image-card">
-              <img src={cameraIconOne} alt="" />
+              <img
+                src={shopDetails?.data?.profile_pic}
+                alt=""
+                className="profilePic"
+              />
+              <input
+                type="file"
+                name=""
+                onChange={(e) => handleImageChange(e, "PROFILE_PIC")}
+                id="invisible_file_upload"
+              />
             </div>
             <div className="basic-fields">
               {profileBasicFields.map((item, index) => {

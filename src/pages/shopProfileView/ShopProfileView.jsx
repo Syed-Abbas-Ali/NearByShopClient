@@ -180,7 +180,7 @@ const ShopProfileView = () => {
           ) : (
             <div className="profile-data-card">
               <div className="profile-pic-card">
-                <img src={userMask} alt="" />
+                <img src={singleShopDetails?.data?.shopDetails?.profile_pic} alt="" />
               </div>
               <div className="profile-details">
                 <h1>

@@ -55,9 +55,23 @@ const ChatDetails = ({
     setInputValue(event.target.value);
   };
 
+  const handleIsRead = () => {
+    socketMethods.emit("is_read", {
+      receiverId: decodedToken.userId,
+      roomId: activeRoomId ?? roomId,
+      senderId:
+        userTypeValue() !== "SELLER"
+          ? chatDetails?.data?.createdBy
+          : chatDetails?.data?.recieverId,
+    });
+    return () => {
+      socketMethods.off("is_read");
+    };
+  };
   useEffect(() => {
     if (chatDetails?.data?.messages) {
       setAllChatList(chatDetails?.data?.messages);
+      handleIsRead();
     }
   }, [chatDetails]);
 
@@ -72,10 +86,15 @@ const ChatDetails = ({
           senderId: allChatList[0]?.senderId,
         },
       ]);
+      handleIsRead();
+    });
+    socketMethods.on("is_read", () => {
+      refetch();
     });
 
     return () => {
       socketMethods.off("receive_message");
+      socketMethods.off("is_read");
     };
   }, [socketMethods]);
 
@@ -89,7 +108,7 @@ const ChatDetails = ({
         roomId: activeRoomId ?? roomId,
         data: messageData,
       });
-      
+
       if (response?.data) {
         if (socketMethods) {
           socketMethods.emit("send_message", {
@@ -113,7 +132,7 @@ const ChatDetails = ({
   };
 
   useEffect(() => {
-    if(chatDetails){
+    if (chatDetails) {
       refetch();
     }
     const handleClickOutside = (event) => {
@@ -129,31 +148,33 @@ const ChatDetails = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  //this for date and time 
+  //this for date and time
   const formatCreatedAt = (createdAt) => {
-  const date = new Date(createdAt);
-  const now = new Date();
+    const date = new Date(createdAt);
+    const now = new Date();
 
-  const isToday = date.toDateString() === now.toDateString();
-  if (isToday) {
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  }
+    const isToday = date.toDateString() === now.toDateString();
+    if (isToday) {
+      return date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
 
-  const startOfWeek = new Date(now);
-  startOfWeek.setDate(now.getDate() - now.getDay());
-  startOfWeek.setHours(0, 0, 0, 0);
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - now.getDay());
+    startOfWeek.setHours(0, 0, 0, 0);
 
-  const endOfWeek = new Date(now);
-  endOfWeek.setDate(now.getDate() + (6 - now.getDay()));
-  endOfWeek.setHours(23, 59, 59, 999);
+    const endOfWeek = new Date(now);
+    endOfWeek.setDate(now.getDate() + (6 - now.getDay()));
+    endOfWeek.setHours(23, 59, 59, 999);
 
-  if (date >= startOfWeek && date <= endOfWeek) {
-    return date.toLocaleDateString('en-US', { weekday: 'short' }); // e.g., Mon, Wed
-  }
+    if (date >= startOfWeek && date <= endOfWeek) {
+      return date.toLocaleDateString("en-US", { weekday: "short" }); // e.g., Mon, Wed
+    }
 
-  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-};
-
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  };
 
   return (
     <div
@@ -182,19 +203,14 @@ const ChatDetails = ({
             className={`message ${
               msg.senderId === decodedToken.userId ? "right" : "left"
             }`}
-          > 
-          {console.log(msg.senderId === decodedToken.userId)}
+          >
+            {console.log(msg.senderId === decodedToken.userId)}
             <p className="message-content">{msg.message}</p>
             <div className="message-timestamp">
-               <img
-                            src={
-                              msg?.isRead ? chatBlueTick : chatGreyTick
-                            }
-                            alt="tick"
-                          />
-              
-              <span>{formatCreatedAt(msg.createdAt)}</span></div>
+              <img src={msg?.isRead ? chatBlueTick : chatGreyTick} alt="tick" />
 
+              <span>{formatCreatedAt(msg.createdAt)}</span>
+            </div>
           </div>
         ))}
       </div>
