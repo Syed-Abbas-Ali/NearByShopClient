@@ -15,7 +15,7 @@ const SharePopup = ({ setIsShare,productId,shopId }) => {
     }
   };
 
-  console.log(shopId,12);
+ 
 
   return (
     <div className="share-popup" onClick={handleParent} id="Parent">

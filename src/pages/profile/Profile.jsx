@@ -15,6 +15,8 @@ import ToggleYesNo from "../../components/toggleYesNo/ToggleYesNo";
 import Search from "../../components/search/Search";
 import OfferCategoryItem from "../../components/offerCategoryItem/OfferCategoryItem";
 import forwardMoreIcon from "../../assets/forwardIcon.svg";
+import Instagram from "../../assets/instagram.png"
+import websiteIcon from "../../assets/websiteIcon.png"
 import {
   useGetAllSellerProductsApiQuery,
   useGetAllShopsApiQuery,
@@ -99,7 +101,7 @@ const Profile = () => {
 
    const sellerChartIcon= pathSegments[1] == "profile"
 
-   console.log(shopDetails?.shop_id)
+  
 
   return (
     <WrapperComponent>
@@ -193,10 +195,35 @@ const Profile = () => {
                   <p>{sellerAllShops?.data[0]?.shop_address}.</p>
                 </a>
               )}
-              <div>
+
+               {sellerAllShops?.data[0]?.shop_contact?.xLink ?  <div>
+
+                <a href={sellerAllShops?.data[0]?.shop_contact?.xLink}  onClick={(e) => e.stopPropagation()}   className="location-link">
+               
                 <img src={youtubeIcon} alt="youtube" />
-                <p>Youtube Channel</p>
-              </div>
+                <p>Youtube Link</p>
+                </a>
+              </div> : " " }
+
+               {sellerAllShops?.data[0]?.shop_contact?.instagramLink ?  <div>
+
+                <a href={sellerAllShops?.data[0]?.shop_contact?.instagramLink}  onClick={(e) => e.stopPropagation()}   className="location-link">
+               
+                <img src={Instagram} alt="youtube" />
+                <p>Instagram Link</p>
+                </a>
+              </div> : " " }
+
+                {sellerAllShops?.data[0]?.shop_contact?.website ?  <div>
+
+                <a href={sellerAllShops?.data[0]?.shop_contact?.website}  onClick={(e) => e.stopPropagation()}   className="location-link">
+               
+                <img src={websiteIcon} alt="website" />
+                <p>My website</p>
+                </a>
+              </div> : " " }
+              
+             
             </div>
           </div>
         </div>

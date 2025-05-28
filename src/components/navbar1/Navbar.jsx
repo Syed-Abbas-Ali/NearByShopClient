@@ -58,8 +58,8 @@ const desktopNavbarLinks = [
     path: "/chat",
   },
   {
-    name: "Notifications",
-    path: "/notifications",
+    name: "shops",
+    path: "/shop",
   }
 ];
 
@@ -180,7 +180,7 @@ const Navbar = () => {
               ))}
             </ul>
           </nav>
-          {token && (
+          {/* {token && (
             <div className="noti-icon">
               <img
                 src={notificationIcon}
@@ -210,17 +210,17 @@ const Navbar = () => {
                 })}
               </div>
             </div>
-          )}
+          )} */}
 
           {/* {isChatActive && token && (
             <div className="chat-component-popUp">
               
             </div>
           )} */}
-
-          <div className="chat-icon" onClick={handleChatActive}>
+{/* dont delete this */}
+          {/* <div className="chat-icon" onClick={handleChatActive}>
             <img src={chatIcon} alt="" />
-          </div>
+          </div> */}
           <div className="profile-card">
             {userTypeValue() === "USER" && token && (
               <div

@@ -31,7 +31,7 @@ const ShopCard = ({ id, singleShop, handleFollow }) => {
     currentUserType: "",
   });
   const handleShop = () => {
-    navigate(`/shop-profile-view/${singleShop.shop_id}`);
+    navigate(`/shop-profile-view/${singleShop?.shop_id}`);
   };
   const handleShare = (e, shopUid) => {
     e.stopPropagation();
@@ -44,7 +44,7 @@ const ShopCard = ({ id, singleShop, handleFollow }) => {
       return;
     }
     const isCreateRoom = chatList?.data
-      ? chatList?.data?.filter((item) => item.shopName === singleShop.shop_name)
+      ? chatList?.data?.filter((item) => item.shopName === singleShop?.shop_name)
       : [];
     if (isCreateRoom.length) {
       return;
@@ -75,7 +75,7 @@ const ShopCard = ({ id, singleShop, handleFollow }) => {
 
   return (
     <>
-      {isShare && <SharePopup setIsShare={setIsShare} />}
+      {isShare && <SharePopup setIsShare={setIsShare} shopId={singleShop?.shop_id} />}
       <div className="shop-card" onClick={handleShop} >
         <div className="shop-image">
           <img src={shopImag} alt="" />
@@ -84,19 +84,17 @@ const ShopCard = ({ id, singleShop, handleFollow }) => {
         <div className="details-card">
           <div className="details">
             <h3>{singleShop?.shop_name || "---------"}</h3>
-            <div className="stars-card">
+            {/* <div className="stars-card">
               {[1, 2, 3, 4, 5].map((item, index) => (
                 <div key={index} dataId={item}>
                   &#9733;
                 </div>
               ))}
               <p>4.3/5</p>
-            </div>
-            <div className="location-text">
-              <img src={location} alt="" />
-              <p>{singleShop?.shop_address || "-----"}</p>
-            </div>
-            <p className="distance">
+            </div> */}
+            <p className="shop-category">Category: {singleShop?.category}</p>
+            <p  className="shop-dis">About Shop: {singleShop?.description}</p>
+               <p className="distance">
               Radius{" "}
               <span>
                 {haversine(
@@ -108,14 +106,28 @@ const ShopCard = ({ id, singleShop, handleFollow }) => {
                 KM
               </span>
             </p>
-            <div className="follow">
+       <div className="location-text">
+  {singleShop?.shop_address && (
+    <a
+      href={`https://www.google.com/maps?q=${singleShop?.store_location?.latitude},${singleShop?.store_location?.longitude}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="location-link"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <img src={location} alt="location" />
+      <p>{singleShop?.shop_address}.</p>
+    </a>
+  )}
+</div>
+            {/* <div className="follow">
               <button onClick={handleFollowShop}>Follow</button>
               <div>
                 <img src={followersIcon} />
                 <p>20K</p>
                 <span>(followers)</span>
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="actions">
             <button onClick={(e) => handleShare(e, singleShop?.shop_uid)}>
@@ -124,14 +136,14 @@ const ShopCard = ({ id, singleShop, handleFollow }) => {
             {/* <button onClick={handleChat}>
               <img src={chat} alt="" />
             </button> */}
-            <button onClick={handleCall}>
+            {/* <button onClick={handleCall}>
               <a
                 href={`tel:${phoneNumber}`}
                 style={{ textDecoration: "none", color: "blue" }}
               >
                 <img src={call} alt="" />
               </a>
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

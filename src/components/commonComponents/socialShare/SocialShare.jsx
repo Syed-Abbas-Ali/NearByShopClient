@@ -16,7 +16,7 @@ const SocialShare = ({ shopIds, productIds, title = "Check this out!" }) => {
     e.stopPropagation();
   };
 
-  console.log(shopIds,30)
+ 
 
 
   const isProduct = Boolean(productIds);

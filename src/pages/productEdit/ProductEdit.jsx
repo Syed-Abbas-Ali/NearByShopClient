@@ -323,8 +323,11 @@ const ProductEdit = () => {
         data,
       });
       if (response?.data) {
+     
         toast.success("Product updated!");
-        handleBack("/profile");
+      setTimeout(() => {
+        navigate("/profile"); // use navigate from useNavigate()
+      }, 1000);
       }
     } catch (err) {
       if (err.inner) {

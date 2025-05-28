@@ -192,6 +192,14 @@
             color: $app-second-color;
           }
         }
+        .location-link{
+          display: flex;
+          gap: 6px;
+          p{
+            color: blue;
+            cursor: pointer;
+          }
+        }
       }
     }
   }
