@@ -223,7 +223,7 @@ const LocationVerification = () => {
                 {
                   item?.name=="category"? <Selector
                 onSelectDropdown={handleCategory}
-                dropdownList={categoriesList}
+                dropdownList={categoriesList} 
                 placeholderText={"Select Category"}
               />:<Input
                   initialData={item}

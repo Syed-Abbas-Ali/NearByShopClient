@@ -3,13 +3,13 @@
 .offers-sub-category {
   padding: 1rem;
   .categories-card-container-div {
-    margin-top: 70px;
-    max-width: 1500px;
+    margin-top: 10px;
+   
     display: flex;
     flex-direction: column;
     gap: 20px;
     @media (min-width:1500px) {
-      margin:70px auto;
+      margin:10px auto;
       margin-bottom: 0px;
     }
     .categories-card-div{
@@ -52,8 +52,8 @@
         border-top-left-radius: 20px;
         border-top-right-radius: 20px;
         img {
-          height: 22px;
-          width: 22px;
+          height: 24px;
+          width: 24px;
           cursor: pointer;
         }
       }

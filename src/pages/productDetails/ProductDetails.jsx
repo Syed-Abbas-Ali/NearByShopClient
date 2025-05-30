@@ -79,7 +79,7 @@ const ProductDetails = () => {
               <SearchComponent setSearch={setSearch} isFilter={true} />
             </div>
             {isProductListLoading && <CircularLoader />}
-            <div className="all-products grid-card">
+            <div className="all-products">
               {relatedProducts?.data?.items.map((item, index) => {
                 return <SingleProduct product={item} key={index} />;
               })}

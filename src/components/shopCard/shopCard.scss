@@ -10,8 +10,8 @@
   cursor: pointer;
   height: auto;
   .shop-image {
-    height: 140px;
-    width: 140px;
+    height: 120px;
+    width: 120px;
     flex-shrink: 0;
     background-color: $white-color;
     border-radius: 8px;
@@ -35,8 +35,18 @@
     flex-grow: 1;
     gap: 4px;
     .details {
+      .shop-category{
+        font-size: 11px;
+            padding-top: 5px;
+            font-weight: 500;
+      }
+        .shop-dis{
+        font-size: 10px;
+            padding-top: 1px;
+            font-weight: 400;
+      }
       h3 {
-        font-size: 14px;
+        font-size: 16px;
         font-weight: 500;
         line-height: 16.8px;
         color: $app-second-color;
@@ -60,8 +70,12 @@
       }
       .location-text {
         display: flex;
-        margin-top: 2px;
-        gap: 4px;
+        margin-top: 5px;
+        gap: 5px;
+        a{
+          display: flex;
+          gap:5px;
+        }
         img {
           height: 16px;
         }
@@ -82,7 +96,7 @@
         font-size: 12px;
         font-weight: 400;
         line-height: 16.8px;
-        margin-top: 8px;
+        margin-top: 5px;
         span {
           color: $app-second-color;
           font-size: 12px;

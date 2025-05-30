@@ -149,7 +149,7 @@ const Navbar = () => {
               );
             })}
           </div>
-          {userTypeValue() === "USER" && (
+          {/* {userTypeValue() === "USER" && (
             <div
               className="become-seller-card"
               onClick={() => navigate("/location-verification")}
@@ -157,7 +157,7 @@ const Navbar = () => {
               <img src={becomeSellerImage} alt="" />
               <p>Become a Seller</p>
             </div>
-          )}
+          )} */}
           <div className="user-profile" onClick={handleUser}>
             <img src={userBorderIcon} alt="" />
           </div>

@@ -77,30 +77,31 @@ const shopDetailsFields = [
   //   name: "email",
   //   placeholderText: "Enter shop email",
   // },
+  // {
+  //   label: "Shop Category",
+  //   name: "category",
+  //   placeholderText: "Enter shop category",
+  // },
+  // {
+  //   label: "Shop state",
+  //   name: "state",
+  //   placeholderText: "Enter shop state",
+  // },
+  // {
+  //   label: "Shop city",
+  //   name: "city",
+  //   placeholderText: "Enter shop city",
+  // },
+  // {
+  //   label: "Shop phone number",
+  //   name: "phone",
+  //   placeholderText: "Enter shop phone number",
+  // },
   {
-    label: "Shop Category",
-    name: "category",
-    placeholderText: "Enter shop category",
-  },
-  {
-    label: "Shop state",
-    name: "state",
-    placeholderText: "Enter shop state",
-  },
-  {
-    label: "Shop city",
-    name: "city",
-    placeholderText: "Enter shop city",
-  },
-  {
-    label: "Shop phone number",
-    name: "phone",
-    placeholderText: "Enter shop phone number",
-  },
-  {
-    label: "X Link",
+    label: "Youtube Link",
+
     name: "xLink",
-    placeholderText: "Enter X link",
+    placeholderText: "Enter Youtube Link",
   },
   {
     label: "Instagram Link",
@@ -116,6 +117,8 @@ const shopDetailsFields = [
 
 const shopDefaultDetails = {
   shopName: "",
+  yourName: "",
+  contactNumber:"",
   shopAddress: "",
   shopDescription: "",
   email: "",
@@ -153,10 +156,12 @@ const SellerProfileEdit = () => {
     if (shopDetails?.data) {
       const prevAddedDetails = {
         shopName: shopDetails?.data?.shop_name || "",
+        yourName : shopDetails?.data?.first_name + " " + shopDetails?.data?.last_name || "",
+contactNumber : shopDetails?.data?.shop_contact?.phone || "",
         shopAddress: shopDetails?.data?.shop_address,
         shopDescription:
           shopDetails?.data?.shop_description || "Book your bus tickets.",
-        email: shopDetails?.data?.shop_email,
+        email: shopDetails?.data?.email,
         state: "Telanaga",
         category: "Electronics",
         city: "Hyderabad",
@@ -166,6 +171,7 @@ const SellerProfileEdit = () => {
         instagramLink: shopDetails?.data?.shop_contact?.instagramLink,
       };
       setUpdateShopDetails((prev) => ({ ...prev, ...prevAddedDetails }));
+     
     }
   }, [shopDetails]);
 
@@ -223,12 +229,13 @@ const SellerProfileEdit = () => {
         longitude: -122.4194,
       },
       storeDescription: updateShopDetails.shopDescription,
-      // email: updateShopDetails.email,
+      email: shopDetails.data.email,
+
       state: updateShopDetails.state,
       category: updateShopDetails.category,
       city: updateShopDetails.city,
       shopContactInfo: {
-        phone: updateShopDetails.phone,
+        phone: shopDetails.data.shop_contact?.phone || shopDetails.data.phone,
         xLink: updateShopDetails.xLink,
         website: updateShopDetails.website,
         instagramLink: updateShopDetails.instagramLink,
@@ -250,13 +257,21 @@ const SellerProfileEdit = () => {
     }
   };
 
+   const handleLogout = () => {
+    sessionStorage.removeItem("user"); // Clear the access token
+    window.location.href = "/";
+
+  };
+ 
+
   return (
     <>
       <Navbar />
       <div className="seller-edit-profile">
         <div className="desktop-left-card">
-          <h3 className="page-header">My Account</h3>
+          
           <div className="profile-image-edit">
+            <h3 className="page-header">My Account</h3>
             <div className="default-image-card">
               <img
                 src={shopDetails?.data?.profile_pic}
@@ -270,16 +285,15 @@ const SellerProfileEdit = () => {
                 id="invisible_file_upload"
               />
             </div>
+            
             <div className="basic-fields">
               {profileBasicFields.map((item, index) => {
                 return (
-                  <div key={index} className="input-single-card">
-                    <label>{item.label}</label>
-                    <Input
-                      initialData={item}
-                      handleInput={handleInput}
-                      value={updateShopDetails[item.name]}
-                    />
+                  <div key={index} className="input-single-cards">
+                    <label>{item.label} : </label>
+                    <p
+                    
+                    >{updateShopDetails[item.name]}</p>
                     {item.name in errors && (
                       <p className="form-error-message">{errors[item.name]}</p>
                     )}
@@ -289,14 +303,14 @@ const SellerProfileEdit = () => {
             </div>
           </div>
           <div className="left-card">
-            <div className="account-public-card">
+            {/* <div className="account-public-card">
               <h3>Do you want your Account in Public? </h3>
               <ToggleYesNo />
-            </div>
-            <p>
+            </div> */}
+            {/* <p>
               (If you keep it in Public out of your contacts Customer can see
               your website)
-            </p>
+            </p> */}
           </div>
           {/* <div className="video-location-section">
             <div className="about-my-business">
@@ -330,16 +344,20 @@ const SellerProfileEdit = () => {
                 </div>
               );
             })}
-          </div>
-          <div className="save-btn">
+              <div className="save-btn">
             <button onClick={handleUpdate}>Update</button>
+               <button onClick={handleLogout} >
+      Logout
+    </button>
           </div>
+          </div>
+        
         </div>
-        <div className="desktop-video-location-section">
-          {/* <div className="about-my-business">
+        {/* <div className="desktop-video-location-section">
+          <div className="about-my-business">
             <h3>About my Business</h3>
             <div className="video-div"></div>
-          </div> */}
+          </div>
           <div className="select-location">
             <div className="heading">
               <img src={locationImage} alt="" />
@@ -347,7 +365,7 @@ const SellerProfileEdit = () => {
             </div>
             <div className="location-default-image"></div>
           </div>
-        </div>
+        </div> */}
       </div>
       <BottomNavbar />
     </>

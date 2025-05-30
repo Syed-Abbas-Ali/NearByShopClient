@@ -15,11 +15,14 @@ import ToggleYesNo from "../../components/toggleYesNo/ToggleYesNo";
 import Search from "../../components/search/Search";
 import OfferCategoryItem from "../../components/offerCategoryItem/OfferCategoryItem";
 import forwardMoreIcon from "../../assets/forwardIcon.svg";
+import Instagram from "../../assets/instagram.png"
+import websiteIcon from "../../assets/websiteIcon.png"
 import {
   useGetAllSellerProductsApiQuery,
   useGetAllShopsApiQuery,
 } from "../../apis&state/apis/shopApiSlice";
 import { useGetProfileApiQuery } from "../../apis&state/apis/authenticationApiSlice";
+import { useLocation } from "react-router-dom";
 
 import ProductDetailsPopup from "./productDetailsPopup/ProductDetailsPopup";
 import SellerSingleProduct from "../../components/sellerSingleProduct/SellerSingleProduct";
@@ -28,6 +31,7 @@ import userMask from "../../assets/userMask.svg";
 import cameraIcon from "../../assets/cameraIcon.svg";
 import { useGetAllDiscountsQuery } from "../../apis&state/apis/discounts";
 import Pagination from "../../components/pagination/Pagination";
+import SharePopup from "../../components/commonComponents/sharePopup/SharePopup";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -36,12 +40,14 @@ const Profile = () => {
   const [productUid, setProductUid] = useState(null);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [showSharePopup, setSharePopup] = useState(false);
 
   const handlePageChange = (page, totalPages) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
   };
+  const location = useLocation();
 
   const shopDetails = sellerAllShops?.data[0];
   const { data: userDetails } = useGetProfileApiQuery();
@@ -77,6 +83,10 @@ const Profile = () => {
     setProductUid(uid);
     setProductDetailsPopup((prev) => !prev);
   };
+   const handleShare = (e) => {
+    e.stopPropagation();
+    setSharePopup((prev) => !prev);
+  };
 
   const handleTakeSubscription = () => {
     navigate(`/seller-plan-purchase/${shopDetails?.shop_uid}`);
@@ -85,6 +95,13 @@ const Profile = () => {
   const handleTickVerification = () => {
     navigate(`/shop-verification/${shopDetails?.shop_uid}`);
   };
+
+   const pathSegments = location.pathname.split('/'); 
+
+
+   const sellerChartIcon= pathSegments[1] == "profile"
+
+  
 
   return (
     <WrapperComponent>
@@ -95,6 +112,7 @@ const Profile = () => {
           shopUid={shopDetails?.shop_uid}
         />
       )}
+      {showSharePopup && <SharePopup setIsShare={setSharePopup} shopId={shopDetails?.shop_id}  />}
       <div className="profile">
         <div className="page-header">
           <h3>My Account</h3>
@@ -109,7 +127,8 @@ const Profile = () => {
               <div className="user-details">
                 <div className="scanner-card">
                   <h3>{shopDetails?.shop_name || "Mobile Traders"}</h3>
-                  <img src={scannerImage} alt="scanner" />
+                  {/* <img src={scannerImage} alt="scanner" /> */}
+                   <img src={shareIcon} alt="tick-icon" onClick={handleShare} />
                 </div>
 
                 <div>
@@ -120,34 +139,35 @@ const Profile = () => {
                 </div>
                 <div className="number-card">
                   <p>91+ {userDetails?.data?.phone || "---"}</p>
-                  <img src={chatColor} alt="chat" />
+                  {sellerChartIcon? "":<img src={chatColor} alt="chat" /> }
+                  
                 </div>
-                <div className="followers-card">
+                {/* <div className="followers-card">
                   <div className="followers-count">
                     <img src={followerIcon} alt="" />
                     <div>
                       <p>20K</p> <p className="followers-text">(followers)</p>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="enable-public">
               <div className="left-card">
-                <div className="account-public-card">
+                {/* <div className="account-public-card">
                   <h3>Do you want your Account in Public? </h3>
                   <ToggleYesNo />
-                </div>
-                <p>
+                </div> */}
+                {/* <p>
                   (If you keep it in Public out of your contacts customer can
                   see your website)
-                </p>
-                <button
+                </p> */}
+                {/* <button
                   onClick={handleTakeSubscription}
                   className="subscription-btn"
                 >
                   Take Subscription
-                </button>
+                </button> */}
                 <button
                   onClick={handleTickVerification}
                   className="subscription-btn"
@@ -166,15 +186,44 @@ const Profile = () => {
             </div> */}
             <div className="links">
               {sellerAllShops?.data[0]?.shop_address && (
-                <div>
+                <a href={`https://www.google.com/maps?q=${sellerAllShops?.data[0]?.store_location?.latitude},${sellerAllShops?.data[0]?.store_location?.longitude}`}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="location-link"
+  onClick={(e) => e.stopPropagation()} >
                   <img src={locationImage} alt="location" />
                   <p>{sellerAllShops?.data[0]?.shop_address}.</p>
-                </div>
+                </a>
               )}
-              <div>
+
+               {sellerAllShops?.data[0]?.shop_contact?.xLink ?  <div>
+
+                <a href={sellerAllShops?.data[0]?.shop_contact?.xLink}  onClick={(e) => e.stopPropagation()}   className="location-link">
+               
                 <img src={youtubeIcon} alt="youtube" />
-                <p>Youtube Channel</p>
-              </div>
+                <p>Youtube Link</p>
+                </a>
+              </div> : " " }
+
+               {sellerAllShops?.data[0]?.shop_contact?.instagramLink ?  <div>
+
+                <a href={sellerAllShops?.data[0]?.shop_contact?.instagramLink}  onClick={(e) => e.stopPropagation()}   className="location-link">
+               
+                <img src={Instagram} alt="youtube" />
+                <p>Instagram Link</p>
+                </a>
+              </div> : " " }
+
+                {sellerAllShops?.data[0]?.shop_contact?.website ?  <div>
+
+                <a href={sellerAllShops?.data[0]?.shop_contact?.website}  onClick={(e) => e.stopPropagation()}   className="location-link">
+               
+                <img src={websiteIcon} alt="website" />
+                <p>My website</p>
+                </a>
+              </div> : " " }
+              
+             
             </div>
           </div>
         </div>

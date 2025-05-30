@@ -34,6 +34,13 @@
         background-color: aqua;
         position: absolute;
         z-index: 2;
+        div{
+          div{
+            button{
+              display: none;
+            }
+          }
+        }
       }
       .map-div {
         width: 100%;

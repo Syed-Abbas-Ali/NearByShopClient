@@ -5,19 +5,11 @@
   border-radius: 8px;
   padding: 8px;
   background-color: $border;
-  width: 95%;
+  width: 400px;
   flex-shrink: 0;
   display: flex;
   gap: 14px;
-  @media (min-width: 768px) {
-    width: 47.5%;
-  }
-  @media (min-width: 1020px) {
-    width: 32%;
-  }
-  @media (min-width: 1300px) {
-    width: 24%;
-  }
+
   .default-image {
     width: 40%;
     flex-shrink: 0;

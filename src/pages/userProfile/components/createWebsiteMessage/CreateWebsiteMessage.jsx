@@ -9,9 +9,15 @@ const CreateWebsiteMessage = () => {
   const handleCreateWebsite = () => {
     navigate("/location-verification");
   };
+  
+   const handleLogout = () => {
+    sessionStorage.removeItem("user"); // Clear the access token
+    window.location.href = "/";
+
+  };
   return (
     <div className="create-website-message-card">
-      <div className="notifications-allow">
+      {/* <div className="notifications-allow">
         <div className="yes-no-notifications">
           <h3>Allow Notifications</h3>
           <div className="toggle-yes-no-div">
@@ -22,7 +28,7 @@ const CreateWebsiteMessage = () => {
           About your wish list cards price changes and stocks availability and
           also your following Seller.
         </p>
-      </div>
+      </div> */}
       <hr />
       <div className="website-creation-btn-card">
         <div className="sample-img">
@@ -38,6 +44,7 @@ const CreateWebsiteMessage = () => {
             for success!
           </p>
           <button onClick={handleCreateWebsite}>Become a seller</button>
+          <button onClick={handleLogout}>Logout</button>
         </div>
       </div>
     </div>

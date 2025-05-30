@@ -86,6 +86,29 @@ const Chat = ({ activeRoomId, setActiveRoomId }) => {
       setActiveRoomId(roomId);
     }
   }, [chatList]);
+    const formatCreatedAt = (createdAt) => {
+  const date = new Date(createdAt);
+  const now = new Date();
+
+  const isToday = date.toDateString() === now.toDateString();
+  if (isToday) {
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  const startOfWeek = new Date(now);
+  startOfWeek.setDate(now.getDate() - now.getDay());
+  startOfWeek.setHours(0, 0, 0, 0);
+
+  const endOfWeek = new Date(now);
+  endOfWeek.setDate(now.getDate() + (6 - now.getDay()));
+  endOfWeek.setHours(23, 59, 59, 999);
+
+  if (date >= startOfWeek && date <= endOfWeek) {
+    return date.toLocaleDateString('en-US', { weekday: 'short' }); // e.g., Mon, Wed
+  }
+
+  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+};
 
   return (
     <>
@@ -126,9 +149,8 @@ const Chat = ({ activeRoomId, setActiveRoomId }) => {
                 {chatList?.data?.map((user, index) => {
                   return (
                     <div
-                      className={`user ${
-                        user.roomId === activeRoomId ? "selected-user-bg" : ""
-                      }`}
+                      className={`user ${user.roomId === activeRoomId ? "selected-user-bg" : ""
+                        }`}
                       key={index}
                       onClick={() => handleSingleChat(user)}
                     >
@@ -139,11 +161,16 @@ const Chat = ({ activeRoomId, setActiveRoomId }) => {
                         <div className="time">
                           <h3>
                             {currentUserType !== "seller"
-                              ? user?.shopName
-                              : user?.customerName}
-                          </h3>
+                              ? user?.shopName?.length > 20
+                                ? user?.shopName.slice(0, 20) + ".."
+                                : user?.shopName
+                              : user?.customerName?.length > 20
+                                ? user?.customerName.slice(0, 20) + ".."
+                                : user?.customerName}
 
-                          <p>{user?.lastMessage?.time}</p>
+                          </h3>
+                              
+                          <p>{formatCreatedAt(user?.lastMessage?.createdAt)}</p>
                         </div>
                         <p className="tick-message">
                           <img
@@ -154,7 +181,7 @@ const Chat = ({ activeRoomId, setActiveRoomId }) => {
                             }
                             alt="tick"
                           />
-                          {user?.lastMessage?.message}
+                          {user?.lastMessage?.message?.length>30 ? user?.lastMessage?.message?.slice(0,30)+"..":user?.lastMessage?.message }
                         </p>
                       </div>
                     </div>

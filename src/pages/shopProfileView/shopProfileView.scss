@@ -11,6 +11,7 @@
     width: 100%;
     padding: 0px 1rem;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 5px -5px;
+
     button {
       padding: 6px;
       display: flex;
@@ -18,6 +19,7 @@
       justify-content: center;
       background-color: transparent;
     }
+
     h3 {
       font-weight: 500;
       font-size: 14px;
@@ -26,6 +28,7 @@
       letter-spacing: -0.5px;
     }
   }
+
   .content-card {
     min-height: calc(100vh - 130px);
     max-height: calc(100vh - 130px);
@@ -36,13 +39,17 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
+
     &::-webkit-scrollbar {
       display: none;
     }
+
     .profile-data-card {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       gap: 24px;
+    
+
       .profile-pic-card {
         height: 104px;
         width: 104px;
@@ -51,22 +58,45 @@
         display: flex;
         justify-content: center;
         align-items: center;
+
         img {
           width: 100%;
           height: 100%;
           border-radius: 50%;
         }
       }
+
       .profile-details {
         flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+        .name-share {
+          width: 70%;
+          display: flex;
+          gap: 20px;
+          align-items: center;
+
+          .h1 {
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 20px;
+            letter-spacing: -0.5px;
+            color: $secondary-color;
+            // margin-bottom: 8px;
+          }
+        }
+
         h1 {
           font-weight: 500;
           font-size: 16px;
           line-height: 20px;
           letter-spacing: -0.5px;
           color: $secondary-color;
-          margin-bottom: 8px;
+          // margin-bottom: 8px;
         }
+
         h3 {
           font-weight: 500;
           font-size: 14px;
@@ -75,14 +105,17 @@
           color: $secondary-color;
           margin-bottom: 3px;
         }
+
         .ratings-card {
           display: flex;
           align-items: center;
           justify-content: space-between;
           margin-bottom: 8px;
+
           .stars-card {
             padding: 0px;
           }
+
           button {
             border: 1px solid $app-primary-color;
             background-color: transparent;
@@ -95,14 +128,19 @@
             border-radius: 4px;
           }
         }
+
         .phone-number-card {
           display: flex;
           align-items: center;
-          gap: 50px;
+          gap: 20px;
+          flex-wrap: wrap;
+
           .chat-card {
             display: flex;
             align-items: center;
             gap: 12px;
+
+
             p {
               font-weight: 500;
               font-size: 12px;
@@ -112,11 +150,22 @@
             }
           }
         }
+
+        .chat-btn {
+          padding: 5px 10px;
+          font-size: 12px;
+          font-weight: 700;
+          background-color: $app-primary-color;
+          border-radius: 5px;
+          color: #fff;
+        }
+
         .follow-card {
           display: flex;
           align-items: center;
           gap: 8px;
           margin-top: 20px;
+
           .follow-btn {
             font-weight: 500;
             font-size: 12px;
@@ -125,15 +174,18 @@
             padding: 6px 12px;
             border-radius: 5px;
           }
+
           .active-btn {
             color: $app-primary-color;
             background-color: transparent;
             border: 1px solid $app-primary-color;
           }
+
           .in-active-btn {
             color: $white-color;
             background-color: $app-primary-color;
           }
+
           .count-card {
             display: flex;
             align-items: center;
@@ -143,11 +195,13 @@
               height: 20px;
               width: 20px;
             }
+
             p {
               display: flex;
               align-items: center;
               gap: 8px;
             }
+
             .number {
               font-weight: 500;
               font-size: 12px;
@@ -155,6 +209,7 @@
               letter-spacing: 1px;
               color: $app-second-color;
             }
+
             .text {
               font-weight: 500;
               font-size: 8px;
@@ -166,11 +221,51 @@
         }
       }
     }
+
     .all-products-card {
       display: flex;
       flex-direction: column;
       gap: 24px;
+
       .products-card {
+        .all-products {
+      
+          display: flex;
+          row-gap: 10px;
+          column-gap: 10px;
+          flex-wrap: wrap;
+
+          @media (max-width:1600px) {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+          }
+
+          @media (max-width:1530px) {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+          }
+
+          @media (max-width:1220px) {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+          }
+
+          @media (max-width:930px) {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+          }
+
+          @media (max-width:690px) {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+          }
+
+          @media (max-width:500px) {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+
         .products-header {
           font-weight: 600;
           font-size: 16px;
@@ -181,6 +276,7 @@
       }
     }
   }
+
   .video-section {
     h3 {
       font-weight: 500;
@@ -190,15 +286,18 @@
       color: $secondary-color;
       margin-bottom: 8px;
     }
+
     .social-media-links {
       margin-top: 27px;
       display: flex;
       flex-direction: column;
       gap: 12px;
+
       p {
         display: flex;
         align-items: center;
         gap: 8px;
+
         span {
           font-weight: 400;
           font-size: 12px;

@@ -29,14 +29,15 @@ const UserProfile = () => {
           </button>
           <span>Profile</span>
         </div>
-        <button onClick={handleSettings}>
+        {/* <button onClick={handleSettings}>
           <img src={settingsIcon} alt="" />
-        </button>
+        </button> */}
       </div>
       <div className="user-profile-card">
         <ProfileHeader />
         <hr />
         <CreateWebsiteMessage />
+        
       </div>
       <BottomNavbar />
     </div>

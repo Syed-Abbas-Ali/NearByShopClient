@@ -9,8 +9,10 @@
     position: fixed;
     top: 0px;
     width: 100%;
+    z-index: 999;
     left: 0px;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 5px -5px;
+    background-color: white;
     .back-icon-card {
       display: flex;
       align-items: center;
@@ -35,6 +37,7 @@
     padding: 1rem;
     margin-top: 70px;
     max-width: 1500px;
+    padding-bottom: 70px;
     @media screen and (min-width: 1500px) {
       margin-left: auto;
       margin-right: auto;
