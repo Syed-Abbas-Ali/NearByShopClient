@@ -80,6 +80,10 @@ const ChatDetails = ({
   }, [socketMethods]);
 
   const handleSendMessage = async () => {
+      if (!inputValue.trim()) {
+    toast.error("Empty message can't be sent!");
+    return;
+  }
     const messageData = {
       isRead: false,
       message: inputValue,
@@ -89,7 +93,7 @@ const ChatDetails = ({
         roomId: activeRoomId ?? roomId,
         data: messageData,
       });
-      
+
       if (response?.data) {
         if (socketMethods) {
           socketMethods.emit("send_message", {
@@ -113,7 +117,7 @@ const ChatDetails = ({
   };
 
   useEffect(() => {
-    if(chatDetails){
+    if (chatDetails) {
       refetch();
     }
     const handleClickOutside = (event) => {
@@ -131,28 +135,28 @@ const ChatDetails = ({
   }, []);
   //this for date and time 
   const formatCreatedAt = (createdAt) => {
-  const date = new Date(createdAt);
-  const now = new Date();
+    const date = new Date(createdAt);
+    const now = new Date();
 
-  const isToday = date.toDateString() === now.toDateString();
-  if (isToday) {
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  }
+    const isToday = date.toDateString() === now.toDateString();
+    if (isToday) {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
 
-  const startOfWeek = new Date(now);
-  startOfWeek.setDate(now.getDate() - now.getDay());
-  startOfWeek.setHours(0, 0, 0, 0);
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - now.getDay());
+    startOfWeek.setHours(0, 0, 0, 0);
 
-  const endOfWeek = new Date(now);
-  endOfWeek.setDate(now.getDate() + (6 - now.getDay()));
-  endOfWeek.setHours(23, 59, 59, 999);
+    const endOfWeek = new Date(now);
+    endOfWeek.setDate(now.getDate() + (6 - now.getDay()));
+    endOfWeek.setHours(23, 59, 59, 999);
 
-  if (date >= startOfWeek && date <= endOfWeek) {
-    return date.toLocaleDateString('en-US', { weekday: 'short' }); // e.g., Mon, Wed
-  }
+    if (date >= startOfWeek && date <= endOfWeek) {
+      return date.toLocaleDateString('en-US', { weekday: 'short' }); // e.g., Mon, Wed
+    }
 
-  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-};
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  };
 
 
   return (
@@ -170,8 +174,16 @@ const ChatDetails = ({
             <img src={chatUser1} alt="" />
           </div>
           <div className="user-name">
-            <h3>{chatDetails?.data?.shopName}</h3>
-            <p>Merchant</p>
+            <h3>{
+              chatDetails?.data?.shopName
+                ? chatDetails?.data?.shopName?.length > 20
+                  ? chatDetails?.data?.shopName?.slice(0, 20) + "..."
+                  : chatDetails?.data?.shopName
+                : chatDetails?.data?.customerName?.length > 20
+                  ? chatDetails?.data?.customerName?.slice(0, 20) + "..."
+                  : chatDetails?.data?.customerName
+            }</h3>
+            <p>{chatDetails?.data?.shopName ? "Merchant" : "Customer"}</p>
           </div>
         </div>
       </div>
@@ -179,20 +191,19 @@ const ChatDetails = ({
         {allChatList?.map((msg) => (
           <div
             key={msg.id}
-            className={`message ${
-              msg.senderId === decodedToken.userId ? "right" : "left"
-            }`}
-          > 
-          {console.log(msg.senderId === decodedToken.userId)}
+            className={`message ${msg.senderId === decodedToken.userId ? "right" : "left"
+              }`}
+          >
+            {console.log(msg.senderId === decodedToken.userId)}
             <p className="message-content">{msg.message}</p>
             <div className="message-timestamp">
-               <img
-                            src={
-                              msg?.isRead ? chatBlueTick : chatGreyTick
-                            }
-                            alt="tick"
-                          />
-              
+              <img
+                src={
+                  msg?.isRead ? chatBlueTick : chatGreyTick
+                }
+                alt="tick"
+              />
+
               <span>{formatCreatedAt(msg.createdAt)}</span></div>
 
           </div>

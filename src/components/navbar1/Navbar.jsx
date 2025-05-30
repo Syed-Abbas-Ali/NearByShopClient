@@ -30,10 +30,10 @@ const mobileNavIcons = [
     path: "/chat",
     icon: chatIcon,
   },
-  {
-    path: "/notifications",
-    icon: notificationIcon,
-  },
+  // {
+  //   path: "/notifications",
+  //   icon: notificationIcon,
+  // },
   {
     path: "/profile",
     icon: userIcon,
@@ -45,30 +45,33 @@ const desktopNavbarLinks = [
     name: "Home",
     path: "/",
   },
-  {
-    name: "Wishlist",
-    path: "/wishlist",
+    {
+    name: "shops",
+    path: "/shop",
   },
-  {
+    {
     name: "Deals",
     path: "/offer",
   },
-  {
+   {
     name: "Chats",
     path: "/chat",
   },
   {
-    name: "shops",
-    path: "/shop",
-  }
+    name: "Wishlist",
+    path: "/wishlist",
+  },
+
+ 
+
 ];
 
 const Navbar = () => {
   let token = accessTokenValue();
   const socketMethods = useContext(SocketContext);
-  const {roomId}=useSelector(state=>state.chatState)
+  const { roomId } = useSelector(state => state.chatState)
   const navigate = useNavigate();
-  const dispatch=useDispatch()
+  const dispatch = useDispatch()
   const { pathname } = useLocation();
   const [notificationActive, setNotificationActive] = useState(false);
   const [chatActive, setChatActive] = useState(false);
@@ -108,7 +111,7 @@ const Navbar = () => {
       console.log(err);
     }
   };
-  const handleLoginActive=()=>{
+  const handleLoginActive = () => {
     navigate("/login");
   }
 
@@ -139,12 +142,12 @@ const Navbar = () => {
     <>
       <header className="mobile-navbar">
         <div className="logo-card" onClick={handleLogo}>
-          <img className= "logo-imgs" src={logo} alt="" />
+          <img className="logo-imgs" src={logo} alt="" />
           <div className="user-Location">
-          <UserLocationPointer />
+            <UserLocationPointer />
           </div>
         </div>
-       
+
         <nav>
           <ul>
             {mobileNavIcons.map((link, index) => (
@@ -158,13 +161,13 @@ const Navbar = () => {
       <header className="desktop-navbar">
         <div className="logo-card-container">
           <div className="logo-card" onClick={handleLogo}>
-            <img className= "logo-imgs"src={logo} alt="" />
+            <img className="logo-imgs" src={logo} alt="" />
           </div>
 
 
           <UserLocationPointer />
-        
-          
+
+
         </div>
         {/* <UserLocationDetails /> */}
         <div className="right-card">
@@ -217,11 +220,11 @@ const Navbar = () => {
               
             </div>
           )} */}
-{/* dont delete this */}
+          {/* dont delete this */}
           {/* <div className="chat-icon" onClick={handleChatActive}>
             <img src={chatIcon} alt="" />
           </div> */}
-          <div className="profile-card">
+          {/* <div className="profile-card">
             {userTypeValue() === "USER" && token && (
               <div
                 className="become-seller-image"
@@ -231,17 +234,24 @@ const Navbar = () => {
                 <span>Become a Seller</span>
               </div>
             )}
-            {userTypeValue() === "USER" && token ?  (
-  <div>
-    {/* <button onClick={() => navigate("/login")} >Login</button> */}
-  </div>
-):(
-  <div className="profile-image" onClick={() => navigate("/profile")}>
-    <img src={userBorderIcon} alt="Profile" />
-    <span>Profile</span>
-  </div>
-) }
+            {userTypeValue() === "USER" && token ? (
+              <div>
+                <button onClick={() => navigate("/login")} >Login</button>
+              </div>
+            ) : (
+              <div className="profile-image" onClick={() => navigate("/profile")}>
+                <img src={userBorderIcon} alt="Profile" />
+                <span>Profile</span>
+              </div>
+            )}
+          </div> */}
+          <div className="profile-card">
+             <div className="profile-image" onClick={() => navigate("/profile")}>
+                <img src={userBorderIcon} alt="Profile" />
+                <span>Profile</span>
+              </div>
           </div>
+
         </div>
       </header>
     </>

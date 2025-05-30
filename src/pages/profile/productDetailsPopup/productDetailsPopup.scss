@@ -32,10 +32,11 @@
       min-height: 90vh;
       overflow: auto;
       display: flex;
+        gap: 100px;
       @media screen and (max-width: 900px) {
         align-items: center;
       }
-      gap: 100px;
+    
       @media screen and (max-width: 900px) {
         flex-direction: column;
         gap: 40px;
@@ -51,22 +52,24 @@
         gap: 20px;
         justify-content: center;
         align-items: center;
-        @media screen and (max-width: 900px) {
+        @media (max-width: 900px) {
           width: 100%;
           max-width: 100%;
         }
         .main-image {
           background-color: $border;
           height: 300px;
-          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
           border-radius: 8px;
           img{
             height: 100%;
-            width: 100%;
+           object-fit: scale-down;
           }
         }
         .sub-images-card {
-          width: 100%;
+      
           display: flex;
           justify-content: center;
           gap: 20px;

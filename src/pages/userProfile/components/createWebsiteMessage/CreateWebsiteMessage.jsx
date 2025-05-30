@@ -9,6 +9,12 @@ const CreateWebsiteMessage = () => {
   const handleCreateWebsite = () => {
     navigate("/location-verification");
   };
+  
+   const handleLogout = () => {
+    sessionStorage.removeItem("user"); // Clear the access token
+    window.location.href = "/";
+
+  };
   return (
     <div className="create-website-message-card">
       {/* <div className="notifications-allow">
@@ -38,6 +44,7 @@ const CreateWebsiteMessage = () => {
             for success!
           </p>
           <button onClick={handleCreateWebsite}>Become a seller</button>
+          <button onClick={handleLogout}>Logout</button>
         </div>
       </div>
     </div>

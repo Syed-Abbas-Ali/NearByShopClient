@@ -26,6 +26,13 @@
       @media (min-width: 768px) {
         width: 50%;
       }
+                .name-share{
+                  width: 70%;
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                }
+      
       .profile-image-card {
         padding: 10px 1rem;
         gap: 24px;

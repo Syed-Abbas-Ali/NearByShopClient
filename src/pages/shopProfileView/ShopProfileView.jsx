@@ -38,7 +38,9 @@ import SearchComponent from "../../components/search/Search";
 import WrapperComponent from "../../components/wrapperComponent/WrapperComponent";
 import CircularLoader from "../../components/circularLoader/CircularLoader";
 import { setRoomChatAndActive } from "../../apis&state/state/chatState";
-import shareIcon from "../../assets/shareIcon.svg"
+import shareIcon from "../../assets/shareNewIcon.svg";
+
+import SharePopup from "../../components/commonComponents/sharePopup/SharePopup";
 
 const ShopProfileView = () => {
   const dispatch = useDispatch();
@@ -46,6 +48,7 @@ const ShopProfileView = () => {
   const navigate = useNavigate();
   const [addReviewText, setAddReviewText] = useState();
   const [isShowPopup, setIsShowPopup] = useState(false);
+   const [showSharePopup, setSharePopup] = useState(false);
 
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -150,6 +153,10 @@ const ShopProfileView = () => {
       console.log(e);
     }
   };
+     const handleShare = (e) => {
+    e.stopPropagation();
+    setSharePopup((prev) => !prev);
+  };
 
   function formatNumber(num) {
     if (num >= 1e9) {
@@ -166,9 +173,10 @@ const ShopProfileView = () => {
   return (
     <WrapperComponent>
       <div className="seller-profile-view">
-        {isShowPopup && (
+         {showSharePopup && <SharePopup setIsShare={setSharePopup} shopId={singleShopDetails?.data?.shopDetails?.shop_id}  />}
+        {/* {isShowPopup && (
           <RatingPopup setIsShowPopup={setIsShowPopup} shopId={shopId} />
-        )}
+        )} */}
         <header>
           <button onClick={handleBack}>
             <img src={backImage} alt="" />
@@ -184,10 +192,12 @@ const ShopProfileView = () => {
                 <img src={userMask} alt="" />
               </div>
               <div className="profile-details">
-
+                <div className="name-share">
                 <h1>
                   {singleShopDetails?.data?.shopDetails?.shop_name || "-----"}
                 </h1>
+                 <img src={shareIcon} onClick={handleShare}/>
+                 </div>
               
                 {/* <div className="ratings-card">
                   <div className="stars-card">
@@ -202,19 +212,19 @@ const ShopProfileView = () => {
                   {singleShopDetails?.data?.shopDetails?.first_name}{" "}
                   {singleShopDetails?.data?.shopDetails?.last_name}
                 </h3>
-                  <img src={shareIcon}/>
+                 
                   </div>
 
                 <div className="phone-number-card">
                   <div
                     className="chat-card"
-                    onClick={() => handleNavigate("/chat")}
+                  
                   >
                     <img src={phoneCallIcon} alt="" />
                     <a href={`tel:+91${singleShopDetails?.data?.shopDetails?.phone}`}>{singleShopDetails?.data?.shopDetails?.phone}</a>
                   </div>
                   {roomExistLoading ? (
-                    <button>
+                    <button    onClick={() => handleNavigate("/chat")}>
                       <img src={chatIcon} />
                       <span>Loading...</span>
                     </button>
@@ -223,11 +233,13 @@ const ShopProfileView = () => {
                       onClick={() =>
                         handleNavigate(roomExistData?.data?.roomId)
                       }
+                           className="chat-btn"
                     >
-                      <img src={chatIcon} />
+                     
                       <span>Chat</span>
                     </button>
                   )}
+                  <div><button onClick={handleShare} className="chat-btn">Share </button></div>
                 </div>
                 {/* <div className="follow-card">
                   <button

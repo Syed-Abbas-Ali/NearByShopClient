@@ -46,7 +46,7 @@
         height: 100%;
         width: 100%;
         border-radius: 4px;
-        object-fit: cover;
+        object-fit: scale-down;
       }
       .action-btns {
         position: absolute;
@@ -135,7 +135,7 @@ white-space: normal;
    }
         h1 {
           font-weight: 500;
-          font-size: 34px;
+          font-size: 24px;
           line-height: 140%;
           letter-spacing: 0%;
           color: $app-second-color;
