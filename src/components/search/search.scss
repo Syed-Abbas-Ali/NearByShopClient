@@ -12,9 +12,9 @@
     }
     .filter {
       cursor: pointer;
-      @media (min-width: 768px) {
-        display: none;
-      }
+      // @media (min-width: 768px) {
+      //   display: none;
+      // }
     }
     .search{
       height: 14px;

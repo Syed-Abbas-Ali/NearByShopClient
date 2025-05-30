@@ -72,6 +72,7 @@ const Navbar = () => {
   const { roomId } = useSelector(state => state.chatState)
   const navigate = useNavigate();
   const dispatch = useDispatch()
+
   const { pathname } = useLocation();
   const [notificationActive, setNotificationActive] = useState(false);
   const [chatActive, setChatActive] = useState(false);
@@ -113,13 +114,13 @@ const Navbar = () => {
   };
   const handleLoginActive = () => {
     navigate("/login");
-  }
+  };
 
   const handleChatActive = () => {
     if (!token) {
       navigate("/login");
     } else {
-      dispatch(toggleChatActive())
+      dispatch(toggleChatActive());
     }
   };
 
@@ -164,9 +165,7 @@ const Navbar = () => {
             <img className="logo-imgs" src={logo} alt="" />
           </div>
 
-
           <UserLocationPointer />
-
 
         </div>
         {/* <UserLocationDetails /> */}
@@ -190,9 +189,11 @@ const Navbar = () => {
                 alt=""
                 onClick={() => setNotificationActive((prev) => !prev)}
               />
-             {totalNotification?.length>0 && <div className="total-count">
-                {totalNotification && totalNotification?.length}
-              </div>}
+              {totalNotification?.length > 0 && (
+                <div className="total-count">
+                  {totalNotification && totalNotification?.length}
+                </div>
+              )}
               <div
                 className={
                   notificationActive
@@ -240,6 +241,7 @@ const Navbar = () => {
               </div>
             ) : (
               <div className="profile-image" onClick={() => navigate("/profile")}>
+
                 <img src={userBorderIcon} alt="Profile" />
                 <span>Profile</span>
               </div>
@@ -250,6 +252,7 @@ const Navbar = () => {
                 <img src={userBorderIcon} alt="Profile" />
                 <span>Profile</span>
               </div>
+
           </div>
 
         </div>

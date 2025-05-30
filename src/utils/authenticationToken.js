@@ -16,6 +16,8 @@ export const userTypeValue = () => {
         JSON.parse(sessionStorage.getItem("user"))
     );
     return decoded?.role
+  }else{
+    return null
   }
   // return
   //   ? JSON.parse(sessionStorage.getItem("user"))?.role

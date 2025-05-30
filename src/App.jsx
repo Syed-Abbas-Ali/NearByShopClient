@@ -95,6 +95,7 @@ const protectionPages = [
 
   // { path: "/shop", element: <ShopPage /> },
 
+
   { path: "/shop/:shopCategory?", element: <ShopPage /> },
 
   { path: "/all-shops", element: <FullShopsPage /> },

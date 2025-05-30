@@ -19,10 +19,13 @@ import WrapperComponent from "../../components/wrapperComponent/WrapperComponent
 import SearchComponent from "../../components/search/Search";
 import Pagination from "../../components/pagination/Pagination";
 import CircularLoader from "../../components/circularLoader/CircularLoader";
+import Filters from "../../components/filters/Filters";
+import { useSelector } from "react-redux";
 
 const ProductDetails = () => {
   const { productUid } = useParams();
   const navigate = useNavigate();
+  const { isFilterPopupOpen } = useSelector((state) => state.globalState);
 
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -60,7 +63,6 @@ const ProductDetails = () => {
 
   return (
     <WrapperComponent>
-      {/* <TopSearchComponent/> */}
       <div className="product-details-container">
         <div className="content-card">
           <div className="product-details-content">
@@ -74,8 +76,7 @@ const ProductDetails = () => {
               />
             )}
             <div className="filter-card">
-              {/* <FilterInputComponent /> */}
-              <SearchComponent setSearch={setSearch} />
+              <SearchComponent setSearch={setSearch} isFilter={true} />
             </div>
             {isProductListLoading && <CircularLoader />}
             <div className="all-products">

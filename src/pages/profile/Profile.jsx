@@ -122,7 +122,7 @@ const Profile = () => {
           <div className="profile-data-card">
             <div className="profile-image-card">
               <div className="profile-image">
-                <img src={userMask} alt="" className="user-mask" />
+                <img src={userDetails?.data?.profilePic} alt="" className="user-mask" />
               </div>
               <div className="user-details">
                 <div className="scanner-card">

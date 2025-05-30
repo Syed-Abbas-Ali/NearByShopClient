@@ -39,10 +39,6 @@ const ProductSection = ({
     { skip: shouldSkip }
   );
 
-  useEffect(()=>{
-console.log(latitude)
-console.log(longitude)
-  },[latitude])
   return (
     <div style={{ display: data?.data?.items?.length > 0 ? "block" : "none" }}>
     <div className="product-section">

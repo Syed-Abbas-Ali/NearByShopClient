@@ -55,9 +55,23 @@ const ChatDetails = ({
     setInputValue(event.target.value);
   };
 
+  const handleIsRead = () => {
+    socketMethods.emit("is_read", {
+      receiverId: decodedToken.userId,
+      roomId: activeRoomId ?? roomId,
+      senderId:
+        userTypeValue() !== "SELLER"
+          ? chatDetails?.data?.createdBy
+          : chatDetails?.data?.recieverId,
+    });
+    return () => {
+      socketMethods.off("is_read");
+    };
+  };
   useEffect(() => {
     if (chatDetails?.data?.messages) {
       setAllChatList(chatDetails?.data?.messages);
+      handleIsRead();
     }
   }, [chatDetails]);
 
@@ -72,10 +86,15 @@ const ChatDetails = ({
           senderId: allChatList[0]?.senderId,
         },
       ]);
+      handleIsRead();
+    });
+    socketMethods.on("is_read", () => {
+      refetch();
     });
 
     return () => {
       socketMethods.off("receive_message");
+      socketMethods.off("is_read");
     };
   }, [socketMethods]);
 
@@ -133,7 +152,7 @@ const ChatDetails = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  //this for date and time 
+  //this for date and time
   const formatCreatedAt = (createdAt) => {
     const date = new Date(createdAt);
     const now = new Date();
@@ -158,6 +177,9 @@ const ChatDetails = ({
     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   };
 
+
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  };
 
   return (
     <div
@@ -193,6 +215,7 @@ const ChatDetails = ({
             key={msg.id}
             className={`message ${msg.senderId === decodedToken.userId ? "right" : "left"
               }`}
+
           >
             {console.log(msg.senderId === decodedToken.userId)}
             <p className="message-content">{msg.message}</p>
@@ -206,6 +229,9 @@ const ChatDetails = ({
 
               <span>{formatCreatedAt(msg.createdAt)}</span></div>
 
+
+              <span>{formatCreatedAt(msg.createdAt)}</span>
+            </div>
           </div>
         ))}
       </div>
