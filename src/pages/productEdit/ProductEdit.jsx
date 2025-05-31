@@ -151,8 +151,8 @@ const ProductEdit = () => {
   const [productDetails, setProductDetails] = useState({
     title: "",
     description: "",
-    mainPrice: "",
-    discountPrice: "",
+    market_price: "",
+    our_price: "",
     isAvailable: "",
   });
 
@@ -163,8 +163,8 @@ const ProductEdit = () => {
         title: product?.title,
         description: product?.description,
         image: product?.image,
-        mainPrice: product?.mainPrice,
-        discountPrice: product?.discountPrice,
+        market_price: product?.market_price,
+        our_price: product?.our_price,
         category: product?.category,
         subCategory: product?.subCategory,
         isAvailable: product?.isAvailable,
@@ -275,7 +275,7 @@ const ProductEdit = () => {
 
   const handleInput = async (e) => {
     const { value, name } = e.target;
-    let NumberRequire = ["discountPrice", "mainPrice"];
+    let NumberRequire = ["our_price", "market_price"];
     const finalValue =
       e.target.type === "checkbox"
         ? e.target.checked
@@ -306,11 +306,11 @@ const ProductEdit = () => {
   };
 
   const handleUpdate = async () => {
-    const { mainPrice, discountPrice } = productDetails;
+    const { market_price, our_price } = productDetails;
     let data = {
       ...productDetails,
-      mainPrice: Number(mainPrice),
-      discountPrice: Number(discountPrice),
+      market_price: Number(market_price),
+      our_price: Number(our_price),
       category: productDetails.category,
       subCategory: productDetails.subCategory,
     };
@@ -322,11 +322,10 @@ const ProductEdit = () => {
         data,
       });
       if (response?.data) {
-     
         toast.success("Product updated!");
-      setTimeout(() => {
-        navigate("/profile"); // use navigate from useNavigate()
-      }, 1000);
+        setTimeout(() => {
+          navigate("/profile"); // use navigate from useNavigate()
+        }, 1000);
       }
     } catch (err) {
       if (err.inner) {
@@ -340,11 +339,11 @@ const ProductEdit = () => {
   };
 
   const handleSave = async () => {
-    const { mainPrice, discountPrice } = productDetails;
+    const { market_price, our_price } = productDetails;
     let data = {
       ...productDetails,
-      mainPrice: Number(mainPrice),
-      discountPrice: Number(discountPrice),
+      market_price: Number(market_price),
+      our_price: Number(our_price),
       category: categoryData.categoryName,
       subCategory: categoryData.subCategory,
       ...productImageDetails,
@@ -368,7 +367,8 @@ const ProductEdit = () => {
         );
       } else {
         toast.error(response?.error?.data?.errors[0]?.fieldName);
-        if (response?.error?.data?.errors[0]?.statusCode == 422) {
+        console.log(response?.error);
+        if (response?.error?.status == 422) {
           navigate(`/seller-plan-purchase/${value?.shopUid.split("&")[0]}`);
         }
       }
@@ -532,23 +532,23 @@ const ProductEdit = () => {
               <input
                 type="text"
                 placeholder="₹Original Price"
-                name="mainPrice"
-                value={productDetails.mainPrice ?? 0}
+                name="market_price"
+                value={productDetails.market_price ?? 0}
                 onChange={handleInput}
               />
-              {errors.mainPrice && <p className="error">{errors.mainPrice}</p>}
+              {errors.market_price && <p className="error">{errors.market_price}</p>}
             </div>
             <div>
               <label>Discount Percentage</label>
               <input
                 type="text"
                 placeholder="%Discount Percentage"
-                name="discountPrice"
-                value={productDetails.discountPrice ?? 0}
+                name="our_price"
+                value={productDetails.our_price ?? 0}
                 onChange={handleInput}
               />
-              {errors.discountPrice && (
-                <p className="error">{errors.discountPrice}</p>
+              {errors.our_price && (
+                <p className="error">{errors.our_price}</p>
               )}
             </div>
           </div>

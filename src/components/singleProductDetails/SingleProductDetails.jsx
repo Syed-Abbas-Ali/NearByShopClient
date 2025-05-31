@@ -216,8 +216,8 @@ const SingleProductDetails = ({
             </div>
 
             <div className="price-container">
-              <span className="price">₹{singleProductDetails?.price.toFixed(0)}/-</span>
-               <span className="main-price">₹{singleProductDetails?.mainPrice.toFixed(0)}/-</span>
+              <span className="price">₹{singleProductDetails?.price?.toFixed(0)}/-</span>
+               <span className="main-price">₹{singleProductDetails?.mainPrice?.toFixed(0)}/-</span>
                 <span className="main-discount">{singleProductDetails?.discountPercentage?.toFixed(0)}%off</span>
             </div>
           </div>

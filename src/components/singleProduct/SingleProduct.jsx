@@ -109,7 +109,7 @@ const handleNavigate = () => {
       {showSharePopup && <SharePopup setIsShare={setSharePopup} productId={product.item_uid}  />}
       {/* <button className="trending-btn">Trending</button> */}
       <div className="product-distance"><p className="distance-div">
-     {styleCardTag ? "" : `Radius ${ (product?.distance / 1000).toFixed(1) } km`}
+     {styleCardTag ? "" : `Radius ${ (product?.distance / 1000)?.toFixed(1) } km`}
 
         </p></div>
       <div className="default-product">
@@ -138,8 +138,8 @@ const handleNavigate = () => {
       <div className="product-details">
         <h3>{product.title}</h3>
         <div className="prices-and-offers">
-          <h2>₹{product.price.toFixed(0)}</h2>
-          <p className="actual-price">₹{product.mainPrice?.toFixed(0)}</p>
+          <h2>₹{product?.our_price?.toFixed(0)}</h2>
+          <p className="actual-price">₹{product?.market_price?.toFixed(0)}</p>
           {product?.discountPercentage?.toFixed(0)>5 ?
             <p className="offer-text">
             {product?.discountPercentage &&
