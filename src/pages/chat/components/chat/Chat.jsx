@@ -87,6 +87,7 @@ const Chat = ({ activeRoomId, setActiveRoomId }) => {
     }
   }, [chatList]);
     const formatCreatedAt = (createdAt) => {
+      console.log(createdAt)
   const date = new Date(createdAt);
   const now = new Date();
 

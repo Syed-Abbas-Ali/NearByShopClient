@@ -82,19 +82,19 @@ const LocationVerification = () => {
     // city: "",
   });
 
-    const { data: categories } = useGetAllCategoriesAndSubCategoriesQuery();
-  
-      useEffect(() => {
-      if (categories?.data?.length > 0) {
-        const allCategoriesList = categories?.data?.map((category) => ({
-          value: category.categoryId,
-          label: category.name,
-        }));
-        setCategoriesList(allCategoriesList);
-      }
-    }, [categories]);
+  const { data: categories } = useGetAllCategoriesAndSubCategoriesQuery();
 
-      const handleCategory = (data) => {
+  useEffect(() => {
+    if (categories?.data?.length > 0) {
+      const allCategoriesList = categories?.data?.map((category) => ({
+        value: category.categoryId,
+        label: category.name,
+      }));
+      setCategoriesList(allCategoriesList);
+    }
+  }, [categories]);
+
+  const handleCategory = (data) => {
     const { label, value } = data;
     setShopDetails((prev) => {
       return { ...prev, category: label };
@@ -148,6 +148,7 @@ const LocationVerification = () => {
   const handleSubmit = async () => {
     const shopFinalData = {
       storeName: shopDetails.shopName,
+      profile_url: shopDetails.profile_url,
       category: shopDetails.category,
       storeDescription: shopDetails.storeDescription,
       email: shopDetails.shopEmail,
@@ -185,6 +186,58 @@ const LocationVerification = () => {
     setShowMap((prev) => !prev);
   };
 
+  const handleImageChange = async (event, imageType) => {
+    const selectedFile = event.target.files[0];
+    if (selectedFile && selectedFile.size > 1024 * 1024) {
+      return toast.error("File size should not exceed 1 MB!");
+    }
+    if (
+      selectedFile.name.endsWith(".jpg") ||
+      selectedFile.name.endsWith(".jpeg") ||
+      selectedFile.name.endsWith(".png") ||
+      selectedFile.name.endsWith(".webp")
+    ) {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        // setSelectedImage(event.target.result);
+      };
+      reader.readAsDataURL(selectedFile);
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
+      if (selectedFile) {
+        // const imageUrl = URL.createObjectURL(selectedFile);
+        // setSelectedImage(imageUrl);
+
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        try {
+          const response = await uploadImage({
+            data: formData,
+            type: imageType,
+            itemUid:
+              imageType === "THUMBNAILS" ? value?.shopUid.split("&")[1] : "",
+          });
+          if (response?.data && imageType !== "THUMBNAILS") {
+            const { fileUrl, file_uid } = response.data.data;
+            // setProductImageDetails({
+            //   file_uid,
+            //   image: fileUrl,
+            // });
+            setShopDetails((prev) => {
+              return { ...prev, profile_url: fileUrl };
+            });
+            toast.success("Successfully uploaded your profile image!");
+          }
+        } catch (error) {
+          toast.error("Something went wrong");
+        }
+      }
+    } else {
+      toast.error("It will allow .jpg, .jpeg, .png, .webp formats only.");
+    }
+  };
+
   return (
     <div className="location-verification-container">
       <div className="location-verification-card">
@@ -216,21 +269,30 @@ const LocationVerification = () => {
           )}
         </div>
         <div className="fields-card">
+          <img src="" />
+          <input
+            type="file"
+            name=""
+            id=""
+            onChange={(e) => handleImageChange(e, "THUMBNAILS")}
+          />
           <div className="fields-container">
             {locationFields.map((item, index) => (
               <div key={index} className="input-single-card">
                 <label>{item.label}</label>
-                {
-                  item?.name=="category"? <Selector
-                onSelectDropdown={handleCategory}
-                dropdownList={categoriesList} 
-                placeholderText={"Select Category"}
-              />:<Input
-                  initialData={item}
-                  handleInput={handleInput}
-                  value={shopDetails[item.name]}
-                />
-                }
+                {item?.name == "category" ? (
+                  <Selector
+                    onSelectDropdown={handleCategory}
+                    dropdownList={categoriesList}
+                    placeholderText={"Select Category"}
+                  />
+                ) : (
+                  <Input
+                    initialData={item}
+                    handleInput={handleInput}
+                    value={shopDetails[item.name]}
+                  />
+                )}
                 {item.name in errors && (
                   <p className="form-error-message">{errors[item.name]}</p>
                 )}

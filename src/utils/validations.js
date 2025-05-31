@@ -136,11 +136,11 @@ export const ProductAddAndEditValidationSchema = Yup.object().shape({
 export const productValidationSchema = Yup.object().shape({
   title: Yup.string().required("Product title is required"),
   description: Yup.string().required("Description is required"),
-  mainPrice: Yup.number()
+  market_price: Yup.number()
     .typeError("Main price must be a number")
     .positive("Price must be positive")
     .required("Main price is required"),
-  discountPrice: Yup.number()
+  our_price: Yup.number()
     .typeError("Discount price must be a number")
     .min(0, "Discount price must be at least 0"),
   // stock: Yup.number()

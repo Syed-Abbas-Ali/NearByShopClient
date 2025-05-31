@@ -44,6 +44,11 @@ const ProductDetails = () => {
   const { data: shopDetails } = useGetShopProfileApiQuery(data?.data?.shopId, {
     skip: !data?.data?.shopId,
   });
+  const {
+    mapDetailsState: {
+      userMapDetails: { latitude, longitude, locationAddress },
+    },
+  } = useSelector((state) => state);
   const { data: relatedProducts, isLoading: isProductListLoading } =
     useGetAllProductsApiQuery(
       {
@@ -51,6 +56,8 @@ const ProductDetails = () => {
         category: data?.data?.category,
         keyword: search,
         pageNum: currentPage,
+        latitude,
+        longitude,
       },
       {
         skip: !data?.data?.category,
