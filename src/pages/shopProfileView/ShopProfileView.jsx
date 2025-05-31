@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import chatIcon from "../../assets/chatColor1.svg";
 import "./shopProfileView.scss";
 import { useNavigate, useParams } from "react-router-dom";
@@ -33,14 +33,12 @@ import {
 import { useGetProfileApiQuery } from "../../apis&state/apis/authenticationApiSlice";
 import SingleProduct from "../../components/singleProduct/SingleProduct";
 import FilterInputComponent from "../../components/commonComponents/filterInputComponent/FilterInputComponent";
-import Pagination from "../../components/pagination/Pagination";
-import SearchComponent from "../../components/search/Search"; 
 import WrapperComponent from "../../components/wrapperComponent/WrapperComponent";
 import CircularLoader from "../../components/circularLoader/CircularLoader";
 import { setRoomChatAndActive } from "../../apis&state/state/chatState";
 import shareIcon from "../../assets/shareNewIcon.svg";
-
 import SharePopup from "../../components/commonComponents/sharePopup/SharePopup";
+import Loader from "../../components/loadingSkelton/LoadingSkelton";
 
 const ShopProfileView = () => {
   const dispatch = useDispatch();
@@ -48,30 +46,91 @@ const ShopProfileView = () => {
   const navigate = useNavigate();
   const [addReviewText, setAddReviewText] = useState();
   const [isShowPopup, setIsShowPopup] = useState(false);
-   const [showSharePopup, setSharePopup] = useState(false);
-
+  const [showSharePopup, setSharePopup] = useState(false);
   const [search, setSearch] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  
+  // Infinite scroll states
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadedProducts, setLoadedProducts] = useState([]);
+  const [initialLoadComplete, setInitialLoadComplete] = useState(false);
+  const loaderRef = useRef(null);
 
-  const handlePageChange = (page, totalPages) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  };
   const {
     mapDetailsState: {
       userMapDetails: { latitude, longitude },
     },
   } = useSelector((state) => state);
 
-  const { data: products, isLoading: isProductListLoading } =
+  const { data: products, isLoading: isProductListLoading, isFetching } =
     useGetAllProductsApiQuery({
       page: 1,
       shopId,
       keyword: search,
-      pageNum: currentPage,
+      pageNum: page,
     });
 
+  // Reset states when shopId or search changes
+  useEffect(() => {
+    setPage(1);
+    setLoadedProducts([]);
+    setHasMore(true);
+    setInitialLoadComplete(false);
+  }, [shopId, search]);
+
+  // Infinite scroll observer callback
+  const handleObserver = useCallback((entries) => {
+    const [entry] = entries;
+    if (entry.isIntersecting && hasMore && !isFetching && initialLoadComplete) {
+      setPage(prev => prev + 1);
+    }
+  }, [hasMore, isFetching, initialLoadComplete]);
+
+  // Set up Intersection Observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(handleObserver, {
+      threshold: 0.1,
+    });
+    
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+    
+    return () => {
+      if (loaderRef.current) {
+        observer.unobserve(loaderRef.current);
+      }
+    };
+  }, [handleObserver]);
+
+  // Accumulate products and check if we've reached the end
+  useEffect(() => {
+    if (products?.data?.items) {
+      const newProducts = products.data.items;
+
+      setLoadedProducts(prev => {
+        const existingUids = new Set(prev.map(p => p.item_uid));
+        const filteredNew = newProducts.filter(p => !existingUids.has(p.item_uid));
+
+        if (page === 1) {
+          return filteredNew;
+        } else {
+          return [...prev, ...filteredNew];
+        }
+      });
+
+      setInitialLoadComplete(true);
+
+      if (
+        page >= products.data.totalPages ||
+        products.data.items.length === 0
+      ) {
+        setHasMore(false);
+      }
+    }
+  }, [products, page]);
+
+  // Rest of your existing functions remain the same...
   const [addReview] = useAddReviewToShopMutation();
   const [followSeller] = useAddToFollowingMutation();
   const { data: singleShopDetails, isLoading: loadingShopDetails } =
@@ -79,10 +138,10 @@ const ShopProfileView = () => {
       skip: !shopId,
     });
   const { data: followersData, isLoading: folowersoading } =
-  useGetFollowingNumberQuery(shopId, {
+    useGetFollowingNumberQuery(shopId, {
       skip: !shopId,
     });
-    console.log(followersData)
+
   const {
     data: roomExistData,
     isLoading: roomExistLoading,
@@ -120,9 +179,11 @@ const ShopProfileView = () => {
       console.log(error);
     }
   };
+
   const handleBack = () => {
     navigate(-1);
   };
+
   const handleNavigate = async (roomId) => {
     if (!singleShopDetails) {
       toast.error("Something went wrong!");
@@ -153,7 +214,8 @@ const ShopProfileView = () => {
       console.log(e);
     }
   };
-     const handleShare = (e) => {
+
+  const handleShare = (e) => {
     e.stopPropagation();
     setSharePopup((prev) => !prev);
   };
@@ -170,19 +232,19 @@ const ShopProfileView = () => {
     }
     return num?.toString();
   }
+
   return (
     <WrapperComponent>
       <div className="seller-profile-view">
-         {showSharePopup && <SharePopup setIsShare={setSharePopup} shopId={singleShopDetails?.data?.shopDetails?.shop_id}  />}
-        {/* {isShowPopup && (
-          <RatingPopup setIsShowPopup={setIsShowPopup} shopId={shopId} />
-        )} */}
+        {showSharePopup && <SharePopup setIsShare={setSharePopup} shopId={singleShopDetails?.data?.shopDetails?.shop_id} />}
+        
         <header>
           <button onClick={handleBack}>
             <img src={backImage} alt="" />
           </button>
           <h3>Seller Profile</h3>
         </header>
+
         <div className="content-card">
           {loadingShopDetails ? (
             <CircularLoader />
@@ -193,134 +255,74 @@ const ShopProfileView = () => {
               </div>
               <div className="profile-details">
                 <div className="name-share">
-                <h1>
-                  {singleShopDetails?.data?.shopDetails?.shop_name || "-----"}
-                </h1>
-                 <img src={shareIcon} onClick={handleShare}/>
-                 </div>
-              
-                {/* <div className="ratings-card">
-                  <div className="stars-card">
-                    <ShowRating rating={singleShopDetails?.data?.rating ?? 0} />
-                  </div>
-                  <button onClick={() => setIsShowPopup(true)}>
-                    Add Rating
-                  </button>
-                </div> */}
+                  <h1>
+                    {singleShopDetails?.data?.shopDetails?.shop_name || "-----"}
+                  </h1>
+                  <img src={shareIcon} onClick={handleShare}/>
+                </div>
+                
                 <div>
-                <h3>
-                  {singleShopDetails?.data?.shopDetails?.first_name}{" "}
-                  {singleShopDetails?.data?.shopDetails?.last_name}
-                </h3>
-                 
-                  </div>
+                  <h3>
+                    {singleShopDetails?.data?.shopDetails?.first_name}{" "}
+                    {singleShopDetails?.data?.shopDetails?.last_name}
+                  </h3>
+                </div>
 
                 <div className="phone-number-card">
-                  <div
-                    className="chat-card"
-                  
-                  >
+                  <div className="chat-card">
                     <img src={phoneCallIcon} alt="" />
-                    <a href={`tel:+91${singleShopDetails?.data?.shopDetails?.phone}`}>{singleShopDetails?.data?.shopDetails?.phone}</a>
+                    <a href={`tel:+91${singleShopDetails?.data?.shopDetails?.phone}`}>
+                      {singleShopDetails?.data?.shopDetails?.phone}
+                    </a>
                   </div>
                   {roomExistLoading ? (
-                    <button    onClick={() => handleNavigate("/chat")}>
+                    <button onClick={() => handleNavigate("/chat")}>
                       <img src={chatIcon} />
                       <span>Loading...</span>
                     </button>
                   ) : (
                     <button
-                      onClick={() =>
-                        handleNavigate(roomExistData?.data?.roomId)
-                      }
-                           className="chat-btn"
+                      onClick={() => handleNavigate(roomExistData?.data?.roomId)}
+                      className="chat-btn"
                     >
-                     
                       <span>Chat</span>
                     </button>
                   )}
                   <div><button onClick={handleShare} className="chat-btn">Share </button></div>
                 </div>
-                {/* <div className="follow-card">
-                  <button
-                    onClick={handleFollow}
-                    className={`follow-btn ${
-                      isUserFollowing ? "active-btn" : "in-active-btn"
-                    }`}
-                  >
-                    {isUserFollowing ? "Following" : "Follow"}
-                  </button>
-                  <div className="count-card">
-                    <img src={followerIcon} alt="" />
-                    <p>
-                      <span className="number">
-                        {formatNumber(followersData?.data)}
-                      </span>{" "}
-                      <span className="text">(Followers)</span>
-                    </p>
-                  </div>
-                </div> */}
               </div>
             </div>
           )}
-          {/* <div className="video-section">
-            <h3>About My Business</h3>
-            <BusinessDetailsVideo />
-            <div className="social-media-links">
-              <p>
-                <img src={youtubeIcon} alt="" />
-                <span>14-1-140, Madhapur, Ayappa socity, Hyderabad.</span>
-              </p>
-              <p>
-                <img src={youtubeIcon} alt="" /> <span>YouTube Channel</span>
-              </p>
-            </div>
-          </div> */}
+
           <div className="all-products-card">
             <div>
-              <SearchComponent setSearch={setSearch} />
+              <Search setSearch={setSearch} />
             </div>
             <div className="products-card">
               <h3 className="products-header">Products</h3>
-              {isProductListLoading && <CircularLoader />}
-
+              
               <div className="all-products">
-                {products?.data?.items?.map((item, index) => {
-                  return <SingleProduct product={item} key={index} />;
-                })}
+                {loadedProducts.map((item, index) => (
+                  <SingleProduct product={item} key={`${item.items_id}-${index}`} />
+                ))}
               </div>
+              
+              <div ref={loaderRef} className="loading-container">
+                {isFetching && <Loader />}
+                {!hasMore && loadedProducts.length > 0 && (
+                  <p className="end-message">You've reached the end of products</p>
+                )}
+              </div>
+              
+              {loadedProducts.length === 0 && !isFetching && (
+                <div className="no-products-message">
+                  No products found
+                </div>
+              )}
             </div>
-            {products?.data?.items?.length == 0 && (
-              <div
-                style={{
-                  width: "100%",
-                  height: "200px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  textAlign: "center",
-                }}
-              >
-                no-data
-              </div>
-            )}
-            {products?.data?.totalPages > 1 && (
-              <Pagination
-                totalPages={products?.data?.totalPages}
-                currentPage={currentPage}
-                onPageChange={handlePageChange}
-              />
-            )}
           </div>
         </div>
-        {/* <p>
-        Name:{singleShopDetails?.data?.shopDetails?.first_name} -{" "}
-        {singleShopDetails?.data?.shopDetails?.last_name}
-      </p>
-      <input type="text" onChange={handleInputChange} value={addReviewText} />
-      <div>
-        <button onClick={handleFollow}>Follow</button>
-      </div> */}
+        
         <BottomNavbar />
       </div>
     </WrapperComponent>

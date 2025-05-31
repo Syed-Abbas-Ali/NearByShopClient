@@ -337,6 +337,7 @@ const ProductEdit = () => {
       }
     }
   };
+  console.log()
 
   const handleSave = async () => {
     const { market_price, our_price } = productDetails;
@@ -344,6 +345,7 @@ const ProductEdit = () => {
       ...productDetails,
       market_price: Number(market_price),
       our_price: Number(our_price),
+      
       category: categoryData.categoryName,
       subCategory: categoryData.subCategory,
       ...productImageDetails,
@@ -528,10 +530,10 @@ const ProductEdit = () => {
           </div>
           <div className="double-input-card">
             <div>
-              <label>Original Price</label>
+              <label>Market Price</label>
               <input
                 type="text"
-                placeholder="₹Original Price"
+                placeholder="example 3000"
                 name="market_price"
                 value={productDetails.market_price ?? 0}
                 onChange={handleInput}
@@ -539,10 +541,10 @@ const ProductEdit = () => {
               {errors.market_price && <p className="error">{errors.market_price}</p>}
             </div>
             <div>
-              <label>Discount Percentage</label>
+              <label>Your Price</label>
               <input
                 type="text"
-                placeholder="%Discount Percentage"
+                placeholder="example 2000"
                 name="our_price"
                 value={productDetails.our_price ?? 0}
                 onChange={handleInput}
