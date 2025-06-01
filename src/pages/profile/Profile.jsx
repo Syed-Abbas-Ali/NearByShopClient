@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useCallback,useEffect } from "react";
 import "./profile.scss";
 import profileEditIcon from "../../assets/editNewIcon.svg";
 import shareIcon from "../../assets/shareNewIcon.svg";
@@ -23,15 +23,13 @@ import {
 } from "../../apis&state/apis/shopApiSlice";
 import { useGetProfileApiQuery } from "../../apis&state/apis/authenticationApiSlice";
 import { useLocation } from "react-router-dom";
-
 import ProductDetailsPopup from "./productDetailsPopup/ProductDetailsPopup";
 import SellerSingleProduct from "../../components/sellerSingleProduct/SellerSingleProduct";
 import BusinessDetailsVideo from "../../components/commonComponents/businessDetailsVideo/BusinessDetailsVideo";
 import userMask from "../../assets/userMask.svg";
 import cameraIcon from "../../assets/cameraIcon.svg";
 import { useGetAllDiscountsQuery } from "../../apis&state/apis/discounts";
-import Pagination from "../../components/pagination/Pagination";
-import SharePopup from "../../components/commonComponents/sharePopup/SharePopup";
+import Loader from "../../components/loadingSkelton/LoadingSkelton";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -39,25 +37,26 @@ const Profile = () => {
   const { data: sellerAllShops } = useGetAllShopsApiQuery();
   const [productUid, setProductUid] = useState(null);
   const [search, setSearch] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [page, setPage] = useState(1);
   const [showSharePopup, setSharePopup] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadedProducts, setLoadedProducts] = useState([]);
+  const [initialLoadComplete, setInitialLoadComplete] = useState(false);
 
-  const handlePageChange = (page, totalPages) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  };
+  const loaderRef = useRef(null);
+
   const location = useLocation();
-
   const shopDetails = sellerAllShops?.data[0];
+  
   const { data: userDetails } = useGetProfileApiQuery();
-  const { data: sellerAllProducts } = useGetAllSellerProductsApiQuery(
-    { shopUid: shopDetails?.shop_uid, keyword: search, pageNum: currentPage },
+  const { data: sellerAllProducts, isLoading, isFetching } = useGetAllSellerProductsApiQuery(
+    { shopUid: shopDetails?.shop_uid, keyword: search, pageNum: page },
     {
       skip: !shopDetails?.shop_uid,
     }
   );
-  const { data: allDiscounts, isLoading } = useGetAllDiscountsQuery(
+
+  const { data: allDiscounts } = useGetAllDiscountsQuery(
     {
       shopId: shopDetails?.shop_id,
     },
@@ -65,6 +64,71 @@ const Profile = () => {
       skip: !shopDetails?.shop_id,
     }
   );
+    useEffect(() => {
+    setPage(1);
+    setLoadedProducts([]);
+    setHasMore(true);
+    setInitialLoadComplete(false);
+  }, [shopDetails?.shop_uid, search]);
+
+  // Infinite scroll logic
+  const handleObserver = useCallback((entries) => {
+    const [entry] = entries;
+    if (entry.isIntersecting && hasMore && !isFetching && initialLoadComplete) {
+      setPage(prev => prev + 1);
+    }
+  }, [hasMore, isFetching, initialLoadComplete]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(handleObserver, {
+      threshold: 0.1,
+    });
+    
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+    
+    return () => {
+      if (loaderRef.current) {
+        observer.unobserve(loaderRef.current);
+      }
+    };
+  }, [handleObserver]);
+
+  // Reset page and hasMore when search changes
+  useEffect(() => {
+    setPage(1);
+    setHasMore(true);
+  }, [search]);
+
+  // Check if we've reached the end of products
+ useEffect(() => {
+  if (sellerAllProducts?.data?.list) {
+    const newProducts = sellerAllProducts.data.list;
+
+    setLoadedProducts(prev => {
+      const existingUids = new Set(prev.map(p => p.item_uid));
+      const filteredNew = newProducts.filter(p => !existingUids.has(p.item_uid));
+
+      if (page === 1) {
+        return filteredNew;
+      } else {
+        return [...prev, ...filteredNew];
+      }
+    });
+
+    setInitialLoadComplete(true);
+
+    if (
+      page >= sellerAllProducts.data.totalPages ||
+      sellerAllProducts.data.list.length === 0
+    ) {
+      setHasMore(false);
+    }
+  }
+}, [sellerAllProducts, page]);
+
+
   const handleAddProduct = () => {
     navigate(`/product-edit/${shopDetails?.shop_uid}&add_product`);
   };
@@ -75,15 +139,12 @@ const Profile = () => {
     navigate("/offer");
   };
 
-  const handleReview = () => {
-    setIsShowPopup((prev) => !prev);
-  };
-
   const handleSingleProductClick = (uid) => {
     setProductUid(uid);
     setProductDetailsPopup((prev) => !prev);
   };
-   const handleShare = (e) => {
+
+  const handleShare = (e) => {
     e.stopPropagation();
     setSharePopup((prev) => !prev);
   };
@@ -96,12 +157,8 @@ const Profile = () => {
     navigate(`/shop-verification/${shopDetails?.shop_uid}`);
   };
 
-   const pathSegments = location.pathname.split('/'); 
-
-
-   const sellerChartIcon= pathSegments[1] == "profile"
-
-  
+  const pathSegments = location.pathname.split('/'); 
+  const sellerChartIcon = pathSegments[1] == "profile";
 
   return (
     <WrapperComponent>
@@ -114,7 +171,7 @@ const Profile = () => {
       )}
       {showSharePopup && <SharePopup setIsShare={setSharePopup} shopId={shopDetails?.shop_id}  />}
       <div className="profile">
-        <div className="page-header">
+          <div className="page-header">
           <h3>My Account</h3>
           <img src={profileEditIcon} alt="edit" onClick={handleEdit} />
         </div>
@@ -246,31 +303,32 @@ const Profile = () => {
         <div className="search-div-in-profile">
           <Search setSearch={setSearch} />
         </div>
-        <div className="all-products-container">
-          <div className="products-header">
-            <h3 className="products-heading">Products</h3>
-            <div>
-              <button onClick={handleAddProduct}>+Add Product</button>
-              <button onClick={handleAddDiscount}>+Add Discount</button>
-            </div>
+        
+       <div className="all-products-container">
+        <div className="products-header">
+          <h3 className="products-heading">Products</h3>
+          <div>
+            <button onClick={handleAddProduct}>+Add Product</button>
+            <button onClick={handleAddDiscount}>+Add Discount</button>
           </div>
-          <div className="all-products grid-card">
-            {sellerAllProducts?.data?.list?.map((item, index) => {
-              return (
-                <SellerSingleProduct
-                  product={item}
-                  key={index}
-                  handleSingleProductClick={handleSingleProductClick}
-                />
-              );
-            })}
-          </div>
-        {sellerAllProducts?.data?.totalPages>1 &&  <Pagination
-            totalPages={sellerAllProducts?.data?.totalPages}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-          />}
         </div>
+        <div className="all-products grid-card">
+          {loadedProducts.map((item, index) => (
+            <SellerSingleProduct
+              product={item}
+              key={`${item.product_uid}-${index}`} // More stable key
+              handleSingleProductClick={handleSingleProductClick}
+            />
+          ))}
+        </div>
+        
+        <div ref={loaderRef} className="loading-container">
+          {isFetching && <Loader />}
+          {!hasMore && loadedProducts.length > 0 && (
+            <p className="end-message">You've reached the end of products</p>
+          )}
+        </div>
+      </div>
       </div>
     </WrapperComponent>
   );

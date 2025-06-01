@@ -34,8 +34,8 @@ const SellerSingleProduct = ({ product, handleSingleProductClick }) => {
       <div className="product-details">
         <h3>{product?.title}</h3>
         <div className="prices-and-offers">
-          <h2>₹{product.price}</h2>
-          <p className="actual-price">₹{product?.mainPrice?.toFixed(0)}</p>
+          <h2>₹{product.our_price}</h2>
+          <p className="actual-price">₹{product?.market_price?.toFixed(0)}</p>
           <p className="offer-text">
             {product?.discountPercentage?.toFixed(0)}%Off
           </p>
