@@ -73,23 +73,31 @@ const ProductDetails = () => {
 
   // Combine products when new data arrives
   useEffect(() => {
-    if (relatedProducts?.data?.items) {
-      if (page === 1) {
-        // First load or after reset
-        setLoadedProducts(relatedProducts.data.items);
+      if (relatedProducts?.data?.items) {
+        const newProducts = relatedProducts.data.items;
+  
+        setLoadedProducts(prev => {
+          const existingUids = new Set(prev.map(p => p.item_uid));
+          const filteredNew = newProducts.filter(p => !existingUids.has(p.item_uid));
+  
+          if (page === 1) {
+            return filteredNew;
+          } else {
+            return [...prev, ...filteredNew];
+          }
+        });
+  
         setInitialLoadComplete(true);
-      } else {
-        // Subsequent loads
-        setLoadedProducts(prev => [...prev, ...relatedProducts.data.items]);
+  
+        if (
+          page >= relatedProducts.data.totalPages ||
+          relatedProducts.data.items.length === 0
+        ) {
+          setHasMore(false);
+        }
       }
-      
-      // Check if we've reached the end
-      if (page >= relatedProducts.data.totalPages || 
-          relatedProducts.data.items.length === 0) {
-        setHasMore(false);
-      }
-    }
-  }, [relatedProducts, page]);
+    }, [relatedProducts, page]);
+
 
   // Infinite scroll observer
   const handleObserver = useCallback((entries) => {
@@ -141,7 +149,7 @@ const ProductDetails = () => {
             
             <div className="all-products">
               {loadedProducts.map((item, index) => (
-                <SingleProduct product={item} key={`${item.id}-${index}`} />
+                <SingleProduct product={item} key={`${item.item_uid}-${index}`} />
               ))}
             </div>
             

@@ -42,11 +42,11 @@ const Home = () => {
   const [selectedCategories, setSelectedCategories] = useState(null);
   const [selectedSubCtegories, setSelectedSubCategory] = useState(null);
 
-  const [isWideScreen, setIsWideScreen] = useState(window.innerWidth < 900);
+  const [isWideScreen, setIsWideScreen] = useState(window.innerWidth < 500);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsWideScreen(window.innerWidth < 900);
+      setIsWideScreen(window.innerWidth < 500);
     };
 
     window.addEventListener('resize', handleResize);
