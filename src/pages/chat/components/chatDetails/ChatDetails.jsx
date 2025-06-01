@@ -81,7 +81,7 @@ const ChatDetails = ({
   // }, [socketMethods]);
 
   const handleIsRead = () => {
-        socketMethods.emit("is_read", {
+    socketMethods.emit("is_read", {
       receiverId: decodedToken.userId,
       roomId: activeRoomId ?? roomId,
       senderId:
@@ -91,6 +91,21 @@ const ChatDetails = ({
     });
     return () => {
       socketMethods.off("is_read");
+    };
+  };
+
+  const handleIsBlock = () => {
+    socketMethods.emit("block", {
+      receiverId:
+        userTypeValue() === "SELLER"
+          ? chatDetails?.data?.createdBy
+          : chatDetails?.data?.recieverId,
+      senderId: decodedToken.userId,
+      roomId: activeRoomId ?? roomId,
+    });
+    refetch()
+    return () => {
+      socketMethods.off("block");
     };
   };
   useEffect(() => {
@@ -176,6 +191,7 @@ const ChatDetails = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
   //this for date and time
   const formatCreatedAt = (createdAt) => {
     const date = new Date(createdAt);
@@ -231,6 +247,13 @@ const ChatDetails = ({
             <p>{chatDetails?.data?.shopName ? "Merchant" : "Customer"}</p>
           </div>
         </div>
+        {chatDetails?.data?.blockedBy ? (
+          "blocked"
+        ) : (
+          <button className="block" onClick={handleIsBlock}>
+            Block
+          </button>
+        )}
       </div>
       <div className="chat-box">
         {allChatList?.map((msg) => (
@@ -250,32 +273,36 @@ const ChatDetails = ({
           </div>
         ))}
       </div>
-      <div className="bottom-div">
-        {showEmojiPicker && (
-          <div className="emoji-picker-card" ref={emojiPickerRef}>
-            <EmojiPicker onEmojiClick={onEmojiClick} />
-          </div>
-        )}
-        <img
-          src={emojiPickerImage}
-          alt=""
-          className="smile-image"
-          onClick={handleEmojiPicker}
-        />
-        <textarea
-          className="search-input"
-          placeholder="Send a Message"
-          rows={1}
-          value={inputValue}
-          onChange={handleInput}
-        ></textarea>
-        <img
-          src={messageSendIcon}
-          alt=""
-          className="message-send-icon"
-          onClick={handleSendMessage}
-        />
-      </div>
+      {chatDetails?.data?.blockedBy ? (
+        "blocked"
+      ) : (
+        <div className="bottom-div">
+          {showEmojiPicker && (
+            <div className="emoji-picker-card" ref={emojiPickerRef}>
+              <EmojiPicker onEmojiClick={onEmojiClick} />
+            </div>
+          )}
+          <img
+            src={emojiPickerImage}
+            alt=""
+            className="smile-image"
+            onClick={handleEmojiPicker}
+          />
+          <textarea
+            className="search-input"
+            placeholder="Send a Message"
+            rows={1}
+            value={inputValue}
+            onChange={handleInput}
+          ></textarea>
+          <img
+            src={messageSendIcon}
+            alt=""
+            className="message-send-icon"
+            onClick={handleSendMessage}
+          />
+        </div>
+      )}
     </div>
   );
 };

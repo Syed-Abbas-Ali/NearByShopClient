@@ -15,6 +15,7 @@ import {
 } from "../../utils/validations";
 import { useGetAllCategoriesAndSubCategoriesQuery } from "../../apis&state/apis/masterDataApis";
 import Selector from "../../components/selector/Selector";
+import { useUploadImageMutation } from "../../apis&state/apis/global";
 
 const locationFields = [
   {
@@ -185,6 +186,7 @@ const LocationVerification = () => {
   const handleLocationClick = () => {
     setShowMap((prev) => !prev);
   };
+  const [uploadImage] = useUploadImageMutation();
 
   const handleImageChange = async (event, imageType) => {
     const selectedFile = event.target.files[0];
@@ -214,22 +216,23 @@ const LocationVerification = () => {
         try {
           const response = await uploadImage({
             data: formData,
-            type: imageType,
-            itemUid:
-              imageType === "THUMBNAILS" ? value?.shopUid.split("&")[1] : "",
+            // type: "PROFILE_PIC",
+            itemUid:null
           });
-          if (response?.data && imageType !== "THUMBNAILS") {
+          if (response?.data) {
             const { fileUrl, file_uid } = response.data.data;
             // setProductImageDetails({
             //   file_uid,
             //   image: fileUrl,
             // });
+            console.log(fileUrl)
             setShopDetails((prev) => {
               return { ...prev, profile_url: fileUrl };
             });
             toast.success("Successfully uploaded your profile image!");
           }
         } catch (error) {
+          console.log(error);
           toast.error("Something went wrong");
         }
       }
@@ -269,7 +272,7 @@ const LocationVerification = () => {
           )}
         </div>
         <div className="fields-card">
-          <img src="" />
+          <img src={shopDetails?.profile_url} className="shop-profile-pic" />
           <input
             type="file"
             name=""
