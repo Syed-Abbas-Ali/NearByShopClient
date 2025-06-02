@@ -1,4 +1,3 @@
-// LocationVerification.js
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
@@ -8,79 +7,112 @@ import sellerSelectMap from "../../assets/sellerSelectMap.png";
 import FormHeader from "../../components/commonComponents/auth&VerificatonComponents/formHeader/FormHeader";
 import Input from "../../components/input/Input";
 import "./locationVerification.scss";
-import CustomMapComponent from "../../components/mapComponent/CustomMapComponent";
 import {
-  locationDetailsValidationSchema,
-  shopValidationSchema,
-} from "../../utils/validations";
+  MapContainer,
+  TileLayer,
+  Marker,
+  useMapEvents,
+} from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import * as Yup from "yup";
 import { useGetAllCategoriesAndSubCategoriesQuery } from "../../apis&state/apis/masterDataApis";
 import Selector from "../../components/selector/Selector";
 import { useUploadImageMutation } from "../../apis&state/apis/global";
+
+// Fix for default marker icons
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
+  iconUrl: require("leaflet/dist/images/marker-icon.png"),
+  shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
+});
 
 const locationFields = [
   {
     label: "Shop name",
     name: "shopName",
     placeholderText: "Enter your Shop Name",
+    required: true,
   },
   {
     label: "Shop location address",
     name: "storeAddress",
     placeholderText: "Enter shop location address",
+    required: true,
   },
   {
     label: "Shop category",
     name: "category",
     placeholderText: "Enter shop category",
+    required: true,
   },
   {
     label: "Shop Description",
     name: "storeDescription",
-    placeholderText: "Enter shop description",
+    placeholderText: "Enter shop description (min 20 characters)",
+    required: true,
+    textarea: true,
   },
-  // {
-  //   label: "Shop email",
-  //   name: "shopEmail",
-  //   placeholderText: "Enter shop email",
-  // },
-  // {
-  //   label: "State",
-  //   name: "state",
-  //   placeholderText: "Enter your state",
-  // },
-  // {
-  //   label: "City",
-  //   name: "city",
-  //   placeholderText: "Enter your city",
-  // },
 ];
+
+const shopValidationSchema = Yup.object().shape({
+  shopName: Yup.string()
+    .required("Shop name is required")
+    .min(3, "Shop name must be at least 3 characters"),
+  storeAddress: Yup.string().required("Shop address is required"),
+  category: Yup.string().required("Shop category is required"),
+  storeDescription: Yup.string()
+    .required("Shop description is required")
+    .min(20, "Description must be at least 20 characters"),
+  profile_url: Yup.string().required("Shop image is required"),
+});
+
+const LocationMarker = ({ setShopDetails, setErrors }) => {
+  const map = useMapEvents({
+    click(e) {
+      const { lat, lng } = e.latlng;
+      
+      // Reverse geocoding using Nominatim (OpenStreetMap)
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+        .then(response => response.json())
+        .then(data => {
+          const address = data.display_name || "Selected location";
+          setShopDetails(prev => ({
+            ...prev,
+            storeAddress: address,
+            storeLocation: { lat, lng }
+          }));
+          setErrors(prev => ({ ...prev, storeLocation: undefined }));
+        })
+        .catch(error => {
+          console.error("Geocoding error:", error);
+          toast.error("Could not get address details for this location");
+        });
+    },
+  });
+
+  return null;
+};
 
 const LocationVerification = () => {
   const value = useSelector((state) => state.shopVerificationState);
   const navigate = useNavigate();
-  const [location, setLocation] = useState({ lat: 37.7749, lng: -122.4194 });
-  const [error, setError] = useState(null);
-  const [isShopYes, setIsShopYes] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [showMap, setShowMap] = useState(false);
   const [categoriesList, setCategoriesList] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const [createNewShop] = useCreateShopMutation();
 
   const [shopDetails, setShopDetails] = useState({
-    locationAddress: "",
     shopName: "",
+    storeAddress: "",
     category: "",
-    // contactInfoPhone: "",
-    // contactInfoEmail: "",
-    // shopWebsite: "",
-    // xLink: "",
-    // instagramLink: "",
-    shopDescription: "",
-    // shopEmail: "",
-    // state: "",
-    // city: "",
+    storeDescription: "",
+    profile_url: "",
+    storeLocation: null,
   });
 
   const { data: categories } = useGetAllCategoriesAndSubCategoriesQuery();
@@ -96,24 +128,24 @@ const LocationVerification = () => {
   }, [categories]);
 
   const handleCategory = (data) => {
-    const { label, value } = data;
-    setShopDetails((prev) => {
-      return { ...prev, category: label };
-    });
+    const { label } = data;
+    setShopDetails((prev) => ({
+      ...prev,
+      category: label,
+    }));
+    setErrors((prev) => ({ ...prev, category: undefined }));
   };
+
   const handleInput = async (inputObject) => {
     const { name, value } = inputObject.target;
     setShopDetails((prevDetails) => ({
       ...prevDetails,
       [name]: value,
     }));
+
     try {
       await shopValidationSchema.validateAt(name, { [name]: value });
-      setErrors((prevErrors) => {
-        const newErrors = { ...prevErrors };
-        delete newErrors[name];
-        return newErrors;
-      });
+      setErrors((prevErrors) => ({ ...prevErrors, [name]: undefined }));
     } catch (error) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -122,51 +154,34 @@ const LocationVerification = () => {
     }
   };
 
-  useEffect(() => {
-    const getUserLocation = () => {
-      setLoading(true);
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            setLocation({ lat: latitude, lng: longitude });
-            setLoading(false);
-          },
-          (error) => {
-            setError("Unable to retrieve location");
-            setLoading(false);
-          }
-        );
-      } else {
-        setError("Geolocation is not supported by this browser.");
-        setLoading(false);
-      }
-    };
-
-    getUserLocation();
-  }, []);
-
   const handleSubmit = async () => {
-    const shopFinalData = {
-      storeName: shopDetails.shopName,
-      profile_url: shopDetails.profile_url,
-      category: shopDetails.category,
-      storeDescription: shopDetails.storeDescription,
-      email: shopDetails.shopEmail,
-      state: shopDetails.state,
-      city: shopDetails.city,
-      storeLocation: shopDetails?.storeLocation,
-      storeAddress: shopDetails?.storeAddress,
-    };
     try {
-      await shopValidationSchema.validate(shopFinalData, { abortEarly: false });
+      setLoading(true);
+      const shopFinalData = {
+        storeName: shopDetails.shopName,
+        profile_url: shopDetails.profile_url,
+        category: shopDetails.category,
+        storeDescription: shopDetails.storeDescription,
+        storeLocation: shopDetails.storeLocation,
+        storeAddress: shopDetails.storeAddress,
+      };
+
+      await shopValidationSchema.validate(shopFinalData, {
+        abortEarly: false,
+      });
+
+      if (!shopDetails.storeLocation) {
+        throw new Error("Please select a shop location on the map");
+      }
+
       const response = await createNewShop(shopFinalData);
+
       if (response?.data) {
         toast.success("Store Created Successfully!");
         sessionStorage.setItem("user", JSON.stringify(response?.data.data));
         navigate(-1);
       } else {
-        toast.error("Something went wrong!");
+        toast.error(response?.error?.data?.message || "Something went wrong!");
       }
     } catch (err) {
       if (err.inner) {
@@ -174,10 +189,15 @@ const LocationVerification = () => {
         err.inner.forEach((error) => {
           validationErrors[error.path] = error.message;
         });
-        setErrors(validationErrors); // Set validation errors to state
+        setErrors(validationErrors);
+      } else {
+        toast.error(err.message || "Failed to create shop");
       }
+    } finally {
+      setLoading(false);
     }
   };
+
 
   const handleYesShop = (value) => {
     setIsShopYes(value);
@@ -189,21 +209,37 @@ const LocationVerification = () => {
   const [uploadImage] = useUploadImageMutation();
 
   const handleImageChange = async (event, imageType) => {
+
     const selectedFile = event.target.files[0];
-    if (selectedFile && selectedFile.size > 1024 * 1024) {
+    if (!selectedFile) return;
+
+    // Validate file size
+    if (selectedFile.size > 1024 * 1024) {
       return toast.error("File size should not exceed 1 MB!");
     }
-    if (
-      selectedFile.name.endsWith(".jpg") ||
-      selectedFile.name.endsWith(".jpeg") ||
-      selectedFile.name.endsWith(".png") ||
-      selectedFile.name.endsWith(".webp")
-    ) {
+
+    // Validate file type
+    const validExtensions = [".jpg", ".jpeg", ".png", ".webp"];
+    const fileExtension = selectedFile.name
+      .substring(selectedFile.name.lastIndexOf("."))
+      .toLowerCase();
+
+    if (!validExtensions.includes(fileExtension)) {
+      return toast.error("Only .jpg, .jpeg, .png, .webp formats are allowed.");
+    }
+
+    try {
+      // Display preview
       const reader = new FileReader();
-      reader.onload = function (event) {
-        // setSelectedImage(event.target.result);
+      reader.onload = (e) => {
+        setSelectedImage(e.target.result);
+        setShopDetails((prev) => ({
+          ...prev,
+          profile_url: e.target.result,
+        }));
       };
       reader.readAsDataURL(selectedFile);
+
       const formData = new FormData();
       formData.append("file", selectedFile);
 
@@ -238,6 +274,7 @@ const LocationVerification = () => {
       }
     } else {
       toast.error("It will allow .jpg, .jpeg, .png, .webp formats only.");
+
     }
   };
 
@@ -248,30 +285,46 @@ const LocationVerification = () => {
         <div className="location-map-div">
           {showMap && (
             <div className="map-comp">
-              <CustomMapComponent
-                handleSetLocationDetails={({ storeAddress }) => {
-                  setShopDetails((prev) => ({ ...prev, ...storeAddress }));
-                }}
-              />
+              <MapContainer
+                center={[20.5937, 78.9629]} // Center on India
+                zoom={5}
+                style={{ height: "100%", width: "100%" }}
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <LocationMarker
+                  setShopDetails={setShopDetails}
+                  setErrors={setErrors}
+                />
+              </MapContainer>
             </div>
           )}
           <div className="select-location-sample-card">
-            <img src={sellerSelectMap} />
-            {/* {shopAddressValue && <h3>{shopAddressValue}</h3>} */}
+            <img src={sellerSelectMap} alt="Shop location selection" />
+            {shopDetails.storeAddress && (
+              <div className="selected-location-info">
+                <h4>Selected Location:</h4>
+                <p>{shopDetails.storeAddress}</p>
+              </div>
+            )}
             <button
               className="select-location-text-btn"
-              onClick={handleLocationClick}
+              onClick={() => setShowMap(!showMap)}
+              disabled={loading}
             >
-              {/* {shopAddressValue
-                ? "Change Shop Location" */}
-              "Select Shop Location"
+              {shopDetails.storeAddress
+                ? "Change Shop Location"
+                : "Select Shop Location"}
             </button>
           </div>
           {errors.storeLocation && (
-            <p className="form-error-message">{errors?.storeLocation}ggg</p>
+            <p className="form-error-message">{errors.storeLocation}</p>
           )}
         </div>
         <div className="fields-card">
+
           <img src={shopDetails?.profile_url} className="shop-profile-pic" />
           <input
             type="file"
@@ -282,28 +335,40 @@ const LocationVerification = () => {
           <div className="fields-container">
             {locationFields.map((item, index) => (
               <div key={index} className="input-single-card">
-                <label>{item.label}</label>
-                {item?.name == "category" ? (
+                <label>
+                  {item.label}
+                  {item.required && <span className="required">*</span>}
+                </label>
+                {item.name === "category" ? (
                   <Selector
                     onSelectDropdown={handleCategory}
                     dropdownList={categoriesList}
                     placeholderText={"Select Category"}
+                    disabled={loading}
                   />
                 ) : (
                   <Input
                     initialData={item}
                     handleInput={handleInput}
                     value={shopDetails[item.name]}
+                    disabled={loading}
+                    isTextarea={item.textarea}
                   />
                 )}
-                {item.name in errors && (
+                {errors[item.name] && (
                   <p className="form-error-message">{errors[item.name]}</p>
                 )}
               </div>
             ))}
           </div>
           <div className="action-card">
-            <button onClick={handleSubmit}>Submit</button>
+            <button
+              onClick={handleSubmit}
+              disabled={loading}
+              className={loading ? "loading" : ""}
+            >
+              {loading ? "Creating Shop..." : "Submit"}
+            </button>
           </div>
         </div>
       </div>
