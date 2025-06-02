@@ -208,75 +208,55 @@ const LocationVerification = () => {
   };
   const [uploadImage] = useUploadImageMutation();
 
-  const handleImageChange = async (event, imageType) => {
+  const handleImageChange = async (event) => {
+  const selectedFile = event.target.files[0];
+  if (!selectedFile) return;
 
-    const selectedFile = event.target.files[0];
-    if (!selectedFile) return;
+  // Validate file
+  if (selectedFile.size > 1024 * 1024) {
+    toast.error("File size should not exceed 1 MB!");
+    return;
+  }
 
-    // Validate file size
-    if (selectedFile.size > 1024 * 1024) {
-      return toast.error("File size should not exceed 1 MB!");
-    }
+  const validExtensions = [".jpg", ".jpeg", ".png", ".webp"];
+  const fileExtension = selectedFile.name.substring(selectedFile.name.lastIndexOf(".")).toLowerCase();
+  
+  if (!validExtensions.includes(fileExtension)) {
+    toast.error("Only .jpg, .jpeg, .png, .webp formats are allowed.");
+    return;
+  }
 
-    // Validate file type
-    const validExtensions = [".jpg", ".jpeg", ".png", ".webp"];
-    const fileExtension = selectedFile.name
-      .substring(selectedFile.name.lastIndexOf("."))
-      .toLowerCase();
+  try {
+    // Show preview immediately
+    const reader = new FileReader();
+    reader.onload = (e) => setSelectedImage(e.target.result);
+    reader.readAsDataURL(selectedFile);
 
-    if (!validExtensions.includes(fileExtension)) {
-      return toast.error("Only .jpg, .jpeg, .png, .webp formats are allowed.");
-    }
+    // Upload to server
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+    
+    const response = await uploadImage({
+      data: formData,
+      itemUid: null
+    });
 
-    try {
-      // Display preview
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setSelectedImage(e.target.result);
-        setShopDetails((prev) => ({
-          ...prev,
-          profile_url: e.target.result,
-        }));
-      };
-      reader.readAsDataURL(selectedFile);
-
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-
-      if (selectedFile) {
-        // const imageUrl = URL.createObjectURL(selectedFile);
-        // setSelectedImage(imageUrl);
-
-        const formData = new FormData();
-        formData.append("file", selectedFile);
-        try {
-          const response = await uploadImage({
-            data: formData,
-            // type: "PROFILE_PIC",
-            itemUid:null
-          });
-          if (response?.data) {
-            const { fileUrl, file_uid } = response.data.data;
-            // setProductImageDetails({
-            //   file_uid,
-            //   image: fileUrl,
-            // });
-            console.log(fileUrl)
-            setShopDetails((prev) => {
-              return { ...prev, profile_url: fileUrl };
-            });
-            toast.success("Successfully uploaded your profile image!");
-          }
-        } catch (error) {
-          console.log(error);
-          toast.error("Something went wrong");
-        }
-      }
+    if (response?.data) {
+      const { fileUrl } = response.data.data;
+      setShopDetails(prev => ({
+        ...prev,
+        profile_url: fileUrl
+      }));
+      toast.success("Image uploaded successfully!");
     } else {
-      toast.error("It will allow .jpg, .jpeg, .png, .webp formats only.");
-
+      throw new Error(response.error?.data?.message || "Upload failed");
     }
-  };
+  } catch (error) {
+    console.error("Upload error:", error);
+    toast.error(error.message || "Image upload failed");
+    setSelectedImage(null);
+  }
+};
 
   return (
     <div className="location-verification-container">
