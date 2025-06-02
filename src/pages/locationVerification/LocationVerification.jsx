@@ -7,12 +7,7 @@ import sellerSelectMap from "../../assets/sellerSelectMap.png";
 import FormHeader from "../../components/commonComponents/auth&VerificatonComponents/formHeader/FormHeader";
 import Input from "../../components/input/Input";
 import "./locationVerification.scss";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  useMapEvents,
-} from "react-leaflet";
+import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import * as Yup from "yup";
@@ -72,20 +67,22 @@ const LocationMarker = ({ setShopDetails, setErrors }) => {
   const map = useMapEvents({
     click(e) {
       const { lat, lng } = e.latlng;
-      
+
       // Reverse geocoding using Nominatim (OpenStreetMap)
-      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
-        .then(response => response.json())
-        .then(data => {
+      fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+      )
+        .then((response) => response.json())
+        .then((data) => {
           const address = data.display_name || "Selected location";
-          setShopDetails(prev => ({
+          setShopDetails((prev) => ({
             ...prev,
             storeAddress: address,
-            storeLocation: { lat, lng }
+            storeLocation: { lat, lng },
           }));
-          setErrors(prev => ({ ...prev, storeLocation: undefined }));
+          setErrors((prev) => ({ ...prev, storeLocation: undefined }));
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Geocoding error:", error);
           toast.error("Could not get address details for this location");
         });
@@ -198,7 +195,6 @@ const LocationVerification = () => {
     }
   };
 
-
   const handleYesShop = (value) => {
     setIsShopYes(value);
   };
@@ -209,7 +205,6 @@ const LocationVerification = () => {
   const [uploadImage] = useUploadImageMutation();
 
   const handleImageChange = async (event, imageType) => {
-
     const selectedFile = event.target.files[0];
     if (!selectedFile) return;
 
@@ -253,7 +248,7 @@ const LocationVerification = () => {
           const response = await uploadImage({
             data: formData,
             // type: "PROFILE_PIC",
-            itemUid:null
+            itemUid: null,
           });
           if (response?.data) {
             const { fileUrl, file_uid } = response.data.data;
@@ -261,7 +256,7 @@ const LocationVerification = () => {
             //   file_uid,
             //   image: fileUrl,
             // });
-            console.log(fileUrl)
+            console.log(fileUrl);
             setShopDetails((prev) => {
               return { ...prev, profile_url: fileUrl };
             });
@@ -271,10 +266,11 @@ const LocationVerification = () => {
           console.log(error);
           toast.error("Something went wrong");
         }
+      } else {
+        toast.error("It will allow .jpg, .jpeg, .png, .webp formats only.");
       }
-    } else {
-      toast.error("It will allow .jpg, .jpeg, .png, .webp formats only.");
-
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -324,7 +320,6 @@ const LocationVerification = () => {
           )}
         </div>
         <div className="fields-card">
-
           <img src={shopDetails?.profile_url} className="shop-profile-pic" />
           <input
             type="file"
