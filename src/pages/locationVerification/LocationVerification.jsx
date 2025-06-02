@@ -18,6 +18,7 @@ import "leaflet/dist/leaflet.css";
 import * as Yup from "yup";
 import { useGetAllCategoriesAndSubCategoriesQuery } from "../../apis&state/apis/masterDataApis";
 import Selector from "../../components/selector/Selector";
+import { useUploadImageMutation } from "../../apis&state/apis/global";
 
 // Fix for default marker icons
 delete L.Icon.Default.prototype._getIconUrl;
@@ -197,7 +198,18 @@ const LocationVerification = () => {
     }
   };
 
-  const handleImageChange = async (event) => {
+
+  const handleYesShop = (value) => {
+    setIsShopYes(value);
+  };
+
+  const handleLocationClick = () => {
+    setShowMap((prev) => !prev);
+  };
+  const [uploadImage] = useUploadImageMutation();
+
+  const handleImageChange = async (event, imageType) => {
+
     const selectedFile = event.target.files[0];
     if (!selectedFile) return;
 
@@ -227,9 +239,42 @@ const LocationVerification = () => {
         }));
       };
       reader.readAsDataURL(selectedFile);
-      toast.success("Shop image selected successfully!");
-    } catch (error) {
-      toast.error("Failed to process image. Please try again.");
+
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
+      if (selectedFile) {
+        // const imageUrl = URL.createObjectURL(selectedFile);
+        // setSelectedImage(imageUrl);
+
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        try {
+          const response = await uploadImage({
+            data: formData,
+            // type: "PROFILE_PIC",
+            itemUid:null
+          });
+          if (response?.data) {
+            const { fileUrl, file_uid } = response.data.data;
+            // setProductImageDetails({
+            //   file_uid,
+            //   image: fileUrl,
+            // });
+            console.log(fileUrl)
+            setShopDetails((prev) => {
+              return { ...prev, profile_url: fileUrl };
+            });
+            toast.success("Successfully uploaded your profile image!");
+          }
+        } catch (error) {
+          console.log(error);
+          toast.error("Something went wrong");
+        }
+      }
+    } else {
+      toast.error("It will allow .jpg, .jpeg, .png, .webp formats only.");
+
     }
   };
 
@@ -279,27 +324,14 @@ const LocationVerification = () => {
           )}
         </div>
         <div className="fields-card">
-          <div className="shop-image-upload">
-            <div className="image-preview">
-              {selectedImage ? (
-                <img src={selectedImage} alt="Shop preview" />
-              ) : (
-                <div className="placeholder">Shop Image</div>
-              )}
-            </div>
-            <label className="upload-btn">
-              Upload Shop Image
-              <input
-                type="file"
-                accept=".jpg,.jpeg,.png,.webp"
-                onChange={handleImageChange}
-                disabled={loading}
-              />
-            </label>
-            {errors.profile_url && (
-              <p className="form-error-message">{errors.profile_url}</p>
-            )}
-          </div>
+
+          <img src={shopDetails?.profile_url} className="shop-profile-pic" />
+          <input
+            type="file"
+            name=""
+            id=""
+            onChange={(e) => handleImageChange(e, "THUMBNAILS")}
+          />
           <div className="fields-container">
             {locationFields.map((item, index) => (
               <div key={index} className="input-single-card">
