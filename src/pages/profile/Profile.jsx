@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback,useEffect } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import "./profile.scss";
 import profileEditIcon from "../../assets/editNewIcon.svg";
 import shareIcon from "../../assets/shareNewIcon.svg";
@@ -15,8 +15,8 @@ import ToggleYesNo from "../../components/toggleYesNo/ToggleYesNo";
 import Search from "../../components/search/Search";
 import OfferCategoryItem from "../../components/offerCategoryItem/OfferCategoryItem";
 import forwardMoreIcon from "../../assets/forwardIcon.svg";
-import Instagram from "../../assets/instagram.png"
-import websiteIcon from "../../assets/websiteIcon.png"
+import Instagram from "../../assets/instagram.png";
+import websiteIcon from "../../assets/websiteIcon.png";
 import {
   useGetAllSellerProductsApiQuery,
   useGetAllShopsApiQuery,
@@ -48,9 +48,13 @@ const Profile = () => {
 
   const location = useLocation();
   const shopDetails = sellerAllShops?.data[0];
-  
+
   const { data: userDetails } = useGetProfileApiQuery();
-  const { data: sellerAllProducts, isLoading, isFetching } = useGetAllSellerProductsApiQuery(
+  const {
+    data: sellerAllProducts,
+    isLoading,
+    isFetching,
+  } = useGetAllSellerProductsApiQuery(
     { shopUid: shopDetails?.shop_uid, keyword: search, pageNum: page },
     {
       skip: !shopDetails?.shop_uid,
@@ -65,7 +69,7 @@ const Profile = () => {
       skip: !shopDetails?.shop_id,
     }
   );
-    useEffect(() => {
+  useEffect(() => {
     setPage(1);
     setLoadedProducts([]);
     setHasMore(true);
@@ -73,22 +77,30 @@ const Profile = () => {
   }, [shopDetails?.shop_uid, search]);
 
   // Infinite scroll logic
-  const handleObserver = useCallback((entries) => {
-    const [entry] = entries;
-    if (entry.isIntersecting && hasMore && !isFetching && initialLoadComplete) {
-      setPage(prev => prev + 1);
-    }
-  }, [hasMore, isFetching, initialLoadComplete]);
+  const handleObserver = useCallback(
+    (entries) => {
+      const [entry] = entries;
+      if (
+        entry.isIntersecting &&
+        hasMore &&
+        !isFetching &&
+        initialLoadComplete
+      ) {
+        setPage((prev) => prev + 1);
+      }
+    },
+    [hasMore, isFetching, initialLoadComplete]
+  );
 
   useEffect(() => {
     const observer = new IntersectionObserver(handleObserver, {
       threshold: 0.1,
     });
-    
+
     if (loaderRef.current) {
       observer.observe(loaderRef.current);
     }
-    
+
     return () => {
       if (loaderRef.current) {
         observer.unobserve(loaderRef.current);
@@ -103,32 +115,33 @@ const Profile = () => {
   }, [search]);
 
   // Check if we've reached the end of products
- useEffect(() => {
-  if (sellerAllProducts?.data?.list) {
-    const newProducts = sellerAllProducts.data.list;
+  useEffect(() => {
+    if (sellerAllProducts?.data?.list) {
+      const newProducts = sellerAllProducts.data.list;
 
-    setLoadedProducts(prev => {
-      const existingUids = new Set(prev.map(p => p.item_uid));
-      const filteredNew = newProducts.filter(p => !existingUids.has(p.item_uid));
+      setLoadedProducts((prev) => {
+        const existingUids = new Set(prev.map((p) => p.item_uid));
+        const filteredNew = newProducts.filter(
+          (p) => !existingUids.has(p.item_uid)
+        );
 
-      if (page === 1) {
-        return filteredNew;
-      } else {
-        return [...prev, ...filteredNew];
+        if (page === 1) {
+          return filteredNew;
+        } else {
+          return [...prev, ...filteredNew];
+        }
+      });
+
+      setInitialLoadComplete(true);
+
+      if (
+        page >= sellerAllProducts.data.totalPages ||
+        sellerAllProducts.data.list.length === 0
+      ) {
+        setHasMore(false);
       }
-    });
-
-    setInitialLoadComplete(true);
-
-    if (
-      page >= sellerAllProducts.data.totalPages ||
-      sellerAllProducts.data.list.length === 0
-    ) {
-      setHasMore(false);
     }
-  }
-}, [sellerAllProducts, page]);
-
+  }, [sellerAllProducts, page]);
 
   const handleAddProduct = () => {
     navigate(`/product-edit/${shopDetails?.shop_uid}&add_product`);
@@ -158,7 +171,7 @@ const Profile = () => {
     navigate(`/shop-verification/${shopDetails?.shop_uid}`);
   };
 
-  const pathSegments = location.pathname.split('/'); 
+  const pathSegments = location.pathname.split("/");
   const sellerChartIcon = pathSegments[1] == "profile";
 
   return (
@@ -170,9 +183,11 @@ const Profile = () => {
           shopUid={shopDetails?.shop_uid}
         />
       )}
-      {showSharePopup && <SharePopup setIsShare={setSharePopup} shopId={shopDetails?.shop_id}  />}
+      {showSharePopup && (
+        <SharePopup setIsShare={setSharePopup} shopId={shopDetails?.shop_id} />
+      )}
       <div className="profile">
-          <div className="page-header">
+        <div className="page-header">
           <h3>My Account</h3>
           <img src={profileEditIcon} alt="edit" onClick={handleEdit} />
         </div>
@@ -180,13 +195,17 @@ const Profile = () => {
           <div className="profile-data-card">
             <div className="profile-image-card">
               <div className="profile-image">
-                <img src={userDetails?.data?.profilePic} alt="" className="user-mask" />
+                <img
+                  src={userDetails?.data?.profilePic}
+                  alt=""
+                  className="user-mask"
+                />
               </div>
               <div className="user-details">
                 <div className="scanner-card">
                   <h3>{shopDetails?.shop_name || "Mobile Traders"}</h3>
                   {/* <img src={scannerImage} alt="scanner" /> */}
-                   <img src={shareIcon} alt="tick-icon" onClick={handleShare} />
+                  <img src={shareIcon} alt="tick-icon" onClick={handleShare} />
                 </div>
 
                 <div>
@@ -197,8 +216,7 @@ const Profile = () => {
                 </div>
                 <div className="number-card">
                   <p>91+ {userDetails?.data?.phone || "---"}</p>
-                  {sellerChartIcon? "":<img src={chatColor} alt="chat" /> }
-                  
+                  {sellerChartIcon ? "" : <img src={chatColor} alt="chat" />}
                 </div>
                 {/* <div className="followers-card">
                   <div className="followers-count">
@@ -244,44 +262,62 @@ const Profile = () => {
             </div> */}
             <div className="links">
               {sellerAllShops?.data[0]?.shop_address && (
-                <a href={`https://www.google.com/maps?q=${sellerAllShops?.data[0]?.store_location?.latitude},${sellerAllShops?.data[0]?.store_location?.longitude}`}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="location-link"
-  onClick={(e) => e.stopPropagation()} >
+                <a
+                  href={`https://www.google.com/maps?q=${sellerAllShops?.data[0]?.store_location?.latitude},${sellerAllShops?.data[0]?.store_location?.longitude}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="location-link"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <img src={locationImage} alt="location" />
                   <p>{sellerAllShops?.data[0]?.shop_address}.</p>
                 </a>
               )}
 
-               {sellerAllShops?.data[0]?.shop_contact?.xLink ?  <div>
+              {sellerAllShops?.data[0]?.shop_contact?.xLink ? (
+                <div>
+                  <a
+                    href={sellerAllShops?.data[0]?.shop_contact?.xLink}
+                    onClick={(e) => e.stopPropagation()}
+                    className="location-link"
+                  >
+                    <img src={youtubeIcon} alt="youtube" />
+                    <p>Youtube Link</p>
+                  </a>
+                </div>
+              ) : (
+                " "
+              )}
 
-                <a href={sellerAllShops?.data[0]?.shop_contact?.xLink}  onClick={(e) => e.stopPropagation()}   className="location-link">
-               
-                <img src={youtubeIcon} alt="youtube" />
-                <p>Youtube Link</p>
-                </a>
-              </div> : " " }
+              {sellerAllShops?.data[0]?.shop_contact?.instagramLink ? (
+                <div>
+                  <a
+                    href={sellerAllShops?.data[0]?.shop_contact?.instagramLink}
+                    onClick={(e) => e.stopPropagation()}
+                    className="location-link"
+                  >
+                    <img src={Instagram} alt="youtube" />
+                    <p>Instagram Link</p>
+                  </a>
+                </div>
+              ) : (
+                " "
+              )}
 
-               {sellerAllShops?.data[0]?.shop_contact?.instagramLink ?  <div>
-
-                <a href={sellerAllShops?.data[0]?.shop_contact?.instagramLink}  onClick={(e) => e.stopPropagation()}   className="location-link">
-               
-                <img src={Instagram} alt="youtube" />
-                <p>Instagram Link</p>
-                </a>
-              </div> : " " }
-
-                {sellerAllShops?.data[0]?.shop_contact?.website ?  <div>
-
-                <a href={sellerAllShops?.data[0]?.shop_contact?.website}  onClick={(e) => e.stopPropagation()}   className="location-link">
-               
-                <img src={websiteIcon} alt="website" />
-                <p>My website</p>
-                </a>
-              </div> : " " }
-              
-             
+              {sellerAllShops?.data[0]?.shop_contact?.website ? (
+                <div>
+                  <a
+                    href={sellerAllShops?.data[0]?.shop_contact?.website}
+                    onClick={(e) => e.stopPropagation()}
+                    className="location-link"
+                  >
+                    <img src={websiteIcon} alt="website" />
+                    <p>My website</p>
+                  </a>
+                </div>
+              ) : (
+                " "
+              )}
             </div>
           </div>
         </div>
@@ -304,32 +340,32 @@ const Profile = () => {
         <div className="search-div-in-profile">
           <Search setSearch={setSearch} />
         </div>
-        
-       <div className="all-products-container">
-        <div className="products-header">
-          <h3 className="products-heading">Products</h3>
-          <div>
-            <button onClick={handleAddProduct}>+Add Product</button>
-            <button onClick={handleAddDiscount}>+Add Discount</button>
+
+        <div className="all-products-container">
+          <div className="products-header">
+            <h3 className="products-heading">Products</h3>
+            <div>
+              <button onClick={handleAddProduct}>+Add Product</button>
+              <button onClick={handleAddDiscount}>+Add Discount</button>
+            </div>
+          </div>
+          <div className="all-products grid-card">
+            {loadedProducts.map((item, index) => (
+              <SellerSingleProduct
+                product={item}
+                key={`${item.product_uid}-${index}`} // More stable key
+                handleSingleProductClick={handleSingleProductClick}
+              />
+            ))}
+          </div>
+
+          <div ref={loaderRef} className="loading-container">
+            {isFetching && <Loader />}
+            {!hasMore && loadedProducts.length > 0 && (
+              <p className="end-message">You've reached the end of products</p>
+            )}
           </div>
         </div>
-        <div className="all-products grid-card">
-          {loadedProducts.map((item, index) => (
-            <SellerSingleProduct
-              product={item}
-              key={`${item.product_uid}-${index}`} // More stable key
-              handleSingleProductClick={handleSingleProductClick}
-            />
-          ))}
-        </div>
-        
-        <div ref={loaderRef} className="loading-container">
-          {isFetching && <Loader />}
-          {!hasMore && loadedProducts.length > 0 && (
-            <p className="end-message">You've reached the end of products</p>
-          )}
-        </div>
-      </div>
       </div>
     </WrapperComponent>
   );
