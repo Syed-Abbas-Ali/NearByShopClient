@@ -17,7 +17,7 @@ const FinalPaymentPopup = ({ orderDetails, handleClearPopup }) => {
 
   const paymentWindow = (orderResponse) => {
     const options = {
-      key: `rzp_test_LUysSnHSj3TuHN`,
+      key: `rzp_test_rs5jkKLF8rjHQd`,
       amount: orderResponse?.amount_due ?? orderResponse?.total_amount,
       currency: orderResponse?.currency ?? "INR",
       name: "Come Fly With Me",
