@@ -4,7 +4,7 @@ import locationIcon from "../../../assets/selectLocationIcon.png";
 import dropDownArrow from "../../../assets/dropDownArrow.png";
 import UserLocationSelectPopup from "../userLocationSelectPopup/UserLocationSelectPopup";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserCurrentLocationDetails } from "../../../apis&state/state/globalStateName";
+// import { setUserCurrentLocationDetails } from "../../../apis&state/state/globalStateName";
 import UserLocationSelect from "../userLocationSelect/UserLocationSelect";
 import {
   setUserMapDetails,
@@ -68,21 +68,21 @@ const UserLocationDetails = () => {
     }
   }, []);
 
-  // return (
-  //   <div className="user-location-details">
-  //     <div className="select-location-card">
-  //       {/* {locationSelectPopup && (
-  //         <UserLocationSelectPopup handleLocationClick={handleLocationClick} />
-  //       )} */}
-  //       {/* {locationSelectPopup && <UserLocationSelect />} */}
-  //       {/* <img src={locationIcon} alt="" /> */}
-  //       <div className="drop-down-card" onClick={handleLocationClick}>
-  //         <p>{userMapDetails?.locationAddress || "Select Location"}</p>
-  //         {/* <img src={dropDownArrow} alt="" /> */}
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
+  return (
+    <div className="user-location-details">
+      <div className="select-location-card">
+        {/* {locationSelectPopup && (
+          <UserLocationSelectPopup handleLocationClick={handleLocationClick} />
+        )} */}
+        {/* {locationSelectPopup && <UserLocationSelect />} */}
+        {/* <img src={locationIcon} alt="" /> */}
+        <div className="drop-down-card" onClick={handleLocationClick}>
+          <p>{userMapDetails?.locationAddress || "Select Location"}</p>
+          {/* <img src={dropDownArrow} alt="" /> */}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default UserLocationDetails;

@@ -4,7 +4,7 @@ import cancelIcon from "../../../assets/cancelIconRed.svg";
 import locationCompass from "../../../assets/compass.png";
 import searchIcon from "../../../assets/searchNew1.svg";
 import cancelInputIcon from "../../../assets/cancelLineIcon.svg";
-import OpenLayer from "../openLayer/OpenLayer";
+// import OpenLayer from "../openLayer/OpenLayer";
 
 const UserLocationSelectPopup = ({ handleLocationClick }) => {
   const [suggestions, setSuggestions] = useState([]);
@@ -106,7 +106,7 @@ const UserLocationSelectPopup = ({ handleLocationClick }) => {
             </div>
           </div>
         )}
-        <OpenLayer />
+        {/* <OpenLayer /> */}
       </div>
     </div>
   );

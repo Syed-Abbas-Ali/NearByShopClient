@@ -7,26 +7,11 @@ import sellerSelectMap from "../../assets/sellerSelectMap.png";
 import FormHeader from "../../components/commonComponents/auth&VerificatonComponents/formHeader/FormHeader";
 import Input from "../../components/input/Input";
 import "./locationVerification.scss";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  useMapEvents,
-} from "react-leaflet";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
 import * as Yup from "yup";
 import { useGetAllCategoriesAndSubCategoriesQuery } from "../../apis&state/apis/masterDataApis";
 import Selector from "../../components/selector/Selector";
 import { useUploadImageMutation } from "../../apis&state/apis/global";
-
-// Fix for default marker icons
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
-  iconUrl: require("leaflet/dist/images/marker-icon.png"),
-  shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
-});
+import CustomMapComponent from "../../components/mapComponent/CustomMapComponent"; // Import the new map component
 
 const locationFields = [
   {
@@ -58,7 +43,7 @@ const locationFields = [
 
 const shopValidationSchema = Yup.object().shape({
   shopName: Yup.string()
-    .required("Shop name is required")
+    // .required("Shop name is required")
     .min(3, "Shop name must be at least 3 characters"),
   storeAddress: Yup.string().required("Shop address is required"),
   category: Yup.string().required("Shop category is required"),
@@ -67,33 +52,6 @@ const shopValidationSchema = Yup.object().shape({
     .min(20, "Description must be at least 20 characters"),
   profile_url: Yup.string().required("Shop image is required"),
 });
-
-const LocationMarker = ({ setShopDetails, setErrors }) => {
-  const map = useMapEvents({
-    click(e) {
-      const { lat, lng } = e.latlng;
-      
-      // Reverse geocoding using Nominatim (OpenStreetMap)
-      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
-        .then(response => response.json())
-        .then(data => {
-          const address = data.display_name || "Selected location";
-          setShopDetails(prev => ({
-            ...prev,
-            storeAddress: address,
-            storeLocation: { lat, lng }
-          }));
-          setErrors(prev => ({ ...prev, storeLocation: undefined }));
-        })
-        .catch(error => {
-          console.error("Geocoding error:", error);
-          toast.error("Could not get address details for this location");
-        });
-    },
-  });
-
-  return null;
-};
 
 const LocationVerification = () => {
   const value = useSelector((state) => state.shopVerificationState);
@@ -126,6 +84,15 @@ const LocationVerification = () => {
       setCategoriesList(allCategoriesList);
     }
   }, [categories]);
+
+  const handleSetLocationDetails = (locationData) => {
+    setShopDetails((prev) => ({
+      ...prev,
+      storeAddress: locationData.address,
+      storeLocation: locationData.storeAddress.storeLocation,
+    }));
+    setErrors((prev) => ({ ...prev, storeLocation: undefined }));
+  };
 
   const handleCategory = (data) => {
     const { label } = data;
@@ -198,65 +165,60 @@ const LocationVerification = () => {
     }
   };
 
-
-  const handleYesShop = (value) => {
-    setIsShopYes(value);
-  };
-
-  const handleLocationClick = () => {
-    setShowMap((prev) => !prev);
-  };
   const [uploadImage] = useUploadImageMutation();
 
   const handleImageChange = async (event) => {
-  const selectedFile = event.target.files[0];
-  if (!selectedFile) return;
+    const selectedFile = event.target.files[0];
+    if (!selectedFile) return;
 
-  // Validate file
-  if (selectedFile.size > 1024 * 1024) {
-    toast.error("File size should not exceed 1 MB!");
-    return;
-  }
-
-  const validExtensions = [".jpg", ".jpeg", ".png", ".webp"];
-  const fileExtension = selectedFile.name.substring(selectedFile.name.lastIndexOf(".")).toLowerCase();
-  
-  if (!validExtensions.includes(fileExtension)) {
-    toast.error("Only .jpg, .jpeg, .png, .webp formats are allowed.");
-    return;
-  }
-
-  try {
-    // Show preview immediately
-    const reader = new FileReader();
-    reader.onload = (e) => setSelectedImage(e.target.result);
-    reader.readAsDataURL(selectedFile);
-
-    // Upload to server
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-    
-    const response = await uploadImage({
-      data: formData,
-      itemUid: null
-    });
-
-    if (response?.data) {
-      const { fileUrl } = response.data.data;
-      setShopDetails(prev => ({
-        ...prev,
-        profile_url: fileUrl
-      }));
-      toast.success("Image uploaded successfully!");
-    } else {
-      throw new Error(response.error?.data?.message || "Upload failed");
+    // Validate file size
+    if (selectedFile.size > 1024 * 1024) {
+      return toast.error("File size should not exceed 1 MB!");
     }
-  } catch (error) {
-    console.error("Upload error:", error);
-    toast.error(error.message || "Image upload failed");
-    setSelectedImage(null);
-  }
-};
+
+    // Validate file type
+    const validExtensions = [".jpg", ".jpeg", ".png", ".webp"];
+    const fileExtension = selectedFile.name
+      .substring(selectedFile.name.lastIndexOf("."))
+      .toLowerCase();
+
+    if (!validExtensions.includes(fileExtension)) {
+      return toast.error("Only .jpg, .jpeg, .png, .webp formats are allowed.");
+    }
+
+    try {
+      // Display preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setSelectedImage(e.target.result);
+        setShopDetails((prev) => ({
+          ...prev,
+          profile_url: e.target.result,
+        }));
+      };
+      reader.readAsDataURL(selectedFile);
+
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
+      const response = await uploadImage({
+        data: formData,
+        itemUid: null,
+      });
+
+      if (response?.data) {
+        const { fileUrl } = response.data.data;
+        setShopDetails((prev) => ({
+          ...prev,
+          profile_url: fileUrl,
+        }));
+        toast.success("Successfully uploaded your profile image!");
+      }
+    } catch (error) {
+      console.error("Image upload error:", error);
+      toast.error("Failed to upload image");
+    }
+  };
 
   return (
     <div className="location-verification-container">
@@ -265,20 +227,9 @@ const LocationVerification = () => {
         <div className="location-map-div">
           {showMap && (
             <div className="map-comp">
-              <MapContainer
-                center={[20.5937, 78.9629]} // Center on India
-                zoom={5}
-                style={{ height: "100%", width: "100%" }}
-              >
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                <LocationMarker
-                  setShopDetails={setShopDetails}
-                  setErrors={setErrors}
-                />
-              </MapContainer>
+              <CustomMapComponent 
+                handleSetLocationDetails={handleSetLocationDetails} 
+              />
             </div>
           )}
           <div className="select-location-sample-card">
@@ -304,13 +255,13 @@ const LocationVerification = () => {
           )}
         </div>
         <div className="fields-card">
-
-          <img src={shopDetails?.profile_url} className="shop-profile-pic" />
+          {shopDetails?.profile_url && (
+            <img src={shopDetails.profile_url} className="shop-profile-pic" alt="Shop profile" />
+          )}
           <input
             type="file"
-            name=""
-            id=""
-            onChange={(e) => handleImageChange(e, "THUMBNAILS")}
+            accept=".jpg,.jpeg,.png,.webp"
+            onChange={handleImageChange}
           />
           <div className="fields-container">
             {locationFields.map((item, index) => (
