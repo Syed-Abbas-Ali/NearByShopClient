@@ -18,14 +18,14 @@ export function haversine(lat1, lon1, lat2, lon2) {
 }
 
 export async function getAddress(lat, lon) {
-  const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
-    return data.display_name;
-  } catch (error) {
-    console.error("Error fetching address:", error);
-  }
+  // const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
+  // try {
+  //   const response = await fetch(url);
+  //   const data = await response.json();
+  //   return data.display_name;
+  // } catch (error) {
+  //   console.error("Error fetching address:", error);
+  // }
 }
 
 // // Example usage:

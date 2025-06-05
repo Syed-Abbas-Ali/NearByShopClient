@@ -67,7 +67,7 @@ const OfferCategoryItem = ({ discountItem, isSeller = false }) => {
             className="shop-address"
             style={{ color: discountItem?.textColor || defaultText }}
           >
-            {discountItem?.shop_address?.slice(0, 20)}...
+            {discountItem?.shop_address?.length>20? discountItem?.shop_address?.slice(0, 20)+ "..":discountItem?.shop_address}
           </p>
            <h4 style={{ color: discountItem?.textColor || defaultText }}>
             {discountItem?.deal}

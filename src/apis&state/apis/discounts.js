@@ -14,7 +14,7 @@ export const discountsApiSlice = createApi({
       query: ({
         latitude = "37.7749",
         longitude = "-122.4194",
-        radius = "4000",
+        radius = "5000",
         minPrice = "10",
         maxPrice = "150000",
         shopId = "",
@@ -32,27 +32,30 @@ export const discountsApiSlice = createApi({
       providesTags: ["discount"],
     }),
 
-    getDiscounts: builder.query({
-      query: ({
-        latitude = "37.7749",
-        longitude = "-122.4194",
-        radius = "100000",
-        minPrice = "1",
-        maxPrice = "150000",
-        shopId = "",
-        category= "",
-        subCategory = "",
-      }) => ({
-        url: `discount?latitude=${latitude}&longitude=${longitude}&radius=${radius}&minPrice=${minPrice}&maxPrice=${maxPrice}${
-          shopId ? `&shopId=${shopId}` : ""
-        }&category=${category}&subCategory=${subCategory}`,
-        headers: {
-          Authorization: `Bearer ${accessTokenValue()}`,
-        },
-        method: "GET",
-      }),
-      providesTags: ["discount"],
-    }),
+getDiscounts: builder.query({
+  query: ({ 
+    latitude = "37.7749", 
+    longitude = "-122.4194", 
+    radius = "100000", 
+    minPrice = "1", 
+    maxPrice = "150000", 
+    shopId = "", 
+    category = "", 
+    subCategory = "" 
+  }) => {
+    console.log("subCategoryrf:", subCategory); // 👈 This works!
+
+    return {
+      url: `discount?latitude=${latitude}&longitude=${longitude}&radius=${radius}&minPrice=${minPrice}&maxPrice=${maxPrice}${shopId ? `&shopId=${shopId}` : ""}&category=${category}&subCategory=${subCategory}`,
+      headers: {
+        Authorization: `Bearer ${accessTokenValue()}`,
+      },
+      method: "GET",
+    };
+  },
+  providesTags: ["discount"],
+}),
+
 
     // Get Single Discount
     getSingleDiscount: builder.query({

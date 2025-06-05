@@ -42,4 +42,11 @@
       grid-template-columns: 1fr 1fr 1fr;
     }
   }
+  .noShopsFound{
+    display: flex;
+    width: 95vw;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+  }
 }
