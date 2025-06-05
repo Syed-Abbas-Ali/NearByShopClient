@@ -1,8 +1,8 @@
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   useAddToFollowingMutation,
-  useGetAllFollowingApiQuery,
   useGetAllNearByShopsApiQuery,
 } from "../../apis&state/apis/shopApiSlice";
 import backIcon from "../../assets/arrowLeftLarge.svg";
@@ -10,35 +10,59 @@ import BottomNavbar from "../../components/bottomNavbar/BottomNavbar";
 import CategoriesList from "../../components/commonComponents/categoriesList/CategoriesList";
 import FilterInputComponent from "../../components/commonComponents/filterInputComponent/FilterInputComponent";
 import ShopCard from "../../components/shopCard/ShopCard";
+import SubCategoriesList from "../../components/commonComponents/subCategoriesList/SubCategoriesList";
 import "./shop.scss";
 
 const Shop = () => {
   const { shopCategory } = useParams();
   const [followSeller] = useAddToFollowingMutation();
-  // const { data: followingData } = useGetAllFollowingApiQuery();
+  const [allCategories, setAllCategories] = useState(null);
+  const [selectedCategories, setSelectedCategories] = useState(null);
+  const [selectedSubCategory, setSelectedSubCategory] = useState(null);
+  const [searchData, setSearchData] = useState("");
+
   const navigate = useNavigate();
+
   const {
     mapDetailsState: {
       userMapDetails: { latitude, longitude },
     },
   } = useSelector((state) => state);
+
+  // Set initial category from URL params
+  useEffect(() => {
+    if (shopCategory && allCategories) {
+      const initialCategory = allCategories.find(cat => cat.name === shopCategory);
+      if (initialCategory) {
+        setSelectedCategories(initialCategory);
+      }
+    }
+  }, [shopCategory, allCategories]);
+
+  // API call
   const { data, isError, isLoading } = useGetAllNearByShopsApiQuery(
     {
       latitude,
       longitude,
-      category: shopCategory,
+      radius: 5000,
+      category: selectedCategories?.name || shopCategory || "",
+      subCategory: selectedSubCategory?.name || "",
+      search: searchData,
     },
     {
       skip: !latitude || !longitude,
     }
   );
-  console.log(data, 100);
-  const handleCategory = (categoryName) => {
-    navigate(`/shop/${categoryName?.name}`);
+
+  const handleCategory = (category) => {
+    setSelectedCategories(category);
+    setSelectedSubCategory(null); // Reset subcategory when category changes
   };
+
   const handleBack = () => {
     navigate(-1);
   };
+
   const handleFollow = async (shopUidValue) => {
     try {
       const response = await followSeller(shopUidValue);
@@ -49,59 +73,51 @@ const Shop = () => {
       console.log(error);
     }
   };
+
   return (
-    // <WrapperComponent>
-    //   <div className="shop-container">
-    //     {/* <AllCategories /> */}
-    //     <div className="search-back-icon">
-    //       <img
-    //         src={backIcon}
-    //         alt=""
-    //         className="back-icon"
-    //         onClick={handleBack}
-    //       />
-    //       <Search />
-    //     </div>
-    //     <CategoriesList
-    //       activeCategory={shopCategory}
-    //       handleCategory={handleCategory}
-    //     />
-    //     <div className="near-shops">
-    //       {data?.data?.list?.map((item, index) => (
-    //         <ShopCard
-    //           id={item}
-    //           singleShop={item}
-    //           key={index}
-    //           handleFollow={handleFollow}
-    //         />
-    //       ))}
-    //     </div>
-    //   </div>
-    // </WrapperComponent>
     <>
       <div className="shop-container">
         <div className="search-back-icon">
           <img
             src={backIcon}
-            alt=""
+            alt="back"
             className="back-icon"
             onClick={handleBack}
           />
-          <FilterInputComponent />
+          <FilterInputComponent handleChange={(value) => setSearchData(value)} />
         </div>
+
         <CategoriesList
-          activeCategory={shopCategory}
           handleCategory={handleCategory}
+          setAllCategories={setAllCategories}
+          activeCategory={selectedCategories?.name || shopCategory}
         />
+
+        {selectedCategories && (
+          <SubCategoriesList
+            selectedCategories={selectedCategories.subcategories}
+            handleSelect={setSelectedSubCategory}
+            selected={selectedSubCategory}
+          />
+        )}
+
         <div className="near-shops">
-          {data?.data?.list?.map((item, index) => (
-            <ShopCard
-              id={item}
-              singleShop={item}
-              key={index}
-              handleFollow={handleFollow}
-            />
-          ))}
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : isError ? (
+            <p>Error loading shops</p>
+          ) : data?.data?.list?.length ? (
+            data.data.list.map((item, index) => (
+              <ShopCard
+                key={index}
+                id={item}
+                singleShop={item}
+                handleFollow={handleFollow}
+              />
+            ))
+          ) : (
+            <p>No shops found</p>
+          )}
         </div>
       </div>
       <BottomNavbar />

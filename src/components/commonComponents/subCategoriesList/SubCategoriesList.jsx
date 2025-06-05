@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./subCategoriesList.scss";
 import { useGetAllCategoriesAndSubCategoriesQuery } from "../../../apis&state/apis/masterDataApis";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
+
 
 const SubCategoriesList = ({ categoryName = "", selectedCategories,handleSelect,selected }) => {
   const navigate = useNavigate();
@@ -28,8 +29,10 @@ const SubCategoriesList = ({ categoryName = "", selectedCategories,handleSelect,
     background:"#ffd9c0",
     color:"white"
   }
+   const location = useLocation()
+    const froStyle = location.pathname.split("/");
   return (
-    <div className="categories-list">
+    <div className="categories-list" style={froStyle[1] ? {} : { margin: "16px 16px" }}>
       <h3>Sub Categories</h3>
       {selectedCategories ? (
         <div className="category-items">

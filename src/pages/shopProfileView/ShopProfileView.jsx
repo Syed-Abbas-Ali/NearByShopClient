@@ -20,7 +20,9 @@ import Search from "../../components/search/Search";
 import { useDispatch, useSelector } from "react-redux";
 import Video from "../home/video/Video";
 import youtubeIcon from "../../assets/youtubeIcon.svg";
-import locationIcon from "../../assets/locationIcon.svg";
+import locationImage from "../../assets/locationIcon.svg";
+import Instagram from "../../assets/instagram.png";
+import websiteIcon from "../../assets/websiteIcon.png";
 import BusinessDetailsVideo from "../../components/commonComponents/businessDetailsVideo/BusinessDetailsVideo";
 import RatingPopup from "./ratingPopup/RatingPopup";
 import { ShowRating } from "../../components/rating/Rating";
@@ -48,7 +50,7 @@ const ShopProfileView = () => {
   const [isShowPopup, setIsShowPopup] = useState(false);
   const [showSharePopup, setSharePopup] = useState(false);
   const [search, setSearch] = useState("");
-  
+
   // Infinite scroll states
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -91,11 +93,11 @@ const ShopProfileView = () => {
     const observer = new IntersectionObserver(handleObserver, {
       threshold: 0.1,
     });
-    
+
     if (loaderRef.current) {
       observer.observe(loaderRef.current);
     }
-    
+
     return () => {
       if (loaderRef.current) {
         observer.unobserve(loaderRef.current);
@@ -237,7 +239,7 @@ const ShopProfileView = () => {
     <WrapperComponent>
       <div className="seller-profile-view">
         {showSharePopup && <SharePopup setIsShare={setSharePopup} shopId={singleShopDetails?.data?.shopDetails?.shop_id} />}
-        
+
         <header>
           <button onClick={handleBack}>
             <img src={backImage} alt="" />
@@ -246,9 +248,11 @@ const ShopProfileView = () => {
         </header>
 
         <div className="content-card">
+           <div className="seller-profile-video-data-card">
           {loadingShopDetails ? (
             <CircularLoader />
           ) : (
+
             <div className="profile-data-card">
               <div className="profile-pic-card">
                 <img src={singleShopDetails?.data?.shopDetails?.profile_pic} alt="" />
@@ -258,9 +262,9 @@ const ShopProfileView = () => {
                   <h1>
                     {singleShopDetails?.data?.shopDetails?.shop_name || "-----"}
                   </h1>
-                  <img src={shareIcon} onClick={handleShare}/>
+
                 </div>
-                
+
                 <div>
                   <h3>
                     {singleShopDetails?.data?.shopDetails?.first_name}{" "}
@@ -294,26 +298,95 @@ const ShopProfileView = () => {
             </div>
           )}
 
+          <div className="video-links-card">
+            {/* <div className="about-video">
+                        <h3>About my Business</h3>
+                        <div className="video-default-div">
+                          <BusinessDetailsVideo />
+                        </div>
+                      </div> */}
+            <div className="links">
+              {singleShopDetails?.data?.shopDetails?.shop_address && (
+                <a
+                  href={`https://www.google.com/maps?q=${singleShopDetails?.data?.shopDetails?.store_location?.latitude},${singleShopDetails?.data?.shopDetails?.store_location?.longitude}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="location-link"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <img src={locationImage} alt="location" />
+                  <p>{singleShopDetails?.data?.shopDetails?.shop_address}.</p>
+                </a>
+              )}
+
+              {singleShopDetails?.data?.shopDetails?.shop_contact?.xLink ? (
+                <div>
+                  <a
+                    href={singleShopDetails?.data?.shopDetails?.shop_contact?.xLink}
+                    onClick={(e) => e.stopPropagation()}
+                    className="location-link"
+                  >
+                    <img src={youtubeIcon} alt="youtube" />
+                    <p>Youtube Link</p>
+                  </a>
+                </div>
+              ) : (
+                " "
+              )}
+
+              {singleShopDetails?.data?.shopDetails?.shop_contact?.instagramLink ? (
+                <div>
+                  <a
+                    href={singleShopDetails?.data?.shopDetails?.shop_contact?.instagramLink}
+                    onClick={(e) => e.stopPropagation()}
+                    className="location-link"
+                  >
+                    <img src={Instagram} alt="youtube" />
+                    <p>Instagram Link</p>
+                  </a>
+                </div>
+              ) : (
+                " "
+              )}
+
+              {singleShopDetails?.data?.shopDetails?.shop_contact?.website ? (
+                <div>
+                  <a
+                    href={singleShopDetails?.data?.shopDetails?.shop_contact?.website}
+                    onClick={(e) => e.stopPropagation()}
+                    className="location-link"
+                  >
+                    <img src={websiteIcon} alt="website" />
+                    <p>My website</p>
+                  </a>
+                </div>
+              ) : (
+                " "
+              )}
+            </div>
+          </div>
+          </div>
+
           <div className="all-products-card">
             <div>
               <Search setSearch={setSearch} />
             </div>
             <div className="products-card">
               <h3 className="products-header">Products</h3>
-              
+
               <div className="all-products">
                 {loadedProducts.map((item, index) => (
                   <SingleProduct product={item} key={`${item.items_id}-${index}`} />
                 ))}
               </div>
-              
+
               <div ref={loaderRef} className="loading-container">
                 {isFetching && <Loader />}
                 {!hasMore && loadedProducts.length > 0 && (
                   <p className="end-message">You've reached the end of products</p>
                 )}
               </div>
-              
+
               {loadedProducts.length === 0 && !isFetching && (
                 <div className="no-products-message">
                   No products found
@@ -322,7 +395,7 @@ const ShopProfileView = () => {
             </div>
           </div>
         </div>
-        
+
         <BottomNavbar />
       </div>
     </WrapperComponent>

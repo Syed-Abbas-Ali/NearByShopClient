@@ -30,6 +30,7 @@ import userMask from "../../assets/userMask.svg";
 import cameraIcon from "../../assets/cameraIcon.svg";
 import { useGetAllDiscountsQuery } from "../../apis&state/apis/discounts";
 import Loader from "../../components/loadingSkelton/LoadingSkelton";
+import SharePopup  from "../../components/commonComponents/sharePopup/SharePopup"
 
 const Profile = () => {
   const navigate = useNavigate();

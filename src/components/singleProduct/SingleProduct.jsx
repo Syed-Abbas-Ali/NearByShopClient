@@ -136,7 +136,7 @@ const handleNavigate = () => {
         </div>
       </div>
       <div className="product-details">
-        <h3>{product.title}</h3>
+        <h3>{product.title?.slice(0,20)}</h3>
         <div className="prices-and-offers">
           <h2>₹{product?.our_price?.toFixed(0)}</h2>
           <p className="actual-price">₹{product?.market_price?.toFixed(0)}</p>
