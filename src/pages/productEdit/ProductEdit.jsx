@@ -61,6 +61,7 @@ const ProductEdit = () => {
   const value = useParams();
   const navigate = useNavigate();
   const socketMethods = useContext(SocketContext);
+  
 
   const [errors, setErrors] = useState({});
 
@@ -337,7 +338,7 @@ const ProductEdit = () => {
       }
     }
   };
-  console.log()
+
 
   const handleSave = async () => {
     const { market_price, our_price } = productDetails;
@@ -367,7 +368,7 @@ const ProductEdit = () => {
             response?.data?.data?.messageData?.item_uid
           }`
         );
-      } else {
+      } else { 
         toast.error(response?.error?.data?.errors[0]?.fieldName);
         console.log(response?.error);
         if (response?.error?.status == 422) {

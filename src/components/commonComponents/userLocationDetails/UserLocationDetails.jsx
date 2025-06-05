@@ -69,19 +69,20 @@ const UserLocationDetails = () => {
   }, []);
 
   return (
-    <div className="user-location-details">
-      <div className="select-location-card">
-        {/* {locationSelectPopup && (
-          <UserLocationSelectPopup handleLocationClick={handleLocationClick} />
-        )} */}
-        {/* {locationSelectPopup && <UserLocationSelect />} */}
-        {/* <img src={locationIcon} alt="" /> */}
-        <div className="drop-down-card" onClick={handleLocationClick}>
-          <p>{userMapDetails?.locationAddress || "Select Location"}</p>
-          {/* <img src={dropDownArrow} alt="" /> */}
-        </div>
-      </div>
-    </div>
+    <></>
+    // <div className="user-location-details">
+    //   <div className="select-location-card">
+    //     {locationSelectPopup && (
+    //       <UserLocationSelectPopup handleLocationClick={handleLocationClick} />
+    //     )}
+    //     {locationSelectPopup && <UserLocationSelect />}
+    //     <img src={locationIcon} alt="" />
+    //     <div className="drop-down-card" onClick={handleLocationClick}>
+    //       <p>{userMapDetails?.locationAddress || "Select Location"}</p>
+    //       <img src={dropDownArrow} alt="" />
+    //     </div>
+    //   </div>
+    // </div>
   );
 };
 

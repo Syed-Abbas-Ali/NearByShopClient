@@ -78,6 +78,8 @@
       ...defaultDiscountData,
     });
 
+
+
     useEffect(() => {
       if (singleDiscountData?.data) {
         const startDateValue =
@@ -180,6 +182,7 @@
           setOrderDetails(response.data);
           if (response?.data) {
             paymentWindow(response?.data?.data);
+            navigate("/profile")
           }
         }
       } catch (err) {
@@ -226,11 +229,12 @@
         ...colorsObject,
         ...productImageDetails,
       };
+     
       try {
         const response = await updateDiscount(finalUpdateData);
         if (response?.data) {
           toast.success("Discount updated!");
-          navigate(-1);
+          navigate("/profile")
         } else {
           toast.error("Something went wrong!");
         }
@@ -272,6 +276,7 @@
     };
 
     const handleColor = (colorText, name) => {
+
       setColorsObject((prev) => ({ ...prev, [name]: colorText }));
     };
 
@@ -414,16 +419,18 @@
                   className="shop-name"
                   style={{ color: colorsObject.textColor }}
                 >
-                  {singleShopDetails?.data?.shop_name}
+                  {singleShopDetails?.data?.shop_name ?? productDetails?.shop_name}
                 </h3>
                 <p
                   className="location-text"
                   style={{ color: colorsObject.textColor }}
                 >
-                  {singleShopDetails?.data?.shop_address}
+                  {singleShopDetails?.data?.shop_address ?? productDetails?.shop_address}
+                
                 </p>
               </div>
               <div className="second-section">
+               
                
                 <input
                   style={{ color: colorsObject.textColor }}
@@ -455,6 +462,7 @@
             <div className="select-bg-color">
               <p className="label-text">Select Background Color:</p>
               <ColorPickerComponent
+              initialColor={productDetails?.backgroundColor}
                 handleColorPicker={(colorText) =>
                   handleColor(colorText, "backgroundColor")
                 }
@@ -467,6 +475,7 @@
               <p className="label-text">Select Text Color:</p>
               <ColorPickerComponent
                 isSingle={true}
+                initialColor={productDetails?.textColor}
                 handleColorPicker={(colorText) =>
                   handleColor(colorText, "textColor")
                 }

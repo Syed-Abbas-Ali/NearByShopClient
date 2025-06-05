@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import "./categoriesList.scss";
 import { useGetAllCategoriesAndSubCategoriesQuery } from "../../../apis&state/apis/masterDataApis";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 
 const CategoriesList = ({
   activeCategory = "",
@@ -19,8 +19,11 @@ const CategoriesList = ({
       }
     }
   }, [data,setAllCategories]);
+  const location = useLocation()
+  const froStyle = location.pathname.split("/");
+
   return (
-    <div className="categories-list">
+    <div className="categories-list"  style={froStyle[1] ? {} : { margin: "16px 16px" }}>
       <h3>{labelText}</h3>
       <div className="category-items">
         {data?.data?.map((category) => {
@@ -28,6 +31,8 @@ const CategoriesList = ({
             <div
               className="single-category"
               onClick={() => handleCategory(category)}
+              
+
             >
               <div
                 className="category-image"

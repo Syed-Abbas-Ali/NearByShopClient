@@ -97,7 +97,7 @@ const Otp = ({ numberOfDigits = 6 }) => {
           navigate("/change-password");
         } else {
           toast.success("Welcome to Near By Shop");
-          navigate("/");
+          navigate("/login");
         }
       } else if (response?.error) {
         const errorMessage = response?.error.data.errors[0].message;

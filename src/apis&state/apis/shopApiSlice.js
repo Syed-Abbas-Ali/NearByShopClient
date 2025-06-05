@@ -175,8 +175,8 @@ export const shopApiSlice = createApi({
 
     // Get All Near By Shops
     getAllNearByShopsApi: builder.query({
-      query: ({ latitude, longitude, category = "" }) => ({
-        url: `/shop/shops-location?latitude=${latitude}&longitude=${longitude}&radius=5000&category=${category}`,
+      query: ({ latitude, longitude, category = "" , subCategory=""}) => ({
+        url: `/shop/shops-location?latitude=${latitude}&longitude=${longitude}&radius=5000&category=${category}&subCategory=${subCategory}`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${accessTokenValue()}`,

@@ -32,12 +32,15 @@ const SellerSingleProduct = ({ product, handleSingleProductClick }) => {
       </div>
 
       <div className="product-details">
-        <h3>{product?.title}</h3>
+        <h3>{product?.title?.length>20 ? product?.title?.slice(0,20)+".." :  product?.title  }</h3>
         <div className="prices-and-offers">
           <h2>₹{product.our_price}</h2>
           <p className="actual-price">₹{product?.market_price?.toFixed(0)}</p>
           <p className="offer-text">
-            {product?.discountPercentage?.toFixed(0)}%Off
+            {product?.discountPercentage?.toFixed(0) > 5
+  ? product?.discountPercentage?.toFixed(0) + "%off"
+  : ""}
+
           </p>
         </div>
         <div className="location">

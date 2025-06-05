@@ -35,6 +35,7 @@ const OfferCategoryItem = ({ discountItem, isSeller = false }) => {
   const handleSellerProfile = (shopId) => {
     navigate(`/shop-profile-view/${shopId}`);
   };
+  
   return (
     <div
       className="offer-content-card"
@@ -68,9 +69,12 @@ const OfferCategoryItem = ({ discountItem, isSeller = false }) => {
           >
             {discountItem?.shop_address?.slice(0, 20)}...
           </p>
-          <h4 style={{ color: discountItem?.textColor || defaultText }}>
-            {discountItem?.offer}
+           <h4 style={{ color: discountItem?.textColor || defaultText }}>
+            {discountItem?.deal}
           </h4>
+          <p style={{ color: discountItem?.textColor || defaultText }}>
+            {discountItem?.offer}
+          </p>
         </div>
       </div>
     </div>

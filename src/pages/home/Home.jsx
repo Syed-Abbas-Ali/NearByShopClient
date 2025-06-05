@@ -26,9 +26,11 @@ import AppBanner from "../../components/commonComponents/auth&VerificatonCompone
 import BottomNavbar from "../../components/bottomNavbar/BottomNavbar";
 import ProductSection from "./productsSection/ProductSection";
 import SubCategoriesList from "../../components/commonComponents/subCategoriesList/SubCategoriesList";
+import { useLocation } from "react-router-dom";
 
 const Home = () => {
   const navigate = useNavigate();
+  const location = useLocation()
   const { isFilterPopupOpen } = useSelector((state) => state.globalState);
 
   const {
@@ -36,6 +38,8 @@ const Home = () => {
       userMapDetails: { latitude, longitude, locationAddress },
     },
   } = useSelector((state) => state);
+
+  
 
   const [searchData, setSearchData] = useState(null);
   const [allCategories, setAllCategories] = useState(null);
@@ -61,6 +65,8 @@ const Home = () => {
     setSelectedCategories(categoryName);
     setSelectedSubCategory("");
   };
+  const froStyle= location.pathname.split("/")
+  console.log(froStyle,80)
 
   return (
     <WrapperComponent>

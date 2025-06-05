@@ -28,15 +28,16 @@ const OfferSubCategory = () => {
       radius: 100000000,
       page: 1,
       categoryName,
+      subCategory,
     },
     {
       skip: !latitude || !longitude,
     }
   );
 
-  const handleCategory = (categoryName) => {
-    navigate(`/offer-sub-category/${categoryName}`);
-  };
+  // const handleCategory = (categoryName) => {
+  //   navigate(`/offer-sub-category/${categoryName}`);
+  // };
   return (
     <div className="offers-sub-category">
       <OfferHeader buttonText={"Add 1 more Discount"} />
@@ -52,11 +53,11 @@ const OfferSubCategory = () => {
             categoryName={categoryName}
           />
         </div>
-        {/* <div className="category-discount-cards">
+        <div className="category-discount-cards">
           {data?.data?.map((item, index) => (
             <OfferCategoryItem key={index} discountItem={item} />
           ))}
-        </div> */}
+        </div>
       </div>
     </div>
   );
