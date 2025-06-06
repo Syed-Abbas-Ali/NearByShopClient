@@ -20,6 +20,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    @media (max-width:900px) {
+        height: 110px;
+    width: 110px;
+    }
+      @media (max-width:600px) {
+        height: 100px;
+    width: 100px;
+    }
+      @media (max-width:400px) {
+        height: 90px;
+    width: 90px;
+    }
     .tick-icon {
       position: absolute;
       bottom: 15px;

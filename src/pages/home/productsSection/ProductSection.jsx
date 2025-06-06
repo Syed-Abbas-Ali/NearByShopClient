@@ -16,14 +16,15 @@ const ProductSection = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [productList, setProductList] = useState([]);
   const [hasMore, setHasMore] = useState(true);
+  const [showEndMessage, setShowEndMessage] = useState(false);
   const scrollRef = useRef(null);
-  const observer = useRef();
   const loadingRef = useRef(false);
+  const observer = useRef();
 
   const { globalFilter } = useSelector((state) => state.globalState);
   const shouldSkip = !latitude || !longitude;
 
-  const { data, isLoading, isError } = useGetAllProductsApiQuery(
+  const { data, isLoading } = useGetAllProductsApiQuery(
     {
       ...globalFilter,
       latitude,
@@ -37,11 +38,13 @@ const ProductSection = ({
     { skip: shouldSkip }
   );
 
-  // Reset state when filters change
+  // Reset products when filters change
   useEffect(() => {
     setCurrentPage(1);
     setProductList([]);
     setHasMore(true);
+    setShowEndMessage(false);
+    loadingRef.current = false;
   }, [latitude, longitude, globalFilter, searchData, category, subCategory]);
 
   // Update product list when new data is fetched
@@ -52,25 +55,32 @@ const ProductSection = ({
       } else {
         setProductList((prev) => [...prev, ...data.data.items]);
       }
-      setHasMore(currentPage < data.data.totalPages);
+      const morePagesAvailable = currentPage < data.data.totalPages;
+      setHasMore(morePagesAvailable);
+      setShowEndMessage(!morePagesAvailable && currentPage > 1);
     }
     loadingRef.current = false;
   }, [data, currentPage]);
 
-  // Handle infinite scroll using Intersection Observer
+  // Handle horizontal scroll with Intersection Observer
   const lastProductRef = useCallback(
     (node) => {
-      if (isLoading) return;
+      if (isLoading || loadingRef.current) return;
+      
       if (observer.current) observer.current.disconnect();
       
       observer.current = new IntersectionObserver(
         (entries) => {
-          if (entries[0].isIntersecting && hasMore && !loadingRef.current) {
+          if (entries[0].isIntersecting && hasMore) {
             loadingRef.current = true;
             setCurrentPage((prev) => prev + 1);
           }
         },
-        { threshold: 0.1, root: scrollRef.current }
+        {
+          root: scrollRef.current,
+          threshold: 0.1,
+          rootMargin: "50px"
+        }
       );
 
       if (node) observer.current.observe(node);
@@ -83,7 +93,7 @@ const ProductSection = ({
       <div className="product-section">
         {isLoading && currentPage === 1 && <p className="loader">Loading...</p>}
         {!productList.length && singleCategory && (
-          <p className="loader">No data</p>
+          <p className="loader">No products found</p>
         )}
 
         {productList.length > 0 && (
@@ -104,8 +114,15 @@ const ProductSection = ({
                 }
                 return <SingleProduct product={product} key={product._id} />;
               })}
+              
               {isLoading && currentPage > 1 && (
-                <p className="loader">Loading more...</p>
+                <p className="loader">Loading more products...</p>
+              )}
+              
+              {showEndMessage && (
+                <div className="end-message">
+                  <p>You've reached the end of products</p>
+                </div>
               )}
             </div>
           </>

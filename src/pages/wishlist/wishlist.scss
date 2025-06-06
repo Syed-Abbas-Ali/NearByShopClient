@@ -20,6 +20,7 @@
 
 .wishlist {
   padding: 1rem;
+  margin-bottom: 60px;
   .wishlist-card-container {
     max-width: 1500px;
     margin: 0px auto;
@@ -27,41 +28,38 @@
     background-color: $white-color;
     border-radius: 8px;
   
-    .products-list {
-      max-height: 79vh;
-      overflow-y: scroll;
-      display: grid;
-      &::-webkit-scrollbar {
-        display: none;
+   
+       .products-list {
+        display: flex;
+    row-gap: 10px;
+    column-gap: 10px;
+      flex-wrap: wrap;
+         @media (max-width:1600px) {
+           display: grid;
+        grid-template-columns: repeat(7,1fr);
       }
-      @media (min-width: 768px) {
-        &::-webkit-scrollbar {
-          width: 5px;
-          cursor: pointer;
-        }
-
-        &::-webkit-scrollbar-track {
-          background: #f1f1f1;
-        }
-
-        &::-webkit-scrollbar-thumb {
-          background: #888;
-          border-radius: 10px;
-        }
-        &::-webkit-scrollbar-thumb:hover {
-          background: #555;
-        }
+      @media (max-width:1530px) {
+           display: grid;
+        grid-template-columns: repeat(6,1fr);
       }
-      @media (min-width: 850px) {
+       @media (max-width:1220px) {
+           display: grid;
+        grid-template-columns: repeat(5,1fr);
+      }
+             @media (max-width:930px) {
+           display: grid;
+        grid-template-columns: repeat(4,1fr);
+      }
+           @media (max-width:690px) {
+           display: grid;
+        grid-template-columns: repeat(3,1fr);
+      }
+      @media (max-width:500px) {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        column-gap: 5px;
+        grid-template-columns: repeat(2,1fr);
       }
-      @media (min-width: 1350px) {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        column-gap: 10px;
-      }
+      
+
     }
   }
 }

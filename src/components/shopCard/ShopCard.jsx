@@ -72,7 +72,8 @@ const ShopCard = ({ id, singleShop, handleFollow }) => {
     e.stopPropagation();
     handleFollow(singleShop.shop_uid);
   };
-
+const width=window.innerWidth
+console.log(width)
   return (
     <>
       {isShare && <SharePopup setIsShare={setIsShare} shopId={singleShop?.shop_id} />}
@@ -93,7 +94,16 @@ const ShopCard = ({ id, singleShop, handleFollow }) => {
               <p>4.3/5</p>
             </div> */}
             <p className="shop-category">Category: {singleShop?.category}</p>
-            <p  className="shop-dis">About Shop: {singleShop?.description}</p>
+            <p className="shop-dis">
+  About Shop: {
+    singleShop?.description?.length > 60
+      ? width > 350
+        ? singleShop?.description?.slice(0, 60) + ".."
+        : singleShop?.description?.slice(0, 30) + ".."
+      : singleShop?.description
+  }
+</p>
+
                <p className="distance">
               Radius{" "}
               <span>

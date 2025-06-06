@@ -49,40 +49,57 @@ const Signup = () => {
     termsAndCondition: false,
   });
 
-  const handleSignup = async () => {
-    try {
-      await signupValidationSchema.validate(userDetails, { abortEarly: false });
-      const finalData = {
-        ...userDetails,
-        role: "USER",
-      };
-      const response = await createUser(finalData);
-      if (response?.data) {
-        toast.success("Successfully created account!");
-        sessionStorage.setItem(
-          "user",
-          JSON.stringify({
-            role: "USER",
-            accessToken: response?.data.data.accessToken,
-          })
-        );
-        navigate("/otp");
-      } else if (response?.error) {
-        const errorMessage = response?.error.data.errors[0].message;
-        toast.error(errorMessage);
-      } else {
-        toast.error("Please try again!");
-      }
-    } catch (err) {
-      if (err.inner) {
-        const validationErrors = {};
-        err.inner.forEach((error) => {
-          validationErrors[error.path] = error.message;
-        });
-        setErrors(validationErrors);
-      }
+const handleSignup = async () => {
+  try {
+    // Validate user details
+    await signupValidationSchema.validate(userDetails, { abortEarly: false });
+
+    // Prepare data for submission
+    const finalData = {
+      ...userDetails,
+      role: "USER",
+    };
+
+    // Call API to create user
+    const response = await createUser(finalData);
+
+    // Handle successful response
+    if (response?.data) {
+      // Successful API response
+      toast.success("Successfully OTP sent");
+      sessionStorage.setItem(
+        "user",
+        JSON.stringify({
+          role: "USER",
+          accessToken: response?.data.data.accessToken,
+        })
+      );
+      navigate("/otp");
+    } else if (response?.error) {
+      // API response with error
+      const errorMessage = response?.error?.data?.message;
+      toast.error(errorMessage);
+    
+    } else {
+      // Unexpected response structure
+      toast.error("Please try again!");
     }
-  };
+  } catch (err) {
+    // Validation errors handled by yup schema
+    if (err.inner) {
+      const validationErrors = {};
+      err.inner.forEach((error) => {
+        validationErrors[error.path] = error.message;
+      });
+      setErrors(validationErrors);
+    }
+
+    // Other unexpected errors
+    console.error("Signup Error:", err); // Log any other unexpected errors
+    toast.error("Signup failed. Please try again!"); // Display a generic error message
+  }
+};
+
 
   const handleInput = async (inputObject) => {
     const { name } = inputObject.target;

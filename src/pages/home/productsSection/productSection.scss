@@ -26,6 +26,22 @@
         display: flex;
         gap: 10px;
           overflow-x: scroll;
+          .end-message {
+      flex: 0 0 auto;
+      width: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+      font-size: 0.9rem;
+      padding: 0 10px;
+      text-align: center;
+
+      @media (max-width: 768px) {
+        width: 120px;
+        font-size: 0.8rem;
+      }
+    }
     }
 }
 
