@@ -10,6 +10,12 @@ import ProductSection from "./productsSection/ProductSection";
 import FilterInputComponent from "../../components/commonComponents/filterInputComponent/FilterInputComponent";
 import Filters from "../../components/filters/Filters";
 
+// Constants for scroll modes
+const SCROLL_MODE = {
+  HORIZONTAL: 'horizontal',
+  VERTICAL: 'vertical'
+};
+
 const Home = () => {
   const navigate = useNavigate();
   const { isFilterPopupOpen } = useSelector((state) => state.globalState);
@@ -26,7 +32,7 @@ const Home = () => {
   const [isWideScreen, setIsWideScreen] = useState(window.innerWidth < 500);
   const [visibleCategories, setVisibleCategories] = useState([]);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [scrollMode, setScrollMode] = useState('horizontal');
+  const [scrollMode, setScrollMode] = useState(SCROLL_MODE.HORIZONTAL);
   const observer = useRef();
   const loadingRef = useRef(false);
   const [loadedCategoryIndex, setLoadedCategoryIndex] = useState(0);
@@ -50,13 +56,20 @@ const Home = () => {
   const handleCategory = (categoryName) => {
     setSelectedCategories(categoryName);
     setSelectedSubCategories("");
-    setScrollMode('horizontal');
+    setScrollMode(SCROLL_MODE.HORIZONTAL);
   };
 
   const handleSubCategory = (subCategory) => {
     setSelectedSubCategories(subCategory);
-    setScrollMode('vertical');
+    setScrollMode(SCROLL_MODE.VERTICAL);
   };
+
+  // Reset scroll mode when no category is selected
+  useEffect(() => {
+    if (!selectedCategories) {
+      setScrollMode(SCROLL_MODE.HORIZONTAL);
+    }
+  }, [selectedCategories]);
 
   const lastCategoryRef = useCallback(
     (node) => {

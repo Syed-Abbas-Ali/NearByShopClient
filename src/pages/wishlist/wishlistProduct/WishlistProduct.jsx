@@ -6,6 +6,7 @@ import shareIcon from "../../../assets/shareNewIcon.svg";
 import { useNavigate } from "react-router-dom";
 import { useDeleteWishlistProductMutation } from "../../../apis&state/apis/shopApiSlice";
 import SharePopup from "../../../components/commonComponents/sharePopup/SharePopup";
+import CircularLoader from "../../../components/circularLoader/CircularLoader";
 
 const WishlistProduct = ({ product }) => {
   const navigate = useNavigate();
@@ -110,7 +111,7 @@ const WishlistProduct = ({ product }) => {
               onClick={(e) => handleActionButton(e, "YES")}
               disabled={isLoading}
             >
-              {isLoading ? "Removing..." : "Remove"}
+              {isLoading ? <CircularLoader/> : "Remove"}
             </button>
           </div>
         </div>

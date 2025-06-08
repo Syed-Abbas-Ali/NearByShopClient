@@ -9,6 +9,7 @@ import { signupValidationSchema } from "../../../utils/validations";
 import AppBanner from "../../../components/commonComponents/auth&VerificatonComponents/appBanner/AppBanner";
 import FormHeader from "../../../components/commonComponents/auth&VerificatonComponents/formHeader/FormHeader";
 import TermsAndConditions from "../../../components/commonComponents/termsAndConditions/TermsAndConditions";
+import CircularLoader from "../../../components/circularLoader/CircularLoader";
 
 const signupFields = [
   {
@@ -225,7 +226,7 @@ console.log(errors)
               </div>
             </div>
             <div className="action-card">
-              <button onClick={handleSignup}>Sign Up</button>
+              <button onClick={handleSignup}>{isLoading ? <CircularLoader/> : "Sign Up"}</button>
               {/* <div className="or-card">- Or -</div> */}
               {/* <button className="google-signup">
                 <img src={googleIcon} alt="google" /> Sign up with Google

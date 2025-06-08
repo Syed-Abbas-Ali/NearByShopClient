@@ -10,6 +10,7 @@ import FormHeader from "../../../components/commonComponents/auth&VerificatonCom
 import { useDispatch } from "react-redux";
 import { setLogin } from "../../../apis&state/state/authSlice";
 import toast from "react-hot-toast";
+import CircularLoader from "../../../components/circularLoader/CircularLoader"
 
 const loginFields = [
   {
@@ -35,7 +36,7 @@ const Login = () => {
     password: "",
   });
 
-  const [userLogin] = useLoginApiMutation();
+  const [userLogin,{ isLoading }] = useLoginApiMutation();
 
   const handleLogin = async () => {
     try {
@@ -45,8 +46,7 @@ const Login = () => {
       const finalData = { ...loginData };
       const response = await userLogin(finalData);
 
-      console.log(response)
-      console.log(response?.error?.status==422)
+   
       if(response?.error?.status==422){
         sessionStorage.setItem("user", JSON.stringify(response?.error?.data?.data));
         toast.error(response?.error?.data?.message)
@@ -146,7 +146,7 @@ const Login = () => {
               Forgot your password?
             </p>
             <div className="action-card">
-              <button onClick={handleLogin}>Login</button>
+              <button onClick={handleLogin}>{isLoading ? <CircularLoader /> : "Login"}</button>
               {/* <div className="or-card">- Or -</div>
               <button className="google-signup">
                 <img src={googleIcon} alt="google" /> Login with Google

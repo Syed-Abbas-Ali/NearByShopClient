@@ -12,6 +12,7 @@ const ProductSection = ({
   singleCategory,
   subCategory,
   searchData,
+   scrollMode
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [productList, setProductList] = useState([]);
@@ -20,6 +21,8 @@ const ProductSection = ({
   const scrollRef = useRef(null);
   const loadingRef = useRef(false);
   const observer = useRef();
+
+  console.log(5,scrollMode)
 
   const { globalFilter } = useSelector((state) => state.globalState);
   const shouldSkip = !latitude || !longitude;
@@ -99,16 +102,16 @@ const ProductSection = ({
         {productList.length > 0 && (
           <>
             <div className="category-heading">
-              <h3>{category}</h3>
+              <h3>{scrollMode == "horizontal" ? category : subCategory}</h3>
               {!singleCategory && <img src={forwardIcon} alt="Forward" />}
             </div>
 
-            <div className="products-scroll" ref={scrollRef}>
+            <div className={scrollMode == "horizontal" ? "horizontal-scroll" : "vertical-scroll"} ref={scrollRef}>
               {productList.map((product, index) => {
                 if (productList.length === index + 1) {
                   return (
                     <div ref={lastProductRef} key={product._id}>
-                      <SingleProduct product={product} />
+                      <SingleProduct product={product}  scrollMode={scrollMode}/>
                     </div>
                   );
                 }

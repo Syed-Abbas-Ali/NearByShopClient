@@ -126,21 +126,23 @@ const Filters = () => {
             </div>
           </div>
 
-          <div className="price-range-card">
-            <p>Nearby Shop Radius</p>
-            <div className="price-range-slider">
-              <input
-                type="range"
-                min={500}
-                max={10000}
-                defaultValue={5000}
-                name="radius"
-                value={filterData.radius}
-                onChange={handleChange}
-              />
-              <span>{filterData.radius} m</span>
-            </div>
-          </div>
+       <div className="price-range-card">
+  <p>Nearby Shop Radius</p>
+  <div className="price-range-slider">
+    <PriceRange
+      min={500}
+      max={10000}
+      defaultValue={5000}
+      minLabel="500m"
+      maxLabel="10km"
+      step={500}
+      handleRange={(d) => setFilterData(prev => ({ ...prev, radius: d.maxPrice }))}
+      singleThumb={true}
+      valueType="distance"
+    />
+    {/* <span>{filterData.radius} m</span> */}
+  </div>
+</div>
 
           <div className="price-range-card">
             <p>Price Range</p>
@@ -153,6 +155,7 @@ const Filters = () => {
                 handleRange={(d) =>
                   setFilterData((prev) => ({ ...prev, ...d }))
                 }
+                valueType="currency"
               />
             </div>
           </div>

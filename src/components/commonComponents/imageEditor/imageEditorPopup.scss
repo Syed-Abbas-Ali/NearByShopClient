@@ -1,0 +1,236 @@
+.image-editor {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #f5f5f5;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  .editor-header {
+    padding: 12px 16px;
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+    h2 {
+      margin: 0;
+      font-size: 18px;
+      color: #333;
+    }
+
+    button {
+      background: none;
+      border: 1px solid #ddd;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+
+      &:hover {
+        background: #f0f0f0;
+      }
+    }
+  }
+
+  .editor-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    flex-direction: column;
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+    }
+
+    .canvas-container {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      background: #333;
+      touch-action: none;
+
+      .canvas-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        .main-canvas, .drawing-canvas {
+          position: absolute;
+          top: 0;
+          left: 0;
+          image-rendering: -moz-crisp-edges;
+          image-rendering: -webkit-crisp-edges;
+          image-rendering: pixelated;
+          image-rendering: crisp-edges;
+        }
+
+        .drawing-canvas {
+          pointer-events: none;
+        }
+      }
+    }
+
+    .editor-controls {
+      width: 100%;
+      padding: 16px;
+      background: #fff;
+      border-top: 1px solid #e0e0e0;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+
+      @media (min-width: 768px) {
+        width: 320px;
+        border-top: none;
+        border-left: 1px solid #e0e0e0;
+      }
+
+      .preview-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+
+        h3 {
+          margin: 0 0 8px 0;
+          font-size: 16px;
+          align-self: flex-start;
+        }
+
+        .preview-canvas {
+          width: 100px;
+          height: auto;
+          border: 1px solid #ddd;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .preview-info {
+          font-size: 14px;
+          color: #666;
+        }
+      }
+
+      .control-group {
+        h3 {
+          margin: 0 0 12px 0;
+          font-size: 16px;
+          color: #333;
+        }
+
+        .tool-buttons {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 8px;
+          margin-bottom: 12px;
+
+          button {
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            &.active {
+              background: #4285f4;
+              color: white;
+              border-color: #4285f4;
+            }
+          }
+        }
+
+        .zoom-controls {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 8px;
+          margin-bottom: 12px;
+
+          button {
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+          }
+        }
+
+        .hint {
+          font-size: 12px;
+          color: #666;
+          margin-top: 8px;
+          text-align: center;
+        }
+
+        label {
+          display: block;
+          margin-bottom: 12px;
+          font-size: 14px;
+          color: #555;
+
+          input[type="range"] {
+            width: 100%;
+            margin-top: 4px;
+          }
+        }
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 8px;
+        margin-top: auto;
+
+        button {
+          flex: 1;
+          padding: 10px;
+          border-radius: 4px;
+          cursor: pointer;
+          font-weight: 500;
+
+          &:first-child {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+
+            &:hover {
+              background: #e0e0e0;
+            }
+          }
+
+          &:last-child {
+            background: #4285f4;
+            color: white;
+            border: none;
+
+            &:hover {
+              background: #3367d6;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .editor-controls {
+      .control-group {
+        .tool-buttons {
+          grid-template-columns: 1fr;
+        }
+
+        .zoom-controls {
+          grid-template-columns: repeat(2, 1fr);
+
+          button:last-child {
+            grid-column: span 2;
+          }
+        }
+      }
+    }
+  }
+}
