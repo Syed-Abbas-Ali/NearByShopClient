@@ -259,7 +259,7 @@ export const shopApiSlice = createApi({
         isVarified = "",
         keyword,discount
       }) => ({
-        url: `items/?latitude=${latitude}&longitude=${longitude}&radius=${radius??5000}&rating=${rating}&minPrice=${minPrice}&maxPrice=${maxPrice}&currentPage=${pageNum}&limit=10&shopId=${shopId}&category=${category}&subCategory=${subCategory}&itemName=${
+        url: `items/?latitude=${latitude}&longitude=${longitude}&radius=${radius??5000}&rating=${rating}&minPrice=${minPrice}&maxPrice=${maxPrice}&page=${pageNum}&limit=10&shopId=${shopId}&category=${category}&subCategory=${subCategory}&itemName=${
           keyword ?? ""
         }&isVarified=${isVarified}&discount=${discount??""}`,
         method: "GET",

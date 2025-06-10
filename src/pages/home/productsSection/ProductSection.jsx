@@ -110,12 +110,12 @@ const ProductSection = ({
               {productList.map((product, index) => {
                 if (productList.length === index + 1) {
                   return (
-                    <div ref={lastProductRef} key={product._id}>
-                      <SingleProduct product={product}  scrollMode={scrollMode}/>
+                    <div ref={lastProductRef} key={product._uid}>
+                      <SingleProduct product={product}  scrollingMode={scrollMode}/>
                     </div>
                   );
                 }
-                return <SingleProduct product={product} key={product._id} />;
+                return <SingleProduct product={product} key={product._uid} />;
               })}
               
               {isLoading && currentPage > 1 && (

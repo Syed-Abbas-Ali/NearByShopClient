@@ -60,8 +60,8 @@ const ProductDetailsPopup = ({
           <div className="right-div">
             <div className="show-product-details-card">
               <div className="div-one">
-                <h3 className="offer-price">₹{data?.data?.price}/-</h3>
-                <p className="real-price">₹{data?.data?.mainPrice}/-</p>
+                <h3 className="offer-price">₹{data?.data?.marketPrice}/-</h3>
+                <p className="real-price">₹{data?.data?.ourPrice}/-</p>
                 <p className="offer-percentage">
                   {data?.data?.discountPercentage?.toFixed(0)}% off
                 </p>

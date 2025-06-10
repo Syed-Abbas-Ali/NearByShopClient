@@ -25,6 +25,7 @@ const OfferCategoryItem = ({ discountItem, isSeller = false }) => {
       toast.error("Something went wrong!");
     }
   };
+  console.log(discountItem)
 
   const handleEditDiscount = (e) => {
     e.stopPropagation();
@@ -35,6 +36,8 @@ const OfferCategoryItem = ({ discountItem, isSeller = false }) => {
   const handleSellerProfile = (shopId) => {
     navigate(`/shop-profile-view/${shopId}`);
   };
+
+console.log("mak",discountItem)
   
   return (
     <div

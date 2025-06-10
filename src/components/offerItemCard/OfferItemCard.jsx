@@ -5,7 +5,7 @@ import OfferCategoryItem from "../offerCategoryItem/OfferCategoryItem";
 import { useGetDiscountsQuery } from "../../apis&state/apis/discounts";
 import { useSelector } from "react-redux";
 
-const OfferItemCard = ({ categoryList,subcategory }) => {
+const OfferItemCard = ({ categoryList,subcategory,discountItem }) => {
   const { globalFilter } = useSelector((state) => state.globalState);
   const {
     mapDetailsState: {
@@ -27,16 +27,26 @@ const OfferItemCard = ({ categoryList,subcategory }) => {
     }
   );
 
+  console.log(55,data)
+
+   if (discountItem) {
+    return (
+      <div className="offer-item-card-div">
+        <OfferCategoryItem discountItem={discountItem} />
+      </div>
+    );
+  }
+
   return (
     <div className="offer-item-card-div">
-      {data?.data?.length > 0 && (
+      {data?.data?.items?.length > 0 && (
         <div className="offer-item-div">
           <div className="category-name">
             <h3>{categoryList}</h3>
             <img src={rightArrow} alt="right arrow" />
           </div>
           <div className="category-discount-cards">
-            {data?.data?.map((item, index) => (
+            {data?.data?.items?.map((item, index) => (
               <OfferCategoryItem key={index} discountItem={item} />
             ))}
           </div>

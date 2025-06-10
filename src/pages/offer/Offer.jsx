@@ -96,7 +96,7 @@ useEffect(() => {
           {userTypeValue() === "SELLER" && (
             <MyDiscounts
               handleExistingDiscounts={handleExistingDiscounts}
-              allDiscounts={allDiscounts?.data}
+              allDiscounts={allDiscounts?.data?.items}
             />
           )}
       
@@ -124,6 +124,8 @@ useEffect(() => {
             />
           )}
         </div>
+        
+      
         <BottomNavbar />
       </div>
     </WrapperComponent>
