@@ -120,7 +120,8 @@ useEffect(() => {
           {selectedCategories && (
             <OfferItemCard
             categoryList={selectedCategories?.name}
-  subcategoryList={selectedSubCtegories?.name}
+   subcategory={selectedSubCtegories?.name}
+   
             />
           )}
         </div>

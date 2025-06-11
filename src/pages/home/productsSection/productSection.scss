@@ -27,6 +27,11 @@
         display: flex;
         gap: 10px;
           overflow-x: scroll;
+                scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none;
+      .container::-webkit-scrollbar {
+  display: none;
+}
           .end-message {
       flex: 0 0 auto;
       width: 150px;
@@ -37,6 +42,7 @@
       font-size: 0.9rem;
       padding: 0 10px;
       text-align: center;
+  
 
       @media (max-width: 768px) {
         width: 120px;
@@ -46,6 +52,7 @@
      .homeSingle-product {
          min-width: 190px;
     max-width: 190px;
+    
 
       }
     }

@@ -12,6 +12,7 @@ import FilterInputComponent from "../../components/commonComponents/filterInputC
 import ShopCard from "../../components/shopCard/ShopCard";
 import SubCategoriesList from "../../components/commonComponents/subCategoriesList/SubCategoriesList";
 import "./shop.scss";
+import Navbar from "../../components/navbar1/Navbar";
 
 const Shop = () => {
   const { shopCategory } = useParams();
@@ -76,6 +77,7 @@ const Shop = () => {
 
   return (
     <>
+    <Navbar/>
       <div className="shop-container">
         <div className="search-back-icon">
           <img

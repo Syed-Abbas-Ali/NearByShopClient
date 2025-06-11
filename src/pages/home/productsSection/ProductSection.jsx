@@ -51,45 +51,54 @@ const ProductSection = ({
   }, [latitude, longitude, globalFilter, searchData, category, subCategory]);
 
   // Update product list when new data is fetched
-  useEffect(() => {
-    if (data?.data?.items) {
-      if (currentPage === 1) {
-        setProductList(data.data.items);
-      } else {
-        setProductList((prev) => [...prev, ...data.data.items]);
-      }
-      const morePagesAvailable = currentPage < data.data.totalPages;
-      setHasMore(morePagesAvailable);
-      setShowEndMessage(!morePagesAvailable && currentPage > 1);
+ useEffect(() => {
+  if (data?.data) {
+    const { items, currentPage: apiPage, totalPages } = data.data;
+    
+    // Reset if it's the first page
+    if (apiPage === 1) {
+      setProductList(items);
+    } 
+    // Append if it's subsequent pages
+    else if (apiPage === currentPage) {
+      setProductList(prev => [...prev, ...items]);
     }
+    
+    setHasMore(apiPage < totalPages);
+    setShowEndMessage(apiPage >= totalPages && apiPage > 1);
     loadingRef.current = false;
-  }, [data, currentPage]);
+  }
+}, [data, currentPage]);
 
   // Handle horizontal scroll with Intersection Observer
-  const lastProductRef = useCallback(
-    (node) => {
-      if (isLoading || loadingRef.current) return;
-      
-      if (observer.current) observer.current.disconnect();
-      
-      observer.current = new IntersectionObserver(
-        (entries) => {
-          if (entries[0].isIntersecting && hasMore) {
-            loadingRef.current = true;
-            setCurrentPage((prev) => prev + 1);
-          }
-        },
-        {
-          root: scrollRef.current,
-          threshold: 0.1,
-          rootMargin: "50px"
+const lastProductRef = useCallback(
+  (node) => {
+    if (isLoading || loadingRef.current || !hasMore) return;
+    
+    if (observer.current) observer.current.disconnect();
+    
+    observer.current = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !loadingRef.current) {
+          loadingRef.current = true;
+          setCurrentPage((prev) => prev + 1);
         }
-      );
+      },
+      {
+        root: scrollRef.current,
+        threshold: 0.1,
+        rootMargin: "50px"
+      }
+    );
 
-      if (node) observer.current.observe(node);
-    },
-    [isLoading, hasMore]
-  );
+    if (node && hasMore) {
+      observer.current.observe(node);
+    } else if (observer.current) {
+      observer.current.disconnect();
+    }
+  },
+  [isLoading, hasMore]
+);
 
   return (
     <div style={{ display: productList.length > 0 ? "block" : "none" }}>

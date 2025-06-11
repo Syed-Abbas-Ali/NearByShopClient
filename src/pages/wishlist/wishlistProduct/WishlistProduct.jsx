@@ -79,15 +79,16 @@ const WishlistProduct = ({ product }) => {
         </h3>
         
         <div className="price-section">
-          <span className="current-price">₹{product?.price}</span>
-          {product?.mainPrice && (
-            <span className="original-price">₹{product.mainPrice}</span>
+          <span className="current-price">₹{product?.our_price}</span>
+          {product?.market_price && (
+            <span className="original-price">₹{product.market_price}</span>
           )}
-          {product?.discountPercentage && (
+          {/* {product?.discountPercentage && ( */}
             <span className="discount-badge">
-              {product.discountPercentage.toFixed(0)}% OFF
+             {product.discountPercentage.toFixed(0)}% OFF
+             
             </span>
-          )}
+          {/* )} */}
         </div>
 
         <div className="location-section">
