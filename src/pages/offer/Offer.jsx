@@ -56,8 +56,15 @@ useEffect(() => {
 }, []);
   const handleCategory = (categoryName) => {
     setSelectedCategories(categoryName);
-    setSelectedSubCategory("");
+    setSelectedSubCategory(null);
   };
+  const { data: discountsData, isLoading: loadingDiscounts } = useGetDiscountsQuery({
+ 
+  category: selectedCategories?.name || "",
+  subCategory: selectedSubCtegories?.name || "", // ✅ This is important
+});
+
+  console.log("Selected Subcategory:", selectedSubCtegories?.name);
 
   return (
     <WrapperComponent>
@@ -89,26 +96,21 @@ useEffect(() => {
           {userTypeValue() === "SELLER" && (
             <MyDiscounts
               handleExistingDiscounts={handleExistingDiscounts}
-              allDiscounts={allDiscounts?.data}
+              allDiscounts={allDiscounts?.data?.items}
             />
           )}
-          <div className="search-filter">
-            <FilterInputComponent
-              handleChange={(value) => setSearchData(value)}
-            />
-            {isFilterPopupOpen && <Filters />}
-          </div>
+      
           <CategoriesList
             handleCategory={handleCategory}
             setAllCategories={setAllCategories}
             activeCategory={selectedCategories?.name}
           />
           {selectedCategories && (
-            <SubCategoriesList
-              selectedCategories={selectedCategories?.subcategories}
-              handleSelect={(pre) => setSelectedSubCategory(pre)}
-              selected={selectedSubCtegories}
-            />
+        <SubCategoriesList
+  selectedCategories={selectedCategories?.subcategories}
+  handleSelect={(pre) => setSelectedSubCategory(pre)}
+  selected={selectedSubCtegories}
+/>
           )}
       
           {!selectedCategories &&
@@ -117,11 +119,14 @@ useEffect(() => {
             })}
           {selectedCategories && (
             <OfferItemCard
-              categoryList={selectedCategories?.name}
-              subcategory={selectedSubCtegories?.name}
+            categoryList={selectedCategories?.name}
+   subcategory={selectedSubCtegories?.name}
+   
             />
           )}
         </div>
+        
+      
         <BottomNavbar />
       </div>
     </WrapperComponent>

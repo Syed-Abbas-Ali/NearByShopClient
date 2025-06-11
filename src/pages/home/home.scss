@@ -26,10 +26,11 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding-top: 20px ;
-    padding-left: 20px;
+    padding: 20px 20px 0px 20px ;
+ 
     @media (max-width:420px) {
       gap:14px;
+        padding: 10px 10px 0px 10px ;
     }
   
     
@@ -48,6 +49,16 @@
     .products-scroll{
       display: flex;
       gap: 10px;
+      margin-top: 10px;
     }
   }
+  .loading-more {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  
+  p {
+    margin: 0;
+  }
+}
 }

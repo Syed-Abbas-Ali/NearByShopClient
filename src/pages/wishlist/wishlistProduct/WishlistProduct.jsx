@@ -1,99 +1,122 @@
+import React, { useState, useEffect } from "react";
 import "./wishlistProduct.scss";
-
-// Assets
 import locationImage from "../../../assets/locationPoint.svg";
 import deleteIcon from "../../../assets/deleteIcon.svg";
-import { useEffect, useState } from "react";
+import shareIcon from "../../../assets/shareNewIcon.svg";
 import { useNavigate } from "react-router-dom";
 import { useDeleteWishlistProductMutation } from "../../../apis&state/apis/shopApiSlice";
-import { getAddress } from "../../../utils/global";
-import shareIcon from "../../../assets/shareNewIcon.svg";
-
 import SharePopup from "../../../components/commonComponents/sharePopup/SharePopup";
+import CircularLoader from "../../../components/circularLoader/CircularLoader";
 
 const WishlistProduct = ({ product }) => {
   const navigate = useNavigate();
-  const [isPopupShow, setIsPopupShow] = useState(null);
-  const [deleteProductFromWishlist,{isLoading}] = useDeleteWishlistProductMutation();
-  const [showSharePopup, setSharePopup] = useState(false);
+  const [isPopupShow, setIsPopupShow] = useState(false);
+  const [showSharePopup, setShowSharePopup] = useState(false);
+  const [deleteProductFromWishlist, { isLoading }] = useDeleteWishlistProductMutation();
+
   const handleDelete = (e) => {
     e.stopPropagation();
-    setIsPopupShow((prev) => !prev);
+    setIsPopupShow(true);
   };
 
-       const handleShare = (e) => {
+  const handleShare = (e) => {
     e.stopPropagation();
-    setSharePopup((prev) => !prev);
+    setShowSharePopup(true);
   };
 
   const removeProductFromWishlist = async () => {
     try {
-      const response = await deleteProductFromWishlist(product.item_uid);
-      setIsPopupShow(null);
+      await deleteProductFromWishlist(product.item_uid);
+      setIsPopupShow(false);
     } catch (error) {
-      console.log(error);
+      console.error("Error removing product:", error);
     }
   };
 
-  const handleActionButton = async (e, selectedAction) => {
+  const handleActionButton = (e, action) => {
     e.stopPropagation();
-    if (selectedAction === "NO") {
-      setIsPopupShow(null);
-    } else if (selectedAction === "YES") {
-      await removeProductFromWishlist();
+    if (action === "YES") {
+      removeProductFromWishlist();
+    } else {
+      setIsPopupShow(false);
     }
   };
-  const handleProduct = () => {
+
+  const handleProductClick = () => {
     navigate(`/product-details/${product.item_uid}`);
   };
-  const [address, setAddress] = useState("Fetching location...");
 
-  useEffect(() => {
-    async function fetchAddress() {
-      const fetchedAddress = await getAddress(17.4343459, 78.3948765);
-      setAddress(fetchedAddress);
-    }
-    fetchAddress();
-  }, []); 
   return (
-    <div className="wishlist-product" onClick={handleProduct}>
-      {showSharePopup && <SharePopup setIsShare={setSharePopup} productId={product.item_uid}  />}
-      <div className="product-div">
-        <div className="image-default-card">
-          <img src={product?.image} className="product-image" />
-        </div>
-        <div className="product-details">
-          <p className="product-name">{product?.title}</p>
-          <div className="price-card">
-            <h2 className="discount-price">₹{product?.price}</h2>
-            <p className="actual-price">₹{product?.mainPrice}</p>
-            <p className="offer-percentage">{product?.discountPercentage?.toFixed(0)}%off</p>
-          </div>
-          <div className="location-div">
-            <img src={locationImage} alt="" />
-            <p>{product?.shop_address}</p>
-          </div>
+    <div className="wishlist-product" onClick={handleProductClick}>
+      {showSharePopup && (
+        <SharePopup 
+          setIsShare={setShowSharePopup} 
+          productId={product.item_uid} 
+        />
+      )}
+
+      <div className="product-image-container">
+        <img 
+          src={product?.image} 
+          alt={product?.title} 
+          className="product-image"
+        />
+        <div className="action-buttons">
+          <button className="action-button" onClick={handleShare}>
+            <img src={shareIcon} alt="Share" />
+          </button>
+          <button className="action-button" onClick={handleDelete}>
+            <img src={deleteIcon} alt="Delete" />
+          </button>
         </div>
       </div>
-      <div className="delete-card">
-        {isPopupShow && (
-          <div className="popup-div">
-            <p>Are you sure you want to remove this product?</p>
-            <div className="action-buttons-card">
-              <button onClick={(e) => handleActionButton(e, "NO")}>
-                CANCEL
-              </button>
-              <button onClick={(e) => handleActionButton(e, "YES")}>
-               {isLoading?"loading...":" YES REMOVE"}
-              </button>
-            </div>
-          </div>
-        )}
-        <img src={deleteIcon} alt="" onClick={(e) => handleDelete(e)} />
 
- <img src={shareIcon} onClick={handleShare}/>
+      <div className="product-details">
+        <h3 className="product-title">
+          {product?.title?.length > 20 
+            ? `${product.title.slice(0,20)}...` 
+            : product?.title}
+        </h3>
+        
+        <div className="price-section">
+          <span className="current-price">₹{product?.our_price}</span>
+          {product?.market_price && (
+            <span className="original-price">₹{product.market_price}</span>
+          )}
+          {/* {product?.discountPercentage && ( */}
+            <span className="discount-badge">
+             {product.discountPercentage.toFixed(0)}% OFF
+             
+            </span>
+          {/* )} */}
+        </div>
 
+        <div className="location-section">
+          <img src={locationImage} alt="Location" />
+          <span>{product?.shop_address || "Location not available"}</span>
+        </div>
       </div>
+
+      {isPopupShow && (
+        <div className="confirmation-popup">
+          <p>Remove this item from your wishlist?</p>
+          <div className="popup-actions">
+            <button 
+              className="cancel-btn"
+              onClick={(e) => handleActionButton(e, "NO")}
+            >
+              Cancel
+            </button>
+            <button 
+              className="confirm-btn"
+              onClick={(e) => handleActionButton(e, "YES")}
+              disabled={isLoading}
+            >
+              {isLoading ? <CircularLoader/> : "Remove"}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

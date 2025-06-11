@@ -6,6 +6,7 @@ import { useNavigate,useLocation } from "react-router-dom";
 const CategoriesList = ({
   activeCategory = "",
   handleCategory,
+
   labelText = "Categories",
      setAllCategories = () => {},
 }) => {

@@ -3,6 +3,13 @@
     .ant-color-picker-color-block {
       width: 100% !important; 
       height: 40px; 
+      // display: none;
     }
+    .ant-color-picker-clear{
+      display: none;
+    }
+  }
+  .ant-popover{
+    inset: auto auto 0px 20px !important;
   }
   

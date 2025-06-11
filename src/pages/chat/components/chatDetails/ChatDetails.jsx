@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState, useCallback } from "react";
 import "./chatDetails.scss";
 import backIcon from "../../../../assets/arrowLeftLarge.svg";
 import messageSendIcon from "../../../../assets/messageSendIcon.svg";
@@ -32,121 +32,147 @@ const ChatDetails = ({
   const token = accessTokenValue();
   const decodedToken = jwtDecode(token);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [allChatList, setAllChatList] = useState([]);
-  const { data: chatDetails, refetch } = useGetSingleChatQuery(
+  const [inputValue, setInputValue] = useState("");
+  const chatBoxRef = useRef(null);
+  const emojiPickerRef = useRef(null);
+
+  const { data: chatDetails, refetch, isLoading, error } = useGetSingleChatQuery(
     activeRoomId || roomId,
     {
       skip: !activeRoomId && !roomId,
     }
   );
-  const [inputValue, setInputValue] = useState("");
+
   const [sendMessage] = useSendMessageMutation();
-  const emojiPickerRef = useRef(null);
-  const handleBack = () => {
-    setChatToggle((prev) => !prev);
-  };
-  const handleEmojiPicker = () => {
-    setShowEmojiPicker((prev) => !prev);
-  };
-  const onEmojiClick = (emojiObject) => {
-    setInputValue((prevValue) => prevValue + emojiObject.emoji);
-  };
-  const handleInput = (event) => {
-    setInputValue(event.target.value);
-  };
+  const [allChatList, setAllChatList] = useState([]);
 
+  // Auto-scroll to bottom when messages change
   useEffect(() => {
-    if (chatDetails?.data?.messages) {
-      setAllChatList(chatDetails?.data?.messages);
+    if (chatBoxRef.current) {
+      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
     }
-  }, [chatDetails]);
+  }, [allChatList]);
 
-  // useEffect(() => {
-  //   if (!socketMethods) return;
-  //   socketMethods.on("receive_message", (data) => {
-  //     setAllChatList((prev) => [
-  //       ...prev,
-  //       {
-  //         ...data.messageData,
-  //         senderType: currentUserType === "seller" ? "USER" : "SELLER",
-  //         senderId: allChatList[0]?.senderId,
-  //         createdAt:new Date()
-  //       },
-  //     ]);
-  //   });
-
-  //   return () => {
-  //     socketMethods.off("receive_message");
-  //   };
-  // }, [socketMethods]);
-
-  const handleIsRead = () => {
-    socketMethods.emit("is_read", {
-      receiverId: decodedToken.userId,
-      roomId: activeRoomId ?? roomId,
-      senderId:
-        userTypeValue() !== "SELLER"
-          ? chatDetails?.data?.createdBy
-          : chatDetails?.data?.recieverId,
-    });
-    return () => {
-      socketMethods.off("is_read");
+  // Handle click outside emoji picker
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target)) {
+        setShowEmojiPicker(false);
+      }
     };
-  };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
-  const handleIsBlock = () => {
-    socketMethods.emit("block", {
-      receiverId:
-        userTypeValue() === "SELLER"
-          ? chatDetails?.data?.createdBy
-          : chatDetails?.data?.recieverId,
-      senderId: decodedToken.userId,
-      roomId: activeRoomId ?? roomId,
-    });
-    refetch()
-    return () => {
-      socketMethods.off("block");
-    };
-  };
+  // Update chat list when data changes
   useEffect(() => {
     if (chatDetails?.data?.messages) {
-      setAllChatList(chatDetails?.data?.messages);
+      setAllChatList(chatDetails.data.messages);
       handleIsRead();
     }
   }, [chatDetails]);
 
+  // Socket event handlers
   useEffect(() => {
     if (!socketMethods) return;
-    socketMethods.on("receive_message", (data) => {
+
+    const handleReceiveMessage = (data) => {
       setAllChatList((prev) => [
         ...prev,
         {
           ...data.messageData,
           senderType: currentUserType === "seller" ? "USER" : "SELLER",
           senderId: allChatList[0]?.senderId,
+          createdAt: new Date().toISOString()
         },
       ]);
       handleIsRead();
-    });
-    socketMethods.on("is_read", () => {
-      refetch();
-    });
+    };
+
+    const handleIsReadEvent = () => refetch();
+
+    socketMethods.on("receive_message", handleReceiveMessage);
+    socketMethods.on("is_read", handleIsReadEvent);
 
     return () => {
-      socketMethods.off("receive_message");
-      socketMethods.off("is_read");
+      socketMethods.off("receive_message", handleReceiveMessage);
+      socketMethods.off("is_read", handleIsReadEvent);
     };
-  }, [socketMethods]);
+  }, [socketMethods, currentUserType, allChatList]);
+
+  const handleIsRead = useCallback(() => {
+    if (!socketMethods || !chatDetails?.data) return;
+    
+    socketMethods.emit("is_read", {
+      receiverId: decodedToken.userId,
+      roomId: activeRoomId ?? roomId,
+      senderId: userTypeValue() !== "SELLER"
+        ? chatDetails.data.createdBy
+        : chatDetails.data.recieverId,
+    });
+  }, [socketMethods, chatDetails, activeRoomId, roomId, decodedToken]);
+
+  const handleIsBlock = useCallback(() => {
+    if (!socketMethods || !chatDetails?.data) return;
+
+    socketMethods.emit("block", {
+      receiverId: userTypeValue() === "SELLER"
+        ? chatDetails.data.createdBy
+        : chatDetails.data.recieverId,
+      senderId: decodedToken.userId,
+      roomId: activeRoomId ?? roomId,
+    });
+    refetch();
+  }, [socketMethods, chatDetails, activeRoomId, roomId, decodedToken]);
+
+  const handleBack = () => {
+    setChatToggle((prev) => !prev);
+  };
+
+  const handleEmojiPicker = () => {
+    setShowEmojiPicker((prev) => !prev);
+  };
+
+  const onEmojiClick = (emojiObject) => {
+    setInputValue((prevValue) => prevValue + emojiObject.emoji);
+  };
+
+  const handleInput = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      handleSendMessage();
+    }
+  };
+
   const handleSendMessage = async () => {
     if (!inputValue.trim()) {
       toast.error("Empty message can't be sent!");
       return;
     }
+
     const messageData = {
       isRead: false,
       message: inputValue,
     };
+
     try {
+      // Optimistic update
+      const tempId = Date.now();
+      setAllChatList(prev => [
+        ...prev,
+        {
+          ...messageData,
+          id: tempId,
+          senderId: decodedToken.userId,
+          senderType: userTypeValue(),
+          createdAt: new Date().toISOString()
+        }
+      ]);
+
       const response = await sendMessage({
         roomId: activeRoomId ?? roomId,
         data: messageData,
@@ -155,45 +181,27 @@ const ChatDetails = ({
       if (response?.data) {
         if (socketMethods) {
           socketMethods.emit("send_message", {
-            receiverId:
-              userTypeValue() === "SELLER"
-                ? chatDetails?.data?.createdBy
-                : chatDetails?.data?.recieverId,
+            receiverId: userTypeValue() === "SELLER"
+              ? chatDetails?.data?.createdBy
+              : chatDetails?.data?.recieverId,
             senderId: decodedToken.userId,
             roomId: activeRoomId ?? roomId,
             messageData: { ...messageData, ...response?.data?.data?.socket },
           });
           setInputValue("");
-        } else {
-          console.log("Socket is not defined");
         }
-        toast.success("Message send successfully!");
       }
     } catch (error) {
-      console.log(error);
+      console.error("Failed to send message:", error);
+      toast.error("Failed to send message");
+      // Revert optimistic update on error
+      setAllChatList(prev => prev.filter(msg => msg.id !== tempId));
     }
   };
 
-  useEffect(() => {
-    if (chatDetails) {
-      refetch();
-    }
-    const handleClickOutside = (event) => {
-      if (
-        emojiPickerRef.current &&
-        !emojiPickerRef.current.contains(event.target)
-      ) {
-        setShowEmojiPicker(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  //this for date and time
   const formatCreatedAt = (createdAt) => {
+    if (!createdAt) return "";
+    
     const date = new Date(createdAt);
     const now = new Date();
 
@@ -214,67 +222,76 @@ const ChatDetails = ({
     endOfWeek.setHours(23, 59, 59, 999);
 
     if (date >= startOfWeek && date <= endOfWeek) {
-      return date.toLocaleDateString("en-US", { weekday: "short" }); // e.g., Mon, Wed
+      return date.toLocaleDateString("en-US", { weekday: "short" });
     }
 
     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   };
 
+  const renderMessageStatus = (isRead) => (
+    <img src={isRead ? chatBlueTick : chatGreyTick} alt={isRead ? "Read" : "Unread"} />
+  );
+
+  if (isLoading) return <div className="chat-details loading">Loading chat...</div>;
+  if (error) return <div className="chat-details error">Error loading chat</div>;
+
   return (
     <div
       className="chat-details"
-      style={{
-        display: chatToggle ? "none" : "flex",
-      }}
+      style={{ display: chatToggle ? "none" : "flex" }}
       id="chat-details-visible"
     >
       <div className="header">
-        <img src={backIcon} alt="" className="back-icon" onClick={handleBack} />
+        <img src={backIcon} alt="Back" className="back-icon" onClick={handleBack} />
         <div className="current-user">
           <div className="user-default">
-            <img src={chatUser1} alt="" />
+            <img src={chatUser1} alt="User" />
           </div>
           <div className="user-name">
             <h3>
               {chatDetails?.data?.shopName
-                ? chatDetails?.data?.shopName?.length > 20
-                  ? chatDetails?.data?.shopName?.slice(0, 20) + "..."
-                  : chatDetails?.data?.shopName
+                ? chatDetails.data.shopName.length > 20
+                  ? `${chatDetails.data.shopName.slice(0, 20)}...`
+                  : chatDetails.data.shopName
                 : chatDetails?.data?.customerName?.length > 20
-                ? chatDetails?.data?.customerName?.slice(0, 20) + "..."
+                ? `${chatDetails.data.customerName.slice(0, 20)}...`
                 : chatDetails?.data?.customerName}
             </h3>
             <p>{chatDetails?.data?.shopName ? "Merchant" : "Customer"}</p>
           </div>
         </div>
         {chatDetails?.data?.blockedBy ? (
-          "blocked"
+          <div className="blocked-label">Blocked</div>
         ) : (
           <button className="block" onClick={handleIsBlock}>
             Block
           </button>
         )}
       </div>
-      <div className="chat-box">
-        {allChatList?.map((msg) => (
-          <div
-            key={msg.id}
-            className={`message ${
-              msg.senderId === decodedToken.userId ? "right" : "left"
-            }`}
-          >
-            {console.log(msg.senderId === decodedToken.userId)}
-            <p className="message-content">{msg.message}</p>
-            <div className="message-timestamp">
-              <img src={msg?.isRead ? chatBlueTick : chatGreyTick} alt="tick" />
 
-              <span>{formatCreatedAt(msg.createdAt)}</span>
+      <div className="chat-box" ref={chatBoxRef}>
+        {allChatList.length === 0 ? (
+          <div className="no-messages">No messages yet</div>
+        ) : (
+          allChatList.map((msg) => (
+            <div
+              key={msg.id}
+              className={`message ${msg.senderId === decodedToken.userId ? "right" : "left"}`}
+            >
+              <p className="message-content">{msg.message}</p>
+              <div className="message-timestamp">
+                {msg.senderId === decodedToken.userId && renderMessageStatus(msg.isRead)}
+                <span>{formatCreatedAt(msg.createdAt)}</span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
+
       {chatDetails?.data?.blockedBy ? (
-        "blocked"
+        <div className="blocked-message">
+          This conversation has been blocked
+        </div>
       ) : (
         <div className="bottom-div">
           {showEmojiPicker && (
@@ -284,7 +301,7 @@ const ChatDetails = ({
           )}
           <img
             src={emojiPickerImage}
-            alt=""
+            alt="Emoji Picker"
             className="smile-image"
             onClick={handleEmojiPicker}
           />
@@ -294,10 +311,11 @@ const ChatDetails = ({
             rows={1}
             value={inputValue}
             onChange={handleInput}
-          ></textarea>
+            onKeyDown={handleKeyDown}
+          />
           <img
             src={messageSendIcon}
-            alt=""
+            alt="Send"
             className="message-send-icon"
             onClick={handleSendMessage}
           />

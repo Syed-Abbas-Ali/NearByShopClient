@@ -25,6 +25,7 @@ const OfferCategoryItem = ({ discountItem, isSeller = false }) => {
       toast.error("Something went wrong!");
     }
   };
+  console.log(discountItem)
 
   const handleEditDiscount = (e) => {
     e.stopPropagation();
@@ -35,6 +36,8 @@ const OfferCategoryItem = ({ discountItem, isSeller = false }) => {
   const handleSellerProfile = (shopId) => {
     navigate(`/shop-profile-view/${shopId}`);
   };
+
+console.log("mak",discountItem)
   
   return (
     <div
@@ -61,13 +64,13 @@ const OfferCategoryItem = ({ discountItem, isSeller = false }) => {
             className="shop-name"
             style={{ color: discountItem?.textColor || defaultText }}
           >
-            {discountItem?.shop_name || "-----"}
+            {discountItem?.shop_name?.length>15 ? discountItem?.shop_name?.slice(0,15) + ".." : discountItem?.shop_name || "-----"}
           </h3>
           <p
             className="shop-address"
             style={{ color: discountItem?.textColor || defaultText }}
           >
-            {discountItem?.shop_address?.slice(0, 20)}...
+            {discountItem?.shop_address?.length>20? discountItem?.shop_address?.slice(0, 20)+ "..":discountItem?.shop_address}
           </p>
            <h4 style={{ color: discountItem?.textColor || defaultText }}>
             {discountItem?.deal}

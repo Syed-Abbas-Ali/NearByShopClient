@@ -369,8 +369,8 @@ const ProductEdit = () => {
           }`
         );
       } else { 
-        toast.error(response?.error?.data?.errors[0]?.fieldName);
-        console.log(response?.error);
+        toast.error(response?.error?.data?.errors[0]?.message);
+        console.log(response?.error?.data?.errors[0]?.message);
         if (response?.error?.status == 422) {
           navigate(`/seller-plan-purchase/${value?.shopUid.split("&")[0]}`);
         }

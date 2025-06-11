@@ -12,6 +12,7 @@ import FilterInputComponent from "../../components/commonComponents/filterInputC
 import ShopCard from "../../components/shopCard/ShopCard";
 import SubCategoriesList from "../../components/commonComponents/subCategoriesList/SubCategoriesList";
 import "./shop.scss";
+import Navbar from "../../components/navbar1/Navbar";
 
 const Shop = () => {
   const { shopCategory } = useParams();
@@ -76,6 +77,7 @@ const Shop = () => {
 
   return (
     <>
+    <Navbar/>
       <div className="shop-container">
         <div className="search-back-icon">
           <img
@@ -84,7 +86,7 @@ const Shop = () => {
             className="back-icon"
             onClick={handleBack}
           />
-          <FilterInputComponent handleChange={(value) => setSearchData(value)} />
+         <h3>Shops</h3>
         </div>
 
         <CategoriesList
@@ -93,13 +95,13 @@ const Shop = () => {
           activeCategory={selectedCategories?.name || shopCategory}
         />
 
-        {selectedCategories && (
+        {/* {selectedCategories && (
           <SubCategoriesList
             selectedCategories={selectedCategories.subcategories}
             handleSelect={setSelectedSubCategory}
             selected={selectedSubCategory}
           />
-        )}
+        )} */}
 
         <div className="near-shops">
           {isLoading ? (
@@ -116,7 +118,7 @@ const Shop = () => {
               />
             ))
           ) : (
-            <p>No shops found</p>
+            <p className="noShopsFound">No shops found</p>
           )}
         </div>
       </div>

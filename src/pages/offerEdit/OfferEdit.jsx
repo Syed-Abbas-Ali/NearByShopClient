@@ -24,6 +24,7 @@
   import ColorPickerComponent from "../../components/commonComponents/colorPicker/ColorPicker";
   import { useUploadImageMutation } from "../../apis&state/apis/global";
   import { discountValidationSchema } from "../../utils/validations";
+ import CircularLoader from "../../components/circularLoader/CircularLoader";
 
   const defaultDiscountData = {
     amount: 5000,
@@ -38,11 +39,10 @@
       startDate: "",
       endDate: "",
     });
-    const [colorsObject, setColorsObject] = useState({
-      textColor: "#fff",
-      backgroundColor:
-        "linear-gradient(90deg, rgb(149,221,193) 0%, rgb(14,104,167) 100%)",
-    });
+const [colorsObject, setColorsObject] = useState({
+  textColor: "#fff",
+  backgroundColor: "linear-gradient(90deg, rgb(149,221,193) 0%, rgb(14,104,167) 100%)",
+});
     const { shopUid, offerUid } = useParams();
     const navigate = useNavigate();
     const shopUidValue = shopUid;
@@ -72,12 +72,12 @@
       skip: !offerUid || offerUid === "discountId",
     });
 
-    const [createOrder] = useCreatePlanOrderMutation();
+    const [createOrder,{isLoading}] = useCreatePlanOrderMutation();
     const [updateDiscount] = useUpdateDiscountMutation();
     const [productDetails, setProductDetails] = useState({
       ...defaultDiscountData,
     });
-
+   
 
 
     useEffect(() => {
@@ -389,7 +389,12 @@
           <div className="offer-edit-card">
           <div
             className="offer-image-card"
-            style={{ backgroundImage: colorsObject.backgroundColor }}
+              style={{ 
+    background: colorsObject.backgroundColor,
+    backgroundImage: colorsObject.backgroundColor.includes('gradient') 
+      ? colorsObject.backgroundColor 
+      : undefined
+  }}
           >
             <div className="image-default-card">
               <button className="default-image">
@@ -461,12 +466,12 @@
           <div className="select-colors-card">
             <div className="select-bg-color">
               <p className="label-text">Select Background Color:</p>
-              <ColorPickerComponent
-              initialColor={productDetails?.backgroundColor}
-                handleColorPicker={(colorText) =>
-                  handleColor(colorText, "backgroundColor")
-                }
-              />
+             <ColorPickerComponent
+  initialColor={colorsObject.backgroundColor}
+  handleColorPicker={(colorText) =>
+    handleColor(colorText, "backgroundColor")
+  }
+/>
               {errors?.backgroundColor && (
                 <p className="form-error-message">{errors?.backgroundColor}</p>
               )}
@@ -544,15 +549,17 @@
               <h3>Total Amount ₹{totalPayment}</h3>
               <span>Per day it will cost ₹40</span>
             </div>
-            {offerUid == "discountId" ? (
-              <div className="pay-btn">
-                <button onClick={handleCreateOrder}>Pay</button>
-              </div>
-            ) : (
-              <div className="pay-btn">
-                <button onClick={handleUpdateDiscount}>Update</button>
-              </div>
-            )}
+         {offerUid === "discountId" ? (
+  isLoading ? <CircularLoader /> : (
+    <div className="pay-btn">
+      <button onClick={handleCreateOrder}>Pay</button>
+    </div>
+  )
+) : (
+  <div className="pay-btn">
+    <button onClick={handleUpdateDiscount}>Update</button>
+  </div>
+)}
           </div>
           </div>
           

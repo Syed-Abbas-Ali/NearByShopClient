@@ -23,7 +23,7 @@ const OfferSubCategory = () => {
     {
       latitude,
       longitude,
-      minPrice: 1,
+      minPrice: 100,
       maxPrice: 1000000,
       radius: 100000000,
       page: 1,
@@ -38,6 +38,8 @@ const OfferSubCategory = () => {
   // const handleCategory = (categoryName) => {
   //   navigate(`/offer-sub-category/${categoryName}`);
   // };
+  console.log("makr",data)
+ 
   return (
     <div className="offers-sub-category">
       <OfferHeader buttonText={"Add 1 more Discount"} />

@@ -16,7 +16,7 @@ import SharePopup from "../commonComponents/sharePopup/SharePopup";
 import wishlistActiveIcon from "../../assets/wishlistActiveIconV1.svg";
 import { useSelector } from "react-redux";
 
-const SingleProduct = ({ product }) => {
+const SingleProduct = ( { product, scrollingMode } ) => {
   const navigate = useNavigate();
   const isAuthenticated = useSelector(
     (state) => state.authState.isAuthenticated
@@ -28,7 +28,8 @@ const SingleProduct = ({ product }) => {
   const [showSharePopup, setSharePopup] = useState(false);
   const [address, setAddress] = useState("Super Grocery, San Francisco");
 
-    const location = useLocation();      
+    const location = useLocation();   
+    console.log(7,scrollingMode)   
 
   useEffect(() => {
     const fetchAddress = async () => {

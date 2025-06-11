@@ -61,14 +61,10 @@ const Profile = () => {
     }
   );
 
-  const { data: allDiscounts } = useGetAllDiscountsQuery(
-    {
-      shopId: shopDetails?.shop_id,
-    },
-    {
-      skip: !shopDetails?.shop_id,
-    }
-  );
+const { data: allDiscounts, isLoading: discountsLoading } = useGetAllDiscountsQuery(
+  { shopId: shopDetails?.shop_id },
+  { skip: !shopDetails?.shop_id }
+);
   useEffect(() => {
     setPage(1);
     setLoadedProducts([]);
@@ -328,13 +324,22 @@ const Profile = () => {
             <img src={forwardMoreIcon} alt="" />
           </div>
           <div className="discount-products">
-            {allDiscounts?.data?.map((item, index) => (
-              <OfferCategoryItem
-                key={index}
-                discountItem={item}
-                isSeller={true}
-              />
-            ))}
+     {
+  discountsLoading ? (
+    <Loader />
+  ) : allDiscounts?.data?.items?.length > 0 ? (
+    allDiscounts.data.items.map((item) => (
+      <OfferCategoryItem
+        key={item._id}
+        discountItem={item}
+        isSeller={true}
+      />
+    ))
+  ) : (
+    <p className="no-discounts-message">No discounts available</p>
+  )
+}
+            {console.log(6,allDiscounts?.data?.items)}
           </div>
         </div>
         <div className="search-div-in-profile">

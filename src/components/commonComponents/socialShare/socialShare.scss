@@ -1,43 +1,85 @@
-@import "../../../app.scss";
+.social-share-container {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  font-family: 'Roboto', sans-serif;
 
-.social-share-card {
-  display: flex;
-  gap: 30px;
-  align-items: center;
-  justify-content: center;
-  .share-text {
-    font-size: 20px;
-    text-align: center;
-    color: $app-second-color;
+  .share-title {
+    margin: 0 0 16px 0;
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
   }
-  .copy-link-card {
-    background-color: grey !important;
-  }
-  .makeStyles-copyContainer-5 {
-    border: 1px solid $border;
-  }
-  .makeStyles-iconContainer-3 {
-    padding: 0px;
+
+  .share-buttons {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    gap: 8px;
+
+    button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 4px;
+      transition: background 0.2s;
+
+      &:hover {
+        background: #f5f5f5;
+      }
+
+      span {
+        margin-top: 4px;
+        font-size: 12px;
+        color: #555;
+      }
+    }
   }
-  .makeStyles-copyContainer-5 {
-    background-color: $white-color;
-    width: 300px;
-  }
-  .makeStyles-copyIcon-7 {
-    color: $white-color;
-    padding: 6px 2px;
-    background-color: rgb(37, 37, 230);
-    border-radius: 20px;
-    font-family: $font-family;
-  }
-  .makeStyles-copyUrl-6 {
-    color: $app-second-color;
-  }
-  .makeStyles-copyUrl-6 {
-    &::-webkit-scrollbar {
-      display: none;
+
+  .link-copy-section {
+    display: flex;
+    align-items: center;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 8px;
+    background: #f9f9f9;
+
+    .link-text {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 14px;
+      color: #333;
+      padding-right: 8px;
+    }
+
+    .copy-button {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: #f0f0f0;
+      border: none;
+      border-radius: 4px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #333;
+      transition: background 0.2s;
+
+      &:hover {
+        background: #e0e0e0;
+      }
+
+      svg {
+        font-size: 16px;
+      }
     }
   }
 }

@@ -93,7 +93,7 @@ const Otp = ({ numberOfDigits = 6 }) => {
       });
       if (response?.data) {
         if (response.data?.message === "set your new password!") {
-          toast.success("OPT Success !");
+          toast.success("OTP Success !");
           navigate("/change-password");
         } else {
           toast.success("Welcome to Near By Shop");

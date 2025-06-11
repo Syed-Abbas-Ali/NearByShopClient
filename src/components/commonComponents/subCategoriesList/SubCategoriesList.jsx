@@ -4,7 +4,7 @@ import { useGetAllCategoriesAndSubCategoriesQuery } from "../../../apis&state/ap
 import { useNavigate,useLocation } from "react-router-dom";
 
 
-const SubCategoriesList = ({ categoryName = "", selectedCategories,handleSelect,selected }) => {
+const SubCategoriesList = ({ categoryName , selectedCategories,handleSelect,selected }) => {
   const navigate = useNavigate();
   const { data } = useGetAllCategoriesAndSubCategoriesQuery();
   const [subcategoryList, setSubcategoryList] = useState([]);

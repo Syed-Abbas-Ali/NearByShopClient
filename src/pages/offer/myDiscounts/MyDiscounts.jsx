@@ -1,5 +1,6 @@
 import OfferCategoryItem from "../../../components/offerCategoryItem/OfferCategoryItem";
 import "./myDiscounts.scss";
+import rightArrow from "../../../assets/forwardIcon.svg";
 
 const MyDiscounts = ({ handleExistingDiscounts, allDiscounts }) => {
   const handleMore = () => {
@@ -12,9 +13,7 @@ const MyDiscounts = ({ handleExistingDiscounts, allDiscounts }) => {
         <div className="my-discounts-container">
           <div className="my-discounts-header">
             <h3>My Discounts</h3>
-            <p onClick={handleMore} style={{ cursor: "pointer", color: "blue" }}>
-              See More
-            </p>
+          <img src={rightArrow}/>
           </div>
           <div className="my-discounts-list-div">
             {allDiscounts.map((item, index) => (
