@@ -19,25 +19,6 @@ import { accessTokenValue } from "../../utils/authenticationToken";
 import { productValidationSchema } from "../../utils/validations.js";
 import "./productEdit.scss";
 
-const allCategories = [
-  {
-    label: "Groceries",
-    value: "groceries",
-  },
-  {
-    label: "Electronics",
-    value: "electronics",
-  },
-  {
-    label: "Fashion",
-    value: "fashion",
-  },
-  {
-    label: "Footwear",
-    value: "footwear",
-  },
-];
-
 const childImagesList = [
   {
     id: 1,
@@ -61,7 +42,6 @@ const ProductEdit = () => {
   const value = useParams();
   const navigate = useNavigate();
   const socketMethods = useContext(SocketContext);
-  
 
   const [errors, setErrors] = useState({});
 
@@ -69,7 +49,6 @@ const ProductEdit = () => {
   const childImageRef = useRef([]);
 
   const [childImages, setChildImages] = useState(childImagesList);
-  const [itemUid, setItemUid] = useState(null);
 
   const [productImageDetails, setProductImageDetails] = useState({});
 
@@ -196,33 +175,9 @@ const ProductEdit = () => {
   const handleBack = () => {
     navigate(-1);
   };
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setBase64String(reader.result);
-        setProductDetails((prev) => ({
-          ...prev,
-          image: reader.result,
-        }));
-      };
-      reader.onerror = (error) => {
-        console.error("Error reading file:", error);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const handleImageUpload = () => {
     imageRef.current.click();
-  };
-
-  const handleCategoryDropdown = (data) => {
-    const { label, value } = data;
-    setProductDetails((prev) => {
-      return { ...prev, category: label };
-    });
   };
 
   const handleImageChange = async (event, imageType) => {
@@ -263,6 +218,7 @@ const ProductEdit = () => {
               file_uid,
               image: fileUrl,
             });
+            setErrors(prev=>({...prev,image:""}))
             toast.success("Successfully uploaded your profile image!");
           }
         } catch (error) {
@@ -316,7 +272,10 @@ const ProductEdit = () => {
       subCategory: productDetails.subCategory,
     };
     try {
-      await productValidationSchema.validate(data, { abortEarly: false });
+      await productValidationSchema.validate(
+        { ...data, ...productImageDetails },
+        { abortEarly: false }
+      );
       const response = await updateProduct({
         shopUid: value?.shopUid.split("&")[0],
         productUid: productUidValue,
@@ -339,20 +298,22 @@ const ProductEdit = () => {
     }
   };
 
-
   const handleSave = async () => {
     const { market_price, our_price } = productDetails;
     let data = {
       ...productDetails,
       market_price: Number(market_price),
       our_price: Number(our_price),
-      
+
       category: categoryData.categoryName,
       subCategory: categoryData.subCategory,
       ...productImageDetails,
     };
     try {
-      await productValidationSchema.validate(data, { abortEarly: false });
+      await productValidationSchema.validate(
+        { ...data, ...productImageDetails },
+        { abortEarly: false }
+      );
       const response = await addSingleSellerProduct({
         shopUid: value?.shopUid.split("&")[0],
         data,
@@ -368,9 +329,8 @@ const ProductEdit = () => {
             response?.data?.data?.messageData?.item_uid
           }`
         );
-      } else { 
+      } else {
         toast.error(response?.error?.data?.errors[0]?.message);
-        console.log(response?.error?.data?.errors[0]?.message);
         if (response?.error?.status == 422) {
           navigate(`/seller-plan-purchase/${value?.shopUid.split("&")[0]}`);
         }
@@ -462,6 +422,9 @@ const ProductEdit = () => {
                 <button>Upload Image</button>
               </div>
             )}
+            {errors.image && (
+              <p className="error">{errors.image}</p>
+            )}
           </div>
 
           <div className="sub-images">
@@ -539,7 +502,9 @@ const ProductEdit = () => {
                 value={productDetails.market_price ?? 0}
                 onChange={handleInput}
               />
-              {errors.market_price && <p className="error">{errors.market_price}</p>}
+              {errors.market_price && (
+                <p className="error">{errors.market_price}</p>
+              )}
             </div>
             <div>
               <label>Your Price</label>
@@ -550,9 +515,7 @@ const ProductEdit = () => {
                 value={productDetails.our_price ?? 0}
                 onChange={handleInput}
               />
-              {errors.our_price && (
-                <p className="error">{errors.our_price}</p>
-              )}
+              {errors.our_price && <p className="error">{errors.our_price}</p>}
             </div>
           </div>
           <div className="product-categories">
