@@ -150,6 +150,7 @@ export const productValidationSchema = Yup.object().shape({
   //   .required("Stock is required"),
   isAvailable: Yup.boolean(),
   category: Yup.string().required("Category is required"),
+  image: Yup.string().required("Thumbnail Image required"),
   subCategory: Yup.string().required("Subcategory is required"),
   productType: Yup.string().required("productType is required"),
 });
@@ -213,6 +214,8 @@ export const discountValidationSchema = Yup.object().shape({
     .oneOf(["discount", "offer", "deal"], "Invalid payment type")
     .required("PaymentFor is required"),
   deal: Yup.string().required("Deal date is required"),
+  offer: Yup.string().required("Offer date is required"),
+  imageUrl: Yup.string().required("Thumbnail is required"),
   StartDate: Yup.date().required("Start date is required"),
   EndDate: Yup.date()
     .required("End date is required")
