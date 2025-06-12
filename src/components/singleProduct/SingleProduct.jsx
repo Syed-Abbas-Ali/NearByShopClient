@@ -141,9 +141,9 @@ const handleNavigate = () => {
         <div className="prices-and-offers">
           <h2>₹{product?.our_price?.toFixed(0)}</h2>
           <p className="actual-price">₹{product?.market_price?.toFixed(0)}</p>
-          {product?.discountPercentage?.toFixed(0)>5 ?
+          {product?.discountPercentage?.toFixed(0)>1 ?
             <p className="offer-text">
-            {product?.discountPercentage &&
+            {product?.discountPercentage>1 &&
               product?.discountPercentage?.toFixed(0)}
             %off
           </p> : ""

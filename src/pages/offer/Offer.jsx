@@ -27,7 +27,7 @@ const Offer = () => {
   const [showExistingDiscounts, setExistingRecords] = useState(false);
   const [allCategories, setAllCategories] = useState(null);
   const [selectedCategories, setSelectedCategories] = useState(null);
-  const [selectedSubCtegories, setSelectedSubCategory] = useState(null);
+  const [selectedSubCategories, setSelectedSubCategory] = useState(null);
   const [searchData, setSearchData] = useState(null);
 
   const navigate = useNavigate();
@@ -61,16 +61,16 @@ useEffect(() => {
   const { data: discountsData, isLoading: loadingDiscounts } = useGetDiscountsQuery({
  
   category: selectedCategories?.name || "",
-  subCategory: selectedSubCtegories?.name || "", // ✅ This is important
+  subCategory: selectedSubCategories?.name || "", // ✅ This is important
 });
 
-  console.log("Selected Subcategory:", selectedSubCtegories?.name);
+  console.log("Selected Subcategory:", selectedSubCategories?.name);
 
   return (
     <WrapperComponent>
       <div className="offer-container">
         <OfferHeader
-          buttonText={userTypeValue() === "SELLER" ? "Add Discount" : ""}
+          buttonText={userTypeValue() === "SELLER" ? "Add Deals" : ""}
           shopUidValue={shopDetails?.shop_uid || null}
         />
         <div className="categories-card-container-div">
@@ -109,7 +109,7 @@ useEffect(() => {
         <SubCategoriesList
   selectedCategories={selectedCategories?.subcategories}
   handleSelect={(pre) => setSelectedSubCategory(pre)}
-  selected={selectedSubCtegories}
+  selected={selectedSubCategories}
 />
           )}
       
@@ -120,7 +120,7 @@ useEffect(() => {
           {selectedCategories && (
             <OfferItemCard
             categoryList={selectedCategories?.name}
-   subcategory={selectedSubCtegories?.name}
+   subcategory={selectedSubCategories?.name}
    
             />
           )}

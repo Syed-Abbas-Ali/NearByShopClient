@@ -6,12 +6,18 @@
   background-color: $white-color;
   cursor: pointer;
   position: relative;
+       &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  }
+
   .default-product {
     height: 164px;
     width: 100%;
     background-color: $border;
     border-radius: 4px;
     position: relative;
+ 
     .product-image {
       height: 100%;
       width: 100%;

@@ -79,7 +79,7 @@ console.log(width)
       {isShare && <SharePopup setIsShare={setIsShare} shopId={singleShop?.shop_id} />}
       <div className="shop-card" onClick={handleShop} >
         <div className="shop-image">
-          <img src={shopImag} alt="" />
+          <img src={singleShop?.profile_url} alt="" />
           {id === 1 && <img src={validTick} className="tick-icon" />}
         </div>
         <div className="details-card">

@@ -54,8 +54,8 @@ const SingleProductDetails = ({
   const { data } = useGetAllWishlistProductsIdsApiQuery();
   const [showSharePopup, setShowSharePopup] = useState(false);
   const [showMore, setShowMore] = useState(false);
-  
- 
+
+
   const isProductInWishlist = data?.data?.includes(
     singleProductDetails?.itemUid || undefined
   );
@@ -137,8 +137,8 @@ const SingleProductDetails = ({
   const handleShare = () => {
     setShowSharePopup((prev) => !prev);
   };
-   const description = singleProductDetails?.description || "";
-     const toggleShow = () => {
+  const description = singleProductDetails?.description || "";
+  const toggleShow = () => {
     setShowMore((prev) => !prev);
   };
 
@@ -151,74 +151,77 @@ const SingleProductDetails = ({
 
       <div className="single-product-details-desktop">
         <div className="images-div">
-  <div className="product-image-card">
-    <img src={previewImagesList[0]} alt="Main product" />
-    <div className="action-btns">
-      <div>
-        <img src={checkIcon} alt="tick-icon" />
-      </div>
-      <div>
-        <img
-          src={isProductInWishlist ? wishlistActiveIcon : heartIcon}
-          alt="wishlist-icon"
-          onClick={
-            isProductInWishlist
-              ? handleDeleteWishlistProduct
-              : handleWishlist
-          }
-        />
-      </div>
-      <div>
-        <img src={shareIcon} alt="share-icon" onClick={handleShare} />
-      </div>
-    </div>
-  </div>
+          <div className="product-image-card">
+            <img src={previewImagesList[0]} alt="Main product" />
+            <div className="action-btns">
+              <div>
+                <img src={checkIcon} alt="tick-icon" />
+              </div>
+              <div>
+                <img
+                  src={isProductInWishlist ? wishlistActiveIcon : heartIcon}
+                  alt="wishlist-icon"
+                  onClick={
+                    isProductInWishlist
+                      ? handleDeleteWishlistProduct
+                      : handleWishlist
+                  }
+                />
+              </div>
+              <div>
+                <img src={shareIcon} alt="share-icon" onClick={handleShare} />
+              </div>
+            </div>
+          </div>
 
-  <div className="sub-images-card">
-    {previewImagesList.slice(1).map((imageUrl, index) => (
-      <div
-        className="image-card"
-        key={index}
-        onClick={() => {
-          const updatedImages = [...previewImagesList];
-          // Swap main image with clicked sub image
-          [updatedImages[0], updatedImages[index + 1]] = [
-            updatedImages[index + 1],
-            updatedImages[0],
-          ];
-          setPreviewImagesList(updatedImages);
-        }}
-      >
-        <img src={imageUrl} alt={`Sub preview ${index + 1}`} />
-      </div>
-    ))}
-  </div>
-</div>
+          <div className="sub-images-card">
+            {previewImagesList.slice(1).map((imageUrl, index) => (
+              <div
+                className="image-card"
+                key={index}
+                onClick={() => {
+                  const updatedImages = [...previewImagesList];
+                  // Swap main image with clicked sub image
+                  [updatedImages[0], updatedImages[index + 1]] = [
+                    updatedImages[index + 1],
+                    updatedImages[0],
+                  ];
+                  setPreviewImagesList(updatedImages);
+                }}
+              >
+                <img src={imageUrl} alt={`Sub preview ${index + 1}`} />
+              </div>
+            ))}
+          </div>
+        </div>
 
         <div className="content-div">
           <div className="text-content">
             <div className="section-one">
               <h1>{singleProductDetails?.title}</h1>
-             <p className="product-description">
-      {displayedText}
-      {shouldTruncate && (
-        <>
-          {!showMore && "... "}
-          <span
-            onClick={toggleShow}
-            style={{ color: "blue", cursor: "pointer" }}
-          >
-            {showMore ? "Show Less" : "Show More"}
-          </span>
-        </>
-      )}
-    </p>
+              <p className="product-description">
+                {displayedText}
+                {shouldTruncate && (
+                  <>
+                    {!showMore && "... "}
+                    <span
+                      onClick={toggleShow}
+                      style={{ color: "blue", cursor: "pointer" }}
+                    >
+                      {showMore ? "Show Less" : "Show More"}
+                    </span>
+                  </>
+                )}
+              </p>
             </div>
 
             <div className="price-container">
-              <span className="price">₹{singleProductDetails?.price?.toFixed(0)}/-</span>
-               <span className="main-price">₹{singleProductDetails?.mainPrice?.toFixed(0)}/-</span>
-                <span className="main-discount">{singleProductDetails?.discountPercentage?.toFixed(0)}%off</span>
+              <span className="price">₹{singleProductDetails?.market_price?.toFixed(0)}/-</span>
+              <span className="main-price">₹{singleProductDetails?.our_price?.toFixed(0)}/-</span>
+              {singleProductDetails?.discountPercentage > 1 &&
+              <span className="main-discount">{ singleProductDetails?.discountPercentage?.toFixed(0) + "%off"  }</span>
+              }
+              
             </div>
           </div>
           <div className="extra-details">

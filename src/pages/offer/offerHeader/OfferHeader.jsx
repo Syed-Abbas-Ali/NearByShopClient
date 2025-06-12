@@ -18,7 +18,7 @@ const OfferHeader = ({ buttonText, shopUidValue }) => {
     <div className="top-header-div">
       <div className="back-name">
         <img src={backIcon} alt="back icon" onClick={handleBack} />
-        <h3>Discount</h3>
+        <h3>Deals</h3>
       </div>
       {buttonText && userTypeValue() === "SELLER" && (
         <button onClick={handleDiscount}>{buttonText}</button>

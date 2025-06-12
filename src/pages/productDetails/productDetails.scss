@@ -34,7 +34,7 @@
     }
   }
   .content-card {
-    padding: 0.6rem;
+    padding: 0px 0.6rem;
     .product-details-content {
       @include flex-center(column, "", "");
       gap: 2rem;
