@@ -28,7 +28,7 @@ function Payment() {
   }, []);
   const paymentWindow = (orderResponse) => {
     const options = {
-      key: `rzp_test_rs5jkKLF8rjHQd`,
+      key: `${import.meta.env.VITE_RAZORPAY_KEY}`,
       amount: orderResponse?.amount_due ?? orderResponse?.total_amount,
       currency: orderResponse?.currency ?? "INR",
       name: "Come Fly With Me",
