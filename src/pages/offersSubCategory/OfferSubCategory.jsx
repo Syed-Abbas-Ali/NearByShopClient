@@ -14,16 +14,32 @@ import SubCategoriesList from "../../components/commonComponents/subCategoriesLi
 const OfferSubCategory = () => {
   const { categoryName } = useParams();
   const navigate = useNavigate();
-  const {
-    mapDetailsState: {
-      userMapDetails: { latitude, longitude },
-    },
-  } = useSelector((state) => state);
+  // const {
+  //   mapDetailsState: {
+  //     userMapDetails: { latitude, longitude },
+  //   },
+  // } = useSelector((state) => state);
+  const [latitude, setLatitude] = useState(null);
+    const [longitude, setLongitude] = useState(null);
+  
+    useEffect(() => {
+      try {
+        const storedLocation = sessionStorage.getItem('userLocation');
+        if (storedLocation) {
+          const userLocation = JSON.parse(storedLocation);
+          setLatitude(userLocation?.coordinates?.latitude);
+          setLongitude(userLocation?.coordinates?.longitude);
+          console.log("Loaded from session:", userLocation);
+        }
+      } catch (error) {
+        console.error("Failed to parse userLocation from sessionStorage", error);
+      }
+    }, []);
   const { data } = useGetDiscountsQuery(
     {
       latitude,
       longitude,
-      minPrice: 100,
+      minPrice: 1,
       maxPrice: 1000000,
       radius: 100000000,
       page: 1,
@@ -38,8 +54,6 @@ const OfferSubCategory = () => {
   // const handleCategory = (categoryName) => {
   //   navigate(`/offer-sub-category/${categoryName}`);
   // };
-  console.log("makr",data)
- 
   return (
     <div className="offers-sub-category">
       <OfferHeader buttonText={"Add 1 more Discount"} />

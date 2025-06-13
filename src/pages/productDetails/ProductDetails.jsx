@@ -42,11 +42,27 @@ const ProductDetails = () => {
     skip: !data?.data?.shopId,
   });
   
-  const {
-    mapDetailsState: {
-      userMapDetails: { latitude, longitude, locationAddress },
-    },
-  } = useSelector((state) => state);
+  // const {
+  //   mapDetailsState: {
+  //     userMapDetails: { latitude, longitude, locationAddress },
+  //   },
+  // } = useSelector((state) => state);
+  const [latitude, setLatitude] = useState(null);
+    const [longitude, setLongitude] = useState(null);
+  
+    useEffect(() => {
+      try {
+        const storedLocation = sessionStorage.getItem('userLocation');
+        if (storedLocation) {
+          const userLocation = JSON.parse(storedLocation);
+          setLatitude(userLocation?.coordinates?.latitude);
+          setLongitude(userLocation?.coordinates?.longitude);
+          console.log("Loaded from session:", userLocation);
+        }
+      } catch (error) {
+        console.error("Failed to parse userLocation from sessionStorage", error);
+      }
+    }, []);
 
   const { data: relatedProducts, isLoading: isProductListLoading, isFetching } =
     useGetAllProductsApiQuery(

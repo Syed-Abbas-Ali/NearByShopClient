@@ -36,55 +36,6 @@ const redIcon = new L.Icon({
 // Cache for storing geocoding results
 const geocodingCache = new Map();
 
-function LocationMarker({ handleSetLocationDetails, setClickedLocation }) {
-  const map = useMapEvents({
-    async click(e) {
-      const { lat, lng } = e.latlng;
-      map.flyTo(e.latlng, map.getZoom());
-      setClickedLocation([lat, lng]);
-      
-      // Check cache first
-      const cacheKey = `reverse-${lat}-${lng}`;
-      if (geocodingCache.has(cacheKey)) {
-        const address = geocodingCache.get(cacheKey);
-        updateLocationDetails(lat, lng, address);
-        return;
-      }
-
-      try {
-        // Only make API call if not in cache
-        const response = await fetch(
-          `${MAPBOX_GEOCODING_URL}${lng},${lat}.json?access_token=${MAPBOX_ACCESS_TOKEN}`
-        );
-        const data = await response.json();
-        const address = data.features[0]?.place_name || "Address not found";
-        
-        // Cache the result
-        geocodingCache.set(cacheKey, address);
-        updateLocationDetails(lat, lng, address);
-      } catch (error) {
-        console.error("Error fetching address:", error);
-        updateLocationDetails(lat, lng, "Address not found");
-      }
-    },
-  });
-
-  const updateLocationDetails = (lat, lng, address) => {
-    handleSetLocationDetails({
-      latitude: lat,
-      longitude: lng,
-      shop_address: address,
-      storeAddress: {
-        storeLocation: { latitude: lat, longitude: lng },
-        storeAddress: address,
-      },
-      address: address,
-    });
-  };
-
-  return null;
-}
-
 function SearchControl() {
   const [search, setSearch] = useState("");
   const [results, setResults] = useState([]);
@@ -224,13 +175,95 @@ function ReturnToLocationButton({ currentLocation }) {
   );
 }
 
+function LocationMarker({ handleSetLocationDetails, setClickedLocation, initialLocation }) {
+  const map = useMapEvents({
+    async click(e) {
+      const { lat, lng } = e.latlng;
+      map.flyTo(e.latlng, map.getZoom());
+      setClickedLocation([lat, lng]);
+      
+      // Check cache first
+      const cacheKey = `reverse-${lat}-${lng}`;
+      if (geocodingCache.has(cacheKey)) {
+        const address = geocodingCache.get(cacheKey);
+        updateLocationDetails(lat, lng, address);
+        return;
+      }
+
+      try {
+        // Only make API call if not in cache
+        const response = await fetch(
+          `${MAPBOX_GEOCODING_URL}${lng},${lat}.json?access_token=${MAPBOX_ACCESS_TOKEN}`
+        );
+        const data = await response.json();
+        const address = data.features[0]?.place_name || "Address not found";
+        
+        // Cache the result
+        geocodingCache.set(cacheKey, address);
+        updateLocationDetails(lat, lng, address);
+      } catch (error) {
+        console.error("Error fetching address:", error);
+        updateLocationDetails(lat, lng, "Address not found");
+      }
+    },
+  });
+
+  // Set initial location if provided
+  useEffect(() => {
+    if (initialLocation) {
+      const { latitude, longitude } = initialLocation.coordinates;
+      map.flyTo([latitude, longitude], 16);
+      setClickedLocation([latitude, longitude]);
+      
+      // Trigger the location details update
+      updateLocationDetails(
+        latitude, 
+        longitude, 
+        initialLocation.address || "Address not found"
+      );
+    }
+  }, [initialLocation, map, setClickedLocation]);
+
+  const updateLocationDetails = (lat, lng, address) => {
+    handleSetLocationDetails({
+      latitude: lat,
+      longitude: lng,
+      shop_address: address,
+      storeAddress: {
+        storeLocation: { latitude: lat, longitude: lng },
+        storeAddress: address,
+      },
+      address: address,
+    });
+  };
+
+  return null;
+}
+
 const CustomMapComponent = ({ handleSetLocationDetails }) => {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [clickedLocation, setClickedLocation] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const defaultPosition = { lat: 51.505, lng: -0.09 };
 
+  // Get initial location from session storage
+  const [initialLocation, setInitialLocation] = useState(() => {
+    const storedLocation = sessionStorage.getItem('userLocation');
+    return storedLocation ? JSON.parse(storedLocation) : null;
+  });
+
   useEffect(() => {
+    if (initialLocation) {
+      // If we have a stored location, use it immediately
+      setCurrentLocation({
+        lat: initialLocation.coordinates.latitude,
+        lng: initialLocation.coordinates.longitude
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    // Otherwise, try to get current location
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
@@ -271,7 +304,7 @@ const CustomMapComponent = ({ handleSetLocationDetails }) => {
       console.error("Geolocation is not supported by this browser.");
       setIsLoading(false);
     }
-  }, [handleSetLocationDetails]);
+  }, [handleSetLocationDetails, initialLocation]);
 
   const updateLocationDetails = (lat, lng, address) => {
     handleSetLocationDetails({
@@ -315,7 +348,8 @@ const CustomMapComponent = ({ handleSetLocationDetails }) => {
         />
         <LocationMarker 
           handleSetLocationDetails={handleSetLocationDetails} 
-          setClickedLocation={setClickedLocation} 
+          setClickedLocation={setClickedLocation}
+          initialLocation={initialLocation}
         />
         <SearchControl />
         {currentLocation && (
@@ -333,5 +367,3 @@ const CustomMapComponent = ({ handleSetLocationDetails }) => {
 };
 
 export default CustomMapComponent;
-
-

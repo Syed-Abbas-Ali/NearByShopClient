@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./offer.scss";
-import Categories from "../home/categories/Categories";
 import OfferItemCard from "../../components/offerItemCard/OfferItemCard";
 import OfferHeader from "./offerHeader/OfferHeader";
 import BottomNavbar from "../../components/bottomNavbar/BottomNavbar";
 import MyDiscounts from "./myDiscounts/MyDiscounts";
 import cancelIconRed from "../../assets/cancelIconRed.svg";
-import OfferCategoryItem from "../../components/offerCategoryItem/OfferCategoryItem";
 import {
   useGetAllDiscountsQuery,
   useGetDiscountsQuery,
@@ -15,12 +13,9 @@ import { useGetAllShopsApiQuery } from "../../apis&state/apis/shopApiSlice";
 import { userTypeValue } from "../../utils/authenticationToken";
 import CategoriesList from "../../components/commonComponents/categoriesList/CategoriesList";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import WrapperComponent from "../../components/wrapperComponent/WrapperComponent";
-import Filters from "../../components/filters/Filters";
 import { setIsFilterPopupOpen } from "../../apis&state/state/globalStateName";
 import SubCategoriesList from "../../components/commonComponents/subCategoriesList/SubCategoriesList";
-import FilterInputComponent from "../../components/commonComponents/filterInputComponent/FilterInputComponent";
 
 const Offer = () => {
   const { isFilterPopupOpen } = useSelector((state) => state.globalState);
@@ -28,50 +23,89 @@ const Offer = () => {
   const [allCategories, setAllCategories] = useState(null);
   const [selectedCategories, setSelectedCategories] = useState(null);
   const [selectedSubCategories, setSelectedSubCategory] = useState(null);
-  const [searchData, setSearchData] = useState(null);
+  const [discountPage, setDiscountPage] = useState(1);
+  const [allDiscounts, setAllDiscounts] = useState([]);
+  const [hasMoreDiscounts, setHasMoreDiscounts] = useState(true);
+  const [selectedSubCategoryName, setSelectedSubCategoryName] = useState(null);
 
-  const navigate = useNavigate();
 
   const dispatch = useDispatch();
+
+  // Fetch shop details if user is seller
+  const { data: sellerDetails, isLoading: isLoadingShop } = useGetAllShopsApiQuery(undefined, {
+    skip: userTypeValue() !== "SELLER"
+  });
+
+  const shopId = sellerDetails?.data?.[0]?.shop_id || null;
+  const shopUid = sellerDetails?.data?.[0]?.shop_uid || null;
+
+  // Fetch discounts with proper shopId dependency
+  const {
+    data: discountsResponse,
+    isLoading: isLoadingDiscounts,
+    isFetching: isFetchingDiscounts,
+  } = useGetAllDiscountsQuery(
+    { shopId, page: discountPage },
+    { skip: !shopId }
+  );
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  // Update discounts when response changes
+  useEffect(() => {
+    if (discountsResponse?.data?.items) {
+      if (discountPage === 1) {
+        setAllDiscounts(discountsResponse.data.items);
+      } else {
+        setAllDiscounts(prev => [...prev, ...discountsResponse.data.items]);
+      }
+      setHasMoreDiscounts(discountsResponse.data.items.length === 10);
+    }
+  }, [discountsResponse, discountPage]);
+
   const openPopup = () => {
     dispatch(setIsFilterPopupOpen());
   };
+
   const handleExistingDiscounts = () => {
-    setExistingRecords((prev) => !prev);
+    setExistingRecords(prev => !prev);
   };
-  const { data: sellerDetails } = useGetAllShopsApiQuery(undefined, {
-    skip: userTypeValue() === "SELLER" ? false : true,
-  });
-  const shopDetails = sellerDetails?.data[0];
-  const { data: allDiscounts, isLoading } = useGetAllDiscountsQuery(
-    {
-      shopId: shopDetails?.shop_id,
-    },
-    {
-      skip: !shopDetails?.shop_id,
-    }
-  );
-useEffect(() => {
-  window.scrollTo({ top: 0, behavior: "smooth" }); // or "auto" for instant scroll
-}, []);
+
   const handleCategory = (categoryName) => {
     setSelectedCategories(categoryName);
     setSelectedSubCategory(null);
+    setSelectedSubCategoryName(null);
   };
-  const { data: discountsData, isLoading: loadingDiscounts } = useGetDiscountsQuery({
- 
-  category: selectedCategories?.name || "",
-  subCategory: selectedSubCategories?.name || "", // ✅ This is important
-});
 
-  console.log("Selected Subcategory:", selectedSubCategories?.name);
+    const handleSubCategory = (subCategory) => {
+    setSelectedSubCategory(subCategory);
+    setSelectedSubCategoryName(subCategory?.name || null);
+  };
+
+  const fetchMoreDiscounts = () => {
+    if (hasMoreDiscounts && !isFetchingDiscounts) {
+      setDiscountPage(prev => prev + 1);
+    }
+  };
+
+   const { data: discountsData, isLoading: loadingDiscounts } = useGetDiscountsQuery(
+    {
+      category: selectedCategories?.name || "",
+      subcategory: selectedSubCategoryName || "", // Changed from subCategory to subcategory to match API
+    },
+    {
+      skip: !selectedCategories?.name, // Only fetch when category is selected
+    }
+  );
 
   return (
     <WrapperComponent>
       <div className="offer-container">
         <OfferHeader
           buttonText={userTypeValue() === "SELLER" ? "Add Deals" : ""}
-          shopUidValue={shopDetails?.shop_uid || null}
+          shopUidValue={shopUid}
         />
         <div className="categories-card-container-div">
           {showExistingDiscounts && (
@@ -93,10 +127,14 @@ useEffect(() => {
               </div>
             </div>
           )}
+          
           {userTypeValue() === "SELLER" && (
             <MyDiscounts
               handleExistingDiscounts={handleExistingDiscounts}
-              allDiscounts={allDiscounts?.data?.items}
+              allDiscounts={allDiscounts}
+              fetchMoreDiscounts={fetchMoreDiscounts}
+              hasMore={hasMoreDiscounts}
+              isLoading={isFetchingDiscounts}
             />
           )}
       
@@ -105,28 +143,28 @@ useEffect(() => {
             setAllCategories={setAllCategories}
             activeCategory={selectedCategories?.name}
           />
+          
           {selectedCategories && (
-        <SubCategoriesList
-  selectedCategories={selectedCategories?.subcategories}
-  handleSelect={(pre) => setSelectedSubCategory(pre)}
-  selected={selectedSubCategories}
-/>
-          )}
+          <SubCategoriesList
+            selectedCategories={selectedCategories?.subcategories}
+            handleSelect={handleSubCategory} // Updated handler
+            selected={selectedSubCategories}
+          />
+        )}
       
-          {!selectedCategories &&
-            allCategories?.map((item) => {
-              return <OfferItemCard categoryList={item?.name} />;
-            })}
-          {selectedCategories && (
-            <OfferItemCard
+     {!selectedCategories &&
+          allCategories?.map((item, index) => (
+            <OfferItemCard key={index} categoryList={item?.name} />
+          ))}
+          
+        {selectedCategories && (
+          <OfferItemCard
             categoryList={selectedCategories?.name}
-   subcategory={selectedSubCategories?.name}
-   
-            />
-          )}
+            subcategory={selectedSubCategoryName} // Pass the name directly
+          />
+        )}
         </div>
         
-      
         <BottomNavbar />
       </div>
     </WrapperComponent>

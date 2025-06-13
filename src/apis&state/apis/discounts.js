@@ -44,7 +44,6 @@ getDiscounts: builder.query({
     subCategory = "",
     page=1 
   }) => {
-    console.log("subCategoryrf:", subCategory); // 👈 This works!
 
     return {
       url: `discount?latitude=${latitude}&longitude=${longitude}&radius=${radius}&minPrice=${minPrice}&maxPrice=${maxPrice}${shopId ? `&shopId=${shopId}` : ""}&category=${category}&subCategory=${subCategory}&page=${page}`,
