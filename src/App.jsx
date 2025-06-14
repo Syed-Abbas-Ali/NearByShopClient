@@ -83,7 +83,7 @@ const needNotChatBot = [
 const protectionPages = [
   { path: "/sub-home", element: <SubHomePage /> },
   { path: "/sub-categories", element: <SubCategoriesPage /> },
-  { path: "/offer", element: <OfferPage /> },
+ 
   { path: "/offer-edit/:shopUid/:offerUid", element: <OfferEditPage /> },
   {
     path: "/offer-sub-category/:categoryName",
@@ -93,10 +93,10 @@ const protectionPages = [
   { path: "/offer-sub-category-list", element: <OfferSubCategoryListPage /> },
   { path: "/wishlist", element: <WishlistPage /> },
 
-  // { path: "/shop", element: <ShopPage /> },
+  
 
 
-  { path: "/shop/:shopCategory?", element: <ShopPage /> },
+  // { path: "/shop/:shopCategory?", element: <ShopPage /> },
 
   { path: "/all-shops", element: <FullShopsPage /> },
   { path: "/product-edit/:shopUid", element: <ProductEditPage /> },
@@ -106,7 +106,7 @@ const protectionPages = [
   { path: "/notifications", element: <NotificationsPage /> },
   { path: "/chat", element: <ChatComponent /> },
   { path: "/chat-details", element: <ChatDetailsPage /> },
-  { path: "/shop-profile-view/:shopId", element: <ShopProfileViewPage /> },
+ 
   { path: "/settings", element: <SettingsPage /> },
   {
     path: "/aadhar-verification/:shopUid",
@@ -126,6 +126,9 @@ const nonProtectionPages = [
     path: "/sub-category-page/:categoryName",
     element: <SubCategoryProductsPage />,
   },
+  { path: "/shop", element: <ShopPage /> },
+   { path: "/shop-profile-view/:shopId", element: <ShopProfileViewPage /> },
+   { path: "/offer", element: <OfferPage /> },
   { path: "/", element: <HomePage /> },
   { path: "/website-form", element: <WebsiteFormPage /> },
   { path: "/thankyou", element: <ThankyouPage /> },

@@ -41,12 +41,12 @@ getDiscounts: builder.query({
     maxPrice = "150000", 
     shopId = "", 
     category = "", 
-    subCategory = "" 
+    subCategory = "",
+    page=1 
   }) => {
-    console.log("subCategoryrf:", subCategory); // 👈 This works!
 
     return {
-      url: `discount?latitude=${latitude}&longitude=${longitude}&radius=${radius}&minPrice=${minPrice}&maxPrice=${maxPrice}${shopId ? `&shopId=${shopId}` : ""}&category=${category}&subCategory=${subCategory}`,
+      url: `discount?latitude=${latitude}&longitude=${longitude}&radius=${radius}&minPrice=${minPrice}&maxPrice=${maxPrice}${shopId ? `&shopId=${shopId}` : ""}&category=${category}&subCategory=${subCategory}&page=${page}`,
       headers: {
         Authorization: `Bearer ${accessTokenValue()}`,
       },

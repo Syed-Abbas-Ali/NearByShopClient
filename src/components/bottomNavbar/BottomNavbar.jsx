@@ -10,8 +10,14 @@ import homeIconActive from "../../assets/homeBorderActive.svg";
 import offerIconActive from "../../assets/offerActiveOutline.svg";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useGetAllCategoriesAndSubCategoriesQuery } from "../../apis&state/apis/masterDataApis";
+import { useState, useEffect  } from "react";
+
 
 const BottomNavbar = () => {
+
+  const [scrolled, setScrolled] = useState(false);
+
+
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const handleNavigate = (pathText) => {
@@ -32,6 +38,14 @@ const BottomNavbar = () => {
     }
     return false;
   };
+  useEffect(() => {
+  const handleScroll = () => {
+    setScrolled(window.scrollY > 10);
+  };
+  
+  window.addEventListener('scroll', handleScroll);
+  return () => window.removeEventListener('scroll', handleScroll);
+}, []);
 
   const categoryName = allCategoriesData?.data[0]?.name || "";
 
@@ -55,11 +69,11 @@ const BottomNavbar = () => {
     {
       name: activeTab("/offer") ? offerIconActive : offerIcon,
       path: "/offer",
-      alt: "Discount",
+      alt: "Deals",
     },
   ];
   return (
-    <div className="bottom-navbar">
+    <div className={`bottom-navbar ${scrolled ? 'scrolled' : ''}`}>
       {bottomTabs.map((item, index) => {
         return (
           <div key={index} onClick={() => handleNavigate(item.path)}>

@@ -1,163 +1,210 @@
 @import "../../app.scss";
 
 .shop-card {
-  padding: 10px;
+  padding: 16px;
   background-color: #fff;
   display: flex;
-  gap: 10px;
-  flex-shrink: 0;
-  border-radius: 8px;
+  gap: 16px;
+  border-radius: 12px;
   cursor: pointer;
   height: auto;
-  border:solid 2px  $border ;
+  border: 1px solid $border;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+  margin-bottom: 8px;
+  position: relative;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    border-color: $app-primary-color;
+  }
+
   .shop-image {
     height: 120px;
     width: 120px;
-    flex-shrink: 0;
-    background-color: $white-color;
+    min-width: 120px;
+    background-color: #f8f8f8;
     border-radius: 8px;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    @media (max-width:900px) {
-        height: 110px;
-    width: 110px;
+    overflow: hidden;
+    
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
     }
-      @media (max-width:600px) {
-        height: 100px;
-    width: 100px;
+    
+    &:hover img {
+      transform: scale(1.05);
     }
-      @media (max-width:400px) {
-        height: 90px;
-    width: 90px;
-    }
+
     .tick-icon {
       position: absolute;
-      bottom: 15px;
-      right: 15px;
+      bottom: 8px;
+      right: 8px;
+      height: 20px;
+      width: 20px;
+      background: white;
+      border-radius: 50%;
+      padding: 2px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-    img{
-      height: 90%;
-      width: 90%;
+
+    @media (max-width: 768px) {
+      height: 100px;
+      width: 100px;
+      min-width: 100px;
+    }
+    
+    @media (max-width: 480px) {
+      height: 80px;
+      width: 80px;
+      min-width: 80px;
     }
   }
+
   .details-card {
     display: flex;
     justify-content: space-between;
     flex-grow: 1;
-    gap: 4px;
+    gap: 12px;
+    
     .details {
-      .shop-category{
-        font-size: 11px;
-            padding-top: 5px;
-            font-weight: 500;
-      }
-        .shop-dis{
-        font-size: 10px;
-            padding-top: 1px;
-            font-weight: 400;
-      }
+      flex: 1;
+      min-width: 0; // Fix for text overflow in flex
+      
       h3 {
-        font-size: 16px;
-        font-weight: 500;
-        line-height: 16.8px;
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 1.2;
         color: $app-second-color;
+        margin-bottom: 6px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
-      .stars-card {
+      
+      .shop-category {
+        font-size: 12px;
+        font-weight: 500;
+        color:$app-second-color, 20%;
+        margin-bottom: 8px;
+        display: inline-block;
+        padding: 4px 8px;
+        background: rgba($app-primary-color, 0.1);
+        border-radius: 4px;
+      }
+      
+      .shop-dis {
+        font-size: 13px;
+        line-height: 1.4;
+        color: #555;
+        margin-bottom: 12px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      
+      .distance {
         display: flex;
         align-items: center;
-        gap: 1px;
-        div {
-          cursor: pointer;
-          font-size: 22px;
-          color: #ffcb45;
-        }
-        p {
-          margin-left: 6px;
-          font-size: 10px;
-          font-weight: 400;
-          line-height: 16.8px;
-          color: #858585;
+        gap: 4px;
+        font-size: 12px;
+        color: #fff;
+        font-weight: 500;
+       
+       
+      
+        border-radius: 4px;
+
+        width: 100px;
+    background: linear-gradient(to right, #DCDCDB, #BBBBB9);
+     align-items: center;
+    justify-content: center;
+    border-radius: 0px 5px 5px 0px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 1;
+    overflow: hidden;
+        
+        span {
+          color: #fff;
+          font-weight: 600;
         }
       }
+      
       .location-text {
         display: flex;
-        margin-top: 5px;
-        gap: 5px;
-        a{
+        align-items: center;
+        gap: 6px;
+        margin-top: 8px;
+        
+        a {
           display: flex;
-          gap:5px;
+          align-items: center;
+          gap: 6px;
+          text-decoration: none;
+          color: inherit;
+          
+          &:hover {
+            color: $app-primary-color;
+          }
         }
+        
         img {
           height: 16px;
+          width: 16px;
+          opacity: 0.7;
         }
+        
         p {
-          font-size: 12px;
-          font-weight: 400;
-          line-height: 16.8px;
-          color: #858585;
-          height: 20px;
-          width: 150px;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-          overflow: hidden;
-        }
-      }
-      .distance {
-        color: #858585;
-        font-size: 12px;
-        font-weight: 400;
-        line-height: 16.8px;
-        margin-top: 5px;
-        span {
-          color: $app-second-color;
-          font-size: 12px;
-          font-weight: 500;
-        }
-      }
-      .follow {
-        display: flex;
-        align-items: center;
-        margin-top: 10px;
-        gap: 10px;
-        button {
-          background-color: $app-primary-color;
-          color: $white-color;
-          font-size: 12px;
-          font-weight: 500;
-          line-height: 18px;
-          padding: 4px 10px;
-          border-radius: 4px;
-        }
-        div {
-          display: flex;
-          gap: 4px;
-          p {
-            font-size: 12px;
-            font-weight: 500;
-            line-height: 20px;
-            letter-spacing: 1px;
-            color: $app-second-color;
-          }
-          span {
-            font-size: 10px;
-            font-weight: 500;
-            line-height: 20px;
-            letter-spacing: 1px;
-            color: #858585;
-          }
+         font-size: 12px;
+    font-weight: 400;
+    line-height: 16.8px;
+    color: #858585;
+    height: 20px;
+    width: 150px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
         }
       }
     }
+    
     .actions {
       display: flex;
       flex-direction: column;
-      gap: 10%;
-      flex-shrink: 0;
+      gap: 12px;
+      align-items: flex-end;
+      
       button {
         cursor: pointer;
-        background-color: transparent;
+        background: transparent;
+        border: none;
+        padding: 6px;
+        border-radius: 50%;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        &:hover {
+          background: rgba($app-primary-color, 0.1);
+          transform: scale(1.1);
+        }
+        
+        img {
+          height: 18px;
+          width: 18px;
+          opacity: 0.8;
+        }
       }
     }
   }

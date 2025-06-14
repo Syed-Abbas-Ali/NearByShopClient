@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./shopCard.scss";
 import validTick from "../../assets/validTick.svg";
 import location from "../../assets/locationThick.svg";
@@ -17,15 +17,31 @@ import { haversine } from "../../utils/global";
 import { useSelector } from "react-redux";
 
 const ShopCard = ({ id, singleShop, handleFollow }) => {
-  const {
-    mapDetailsState: {
-      userMapDetails: { latitude, longitude },
-    },
-  } = useSelector((state) => state);
+  // const {
+  //   mapDetailsState: {
+  //     userMapDetails: { latitude, longitude },
+  //   },
+  // } = useSelector((state) => state);
   const phoneNumber = "+918639215761";
   const navigate = useNavigate();
   const [isShare, setIsShare] = useState(false);
   const [shopUidValue, setShopUidValue] = useState(null);
+  const [latitude, setLatitude] = useState(null);
+    const [longitude, setLongitude] = useState(null);
+  
+    useEffect(() => {
+      try {
+        const storedLocation = sessionStorage.getItem('userLocation');
+        if (storedLocation) {
+          const userLocation = JSON.parse(storedLocation);
+          setLatitude(userLocation?.coordinates?.latitude);
+          setLongitude(userLocation?.coordinates?.longitude);
+          console.log("Loaded from session:", userLocation);
+        }
+      } catch (error) {
+        console.error("Failed to parse userLocation from sessionStorage", error);
+      }
+    }, []);
   const [createChatRoom] = useCreateRoomMutation();
   const { data: chatList } = useGetChatListQuery({
     currentUserType: "",
@@ -79,7 +95,7 @@ console.log(width)
       {isShare && <SharePopup setIsShare={setIsShare} shopId={singleShop?.shop_id} />}
       <div className="shop-card" onClick={handleShop} >
         <div className="shop-image">
-          <img src={shopImag} alt="" />
+          <img src={singleShop?.profile_url} alt="" />
           {id === 1 && <img src={validTick} className="tick-icon" />}
         </div>
         <div className="details-card">
