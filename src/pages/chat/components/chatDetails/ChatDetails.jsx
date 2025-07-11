@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useRef, useState, useCallback } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+} from "react";
 import "./chatDetails.scss";
 import backIcon from "../../../../assets/arrowLeftLarge.svg";
 import messageSendIcon from "../../../../assets/messageSendIcon.svg";
@@ -20,6 +26,7 @@ import {
 } from "../../../../utils/authenticationToken";
 import SocketContext from "../../../../context/socketContext";
 import { useSelector } from "react-redux";
+// import { AppState, Platform } from "react-native";
 
 const ChatDetails = ({
   chatToggle,
@@ -36,16 +43,19 @@ const ChatDetails = ({
   const chatBoxRef = useRef(null);
   const emojiPickerRef = useRef(null);
 
-  const { data: chatDetails, refetch, isLoading, error } = useGetSingleChatQuery(
-    activeRoomId || roomId,
-    {
-      skip: !activeRoomId && !roomId,
-    }
-  );
+  const {
+    data: chatDetails,
+    refetch,
+    isLoading,
+    error,
+  } = useGetSingleChatQuery(activeRoomId || roomId, {
+    skip: !activeRoomId && !roomId,
+  });
 
   const [sendMessage] = useSendMessageMutation();
   const [allChatList, setAllChatList] = useState([]);
-
+  console.log(navigator.userAgent
+)
   // Auto-scroll to bottom when messages change
   useEffect(() => {
     if (chatBoxRef.current) {
@@ -56,7 +66,10 @@ const ChatDetails = ({
   // Handle click outside emoji picker
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target)) {
+      if (
+        emojiPickerRef.current &&
+        !emojiPickerRef.current.contains(event.target)
+      ) {
         setShowEmojiPicker(false);
       }
     };
@@ -83,7 +96,7 @@ const ChatDetails = ({
           ...data.messageData,
           senderType: currentUserType === "seller" ? "USER" : "SELLER",
           senderId: allChatList[0]?.senderId,
-          createdAt: new Date().toISOString()
+          createdAt: new Date().toISOString(),
         },
       ]);
       handleIsRead();
@@ -100,15 +113,64 @@ const ChatDetails = ({
     };
   }, [socketMethods, currentUserType, allChatList]);
 
+  // import { useEffect, useState } from "react";
+
+  // useEffect(() => {
+  //   const token = accessTokenValue();
+  //   const decodedToken = jwtDecode(token);
+  //   if (Platform.OS === "web") {
+  //     const handleVisibilityChange = () => {
+  //       if (document.visibilityState === "hidden") {
+  //         socketMethods.emit("offline", {
+  //           userId: decodedToken?.userId || "",
+  //           roomId: activeRoomId ?? "",
+  //         });
+  //         console.log("🔻 Browser tab is hidden or minimized");
+  //         callbacks.onHide?.();
+  //         // setAppState("hidden");
+  //       } else if (document.visibilityState === "visible") {
+  //         console.log("✅ Browser tab is visible again");
+  //         callbacks.onShow?.();
+  //         // setAppState("visible");
+  //       }
+  //     };
+
+  //     document.addEventListener("visibilitychange", handleVisibilityChange);
+
+  //     return () => {
+  //       document.removeEventListener(
+  //         "visibilitychange",
+  //         handleVisibilityChange
+  //       );
+  //     };
+  //   } else {
+  //     const subscription = AppState.addEventListener("change", (nextState) => {
+  //       if (nextState === "background") {
+  //         console.log("🔻 App is minimized or backgrounded");
+  //         callbacks.onHide?.();
+  //       } else if (nextState === "active") {
+  //         console.log("✅ App is in foreground");
+  //         callbacks.onShow?.();
+  //       } else if (nextState === "inactive") {
+  //         console.log("⚠️ App is inactive (screen locked or transitioning)");
+  //       }
+  //       setAppState(nextState);
+  //     });
+
+  //     return () => subscription.remove();
+  //   }
+  // }, []);
+
   const handleIsRead = useCallback(() => {
     if (!socketMethods || !chatDetails?.data) return;
-    
+
     socketMethods.emit("is_read", {
       receiverId: decodedToken.userId,
       roomId: activeRoomId ?? roomId,
-      senderId: userTypeValue() !== "SELLER"
-        ? chatDetails.data.createdBy
-        : chatDetails.data.recieverId,
+      senderId:
+        userTypeValue() !== "SELLER"
+          ? chatDetails.data.createdBy
+          : chatDetails.data.recieverId,
     });
   }, [socketMethods, chatDetails, activeRoomId, roomId, decodedToken]);
 
@@ -116,9 +178,10 @@ const ChatDetails = ({
     if (!socketMethods || !chatDetails?.data) return;
 
     socketMethods.emit("block", {
-      receiverId: userTypeValue() === "SELLER"
-        ? chatDetails.data.createdBy
-        : chatDetails.data.recieverId,
+      receiverId:
+        userTypeValue() === "SELLER"
+          ? chatDetails.data.createdBy
+          : chatDetails.data.recieverId,
       senderId: decodedToken.userId,
       roomId: activeRoomId ?? roomId,
     });
@@ -142,7 +205,7 @@ const ChatDetails = ({
   };
 
   const handleKeyDown = (event) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
+    if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
       handleSendMessage();
     }
@@ -162,15 +225,15 @@ const ChatDetails = ({
     try {
       // Optimistic update
       const tempId = Date.now();
-      setAllChatList(prev => [
+      setAllChatList((prev) => [
         ...prev,
         {
           ...messageData,
           id: tempId,
           senderId: decodedToken.userId,
           senderType: userTypeValue(),
-          createdAt: new Date().toISOString()
-        }
+          createdAt: new Date().toISOString(),
+        },
       ]);
 
       const response = await sendMessage({
@@ -181,9 +244,10 @@ const ChatDetails = ({
       if (response?.data) {
         if (socketMethods) {
           socketMethods.emit("send_message", {
-            receiverId: userTypeValue() === "SELLER"
-              ? chatDetails?.data?.createdBy
-              : chatDetails?.data?.recieverId,
+            receiverId:
+              userTypeValue() === "SELLER"
+                ? chatDetails?.data?.createdBy
+                : chatDetails?.data?.recieverId,
             senderId: decodedToken.userId,
             roomId: activeRoomId ?? roomId,
             messageData: { ...messageData, ...response?.data?.data?.socket },
@@ -195,13 +259,13 @@ const ChatDetails = ({
       console.error("Failed to send message:", error);
       toast.error("Failed to send message");
       // Revert optimistic update on error
-      setAllChatList(prev => prev.filter(msg => msg.id !== tempId));
+      setAllChatList((prev) => prev.filter((msg) => msg.id !== tempId));
     }
   };
 
   const formatCreatedAt = (createdAt) => {
     if (!createdAt) return "";
-    
+
     const date = new Date(createdAt);
     const now = new Date();
 
@@ -229,11 +293,16 @@ const ChatDetails = ({
   };
 
   const renderMessageStatus = (isRead) => (
-    <img src={isRead ? chatBlueTick : chatGreyTick} alt={isRead ? "Read" : "Unread"} />
+    <img
+      src={isRead ? chatBlueTick : chatGreyTick}
+      alt={isRead ? "Read" : "Unread"}
+    />
   );
 
-  if (isLoading) return <div className="chat-details loading">Loading chat...</div>;
-  if (error) return <div className="chat-details error">Error loading chat</div>;
+  if (isLoading)
+    return <div className="chat-details loading">Loading chat...</div>;
+  if (error)
+    return <div className="chat-details error">Error loading chat</div>;
 
   return (
     <div
@@ -242,7 +311,12 @@ const ChatDetails = ({
       id="chat-details-visible"
     >
       <div className="header">
-        <img src={backIcon} alt="Back" className="back-icon" onClick={handleBack} />
+        <img
+          src={backIcon}
+          alt="Back"
+          className="back-icon"
+          onClick={handleBack}
+        />
         <div className="current-user">
           <div className="user-default">
             <img src={chatUser1} alt="User" />
@@ -276,11 +350,14 @@ const ChatDetails = ({
           allChatList.map((msg) => (
             <div
               key={msg.id}
-              className={`message ${msg.senderId === decodedToken.userId ? "right" : "left"}`}
+              className={`message ${
+                msg.senderId === decodedToken.userId ? "right" : "left"
+              }`}
             >
               <p className="message-content">{msg.message}</p>
               <div className="message-timestamp">
-                {msg.senderId === decodedToken.userId && renderMessageStatus(msg.isRead)}
+                {msg.senderId === decodedToken.userId &&
+                  renderMessageStatus(msg.isRead)}
                 <span>{formatCreatedAt(msg.createdAt)}</span>
               </div>
             </div>
