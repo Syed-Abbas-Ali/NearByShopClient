@@ -2,6 +2,6 @@
 import { io } from "socket.io-client";
 import { accessTokenValue } from "./authenticationToken";
 
-export default io(import.meta.env.VITE_AUTH_URL, {
+export default io("https://www.waytoshops.com/api", {
   auth: { token: accessTokenValue() },
 });

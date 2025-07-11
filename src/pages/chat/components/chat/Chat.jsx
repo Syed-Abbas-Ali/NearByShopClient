@@ -16,6 +16,7 @@ import {
   accessTokenValue,
   userTypeValue,
 } from "../../../../utils/authenticationToken";
+import socket from "../../../../utils/socketIo";
 
 function formatCreatedAt(createdAt) {
   const date = new Date(createdAt);
@@ -86,30 +87,55 @@ const Chat = ({ activeRoomId, setActiveRoomId }) => {
       setActiveRoomId(roomId);
     }
   }, [chatList]);
-    const formatCreatedAt = (createdAt) => {
-      console.log(createdAt)
-  const date = new Date(createdAt);
-  const now = new Date();
+  const formatCreatedAt = (createdAt) => {
+    console.log(createdAt);
+    const date = new Date(createdAt);
+    const now = new Date();
 
-  const isToday = date.toDateString() === now.toDateString();
-  if (isToday) {
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  }
+    const isToday = date.toDateString() === now.toDateString();
+    if (isToday) {
+      return date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
 
-  const startOfWeek = new Date(now);
-  startOfWeek.setDate(now.getDate() - now.getDay());
-  startOfWeek.setHours(0, 0, 0, 0);
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - now.getDay());
+    startOfWeek.setHours(0, 0, 0, 0);
 
-  const endOfWeek = new Date(now);
-  endOfWeek.setDate(now.getDate() + (6 - now.getDay()));
-  endOfWeek.setHours(23, 59, 59, 999);
+    const endOfWeek = new Date(now);
+    endOfWeek.setDate(now.getDate() + (6 - now.getDay()));
+    endOfWeek.setHours(23, 59, 59, 999);
 
-  if (date >= startOfWeek && date <= endOfWeek) {
-    return date.toLocaleDateString('en-US', { weekday: 'short' }); // e.g., Mon, Wed
-  }
+    if (date >= startOfWeek && date <= endOfWeek) {
+      return date.toLocaleDateString("en-US", { weekday: "short" }); // e.g., Mon, Wed
+    }
 
-  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-};
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  };
+
+  // const { roomId, isChatActive } = useSelector((state) => state.chatState);
+  // const location = useLocation();
+
+  useEffect(() => {
+    const handleConnectionPort = () => {
+      const token = accessTokenValue();
+      if (!token) {
+        return null;
+      }
+      const decodedToken = jwtDecode(token);
+
+      socket.emit("connect_socket", {
+        userId: decodedToken?.userId || "",
+        roomId: "",
+      });
+    };
+
+    if (socket && location) {
+      handleConnectionPort();
+    }
+  }, [socket, roomId, location, currentUserType]);
 
   return (
     <>
@@ -150,8 +176,9 @@ const Chat = ({ activeRoomId, setActiveRoomId }) => {
                 {chatList?.data?.map((user, index) => {
                   return (
                     <div
-                      className={`user ${user.roomId === activeRoomId ? "selected-user-bg" : ""
-                        }`}
+                      className={`user ${
+                        user.roomId === activeRoomId ? "selected-user-bg" : ""
+                      }`}
                       key={index}
                       onClick={() => handleSingleChat(user)}
                     >
@@ -166,11 +193,10 @@ const Chat = ({ activeRoomId, setActiveRoomId }) => {
                                 ? user?.shopName.slice(0, 20) + ".."
                                 : user?.shopName
                               : user?.customerName?.length > 20
-                                ? user?.customerName.slice(0, 20) + ".."
-                                : user?.customerName}
-
+                              ? user?.customerName.slice(0, 20) + ".."
+                              : user?.customerName}
                           </h3>
-                              
+
                           <p>{formatCreatedAt(user?.lastMessage?.createdAt)}</p>
                         </div>
                         <p className="tick-message">
@@ -182,7 +208,9 @@ const Chat = ({ activeRoomId, setActiveRoomId }) => {
                             }
                             alt="tick"
                           />
-                          {user?.lastMessage?.message?.length>30 ? user?.lastMessage?.message?.slice(0,30)+"..":user?.lastMessage?.message }
+                          {user?.lastMessage?.message?.length > 30
+                            ? user?.lastMessage?.message?.slice(0, 30) + ".."
+                            : user?.lastMessage?.message}
                         </p>
                       </div>
                     </div>
