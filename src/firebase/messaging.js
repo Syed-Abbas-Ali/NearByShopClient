@@ -32,7 +32,7 @@ export const onForegroundMessage = (callback) => {
 export const sendTokenToServer = async (token) => {
   console.log(accessTokenValue())
   try {
-    const response = await fetch('https://www.waytoshops.com/api/api/v1/global/notification/save-token', {
+    const response = await fetch(`https://api.waytoshops.com/api/v1/global/notification/save-token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
