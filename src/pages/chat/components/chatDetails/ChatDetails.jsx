@@ -24,17 +24,14 @@ import {
   accessTokenValue,
   userTypeValue,
 } from "../../../../utils/authenticationToken";
-import SocketContext from "../../../../context/socketContext";
 import { useSelector } from "react-redux";
+import { useChat } from "../../../../context/socketContext";
 // import { AppState, Platform } from "react-native";
 
 const ChatDetails = ({
   chatToggle,
-  setChatToggle,
-  activeRoomId,
-  currentUserType,
+  setChatToggle
 }) => {
-  const socketMethods = useContext(SocketContext);
   const { roomId } = useSelector((state) => state.chatState);
   const token = accessTokenValue();
   const decodedToken = jwtDecode(token);
@@ -42,20 +39,22 @@ const ChatDetails = ({
   const [inputValue, setInputValue] = useState("");
   const chatBoxRef = useRef(null);
   const emojiPickerRef = useRef(null);
-
+  const { messages, sendMessage } = useChat();
+  useEffect(() => {
+    console.log(messages);
+  }, [messages]);
   const {
     data: chatDetails,
     refetch,
     isLoading,
     error,
-  } = useGetSingleChatQuery(activeRoomId || roomId, {
-    skip: !activeRoomId && !roomId,
+  } = useGetSingleChatQuery(roomId, {
+    skip:!roomId,
   });
 
-  const [sendMessage] = useSendMessageMutation();
+  const [sendMessageMutation] = useSendMessageMutation();
   const [allChatList, setAllChatList] = useState([]);
-  console.log(navigator.userAgent
-)
+  console.log(navigator.userAgent);
   // Auto-scroll to bottom when messages change
   useEffect(() => {
     if (chatBoxRef.current) {
@@ -77,116 +76,11 @@ const ChatDetails = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Update chat list when data changes
   useEffect(() => {
-    if (chatDetails?.data?.messages) {
-      setAllChatList(chatDetails.data.messages);
-      handleIsRead();
+    if (chatDetails?.data) {
+      setAllChatList(chatDetails?.data?.messages);
     }
   }, [chatDetails]);
-
-  // Socket event handlers
-  useEffect(() => {
-    if (!socketMethods) return;
-
-    const handleReceiveMessage = (data) => {
-      setAllChatList((prev) => [
-        ...prev,
-        {
-          ...data.messageData,
-          senderType: currentUserType === "seller" ? "USER" : "SELLER",
-          senderId: allChatList[0]?.senderId,
-          createdAt: new Date().toISOString(),
-        },
-      ]);
-      handleIsRead();
-    };
-
-    const handleIsReadEvent = () => refetch();
-
-    socketMethods.on("receive_message", handleReceiveMessage);
-    socketMethods.on("is_read", handleIsReadEvent);
-
-    return () => {
-      socketMethods.off("receive_message", handleReceiveMessage);
-      socketMethods.off("is_read", handleIsReadEvent);
-    };
-  }, [socketMethods, currentUserType, allChatList]);
-
-  // import { useEffect, useState } from "react";
-
-  // useEffect(() => {
-  //   const token = accessTokenValue();
-  //   const decodedToken = jwtDecode(token);
-  //   if (Platform.OS === "web") {
-  //     const handleVisibilityChange = () => {
-  //       if (document.visibilityState === "hidden") {
-  //         socketMethods.emit("offline", {
-  //           userId: decodedToken?.userId || "",
-  //           roomId: activeRoomId ?? "",
-  //         });
-  //         console.log("🔻 Browser tab is hidden or minimized");
-  //         callbacks.onHide?.();
-  //         // setAppState("hidden");
-  //       } else if (document.visibilityState === "visible") {
-  //         console.log("✅ Browser tab is visible again");
-  //         callbacks.onShow?.();
-  //         // setAppState("visible");
-  //       }
-  //     };
-
-  //     document.addEventListener("visibilitychange", handleVisibilityChange);
-
-  //     return () => {
-  //       document.removeEventListener(
-  //         "visibilitychange",
-  //         handleVisibilityChange
-  //       );
-  //     };
-  //   } else {
-  //     const subscription = AppState.addEventListener("change", (nextState) => {
-  //       if (nextState === "background") {
-  //         console.log("🔻 App is minimized or backgrounded");
-  //         callbacks.onHide?.();
-  //       } else if (nextState === "active") {
-  //         console.log("✅ App is in foreground");
-  //         callbacks.onShow?.();
-  //       } else if (nextState === "inactive") {
-  //         console.log("⚠️ App is inactive (screen locked or transitioning)");
-  //       }
-  //       setAppState(nextState);
-  //     });
-
-  //     return () => subscription.remove();
-  //   }
-  // }, []);
-
-  const handleIsRead = useCallback(() => {
-    if (!socketMethods || !chatDetails?.data) return;
-
-    socketMethods.emit("is_read", {
-      receiverId: decodedToken.userId,
-      roomId: activeRoomId ?? roomId,
-      senderId:
-        userTypeValue() !== "SELLER"
-          ? chatDetails.data.createdBy
-          : chatDetails.data.recieverId,
-    });
-  }, [socketMethods, chatDetails, activeRoomId, roomId, decodedToken]);
-
-  const handleIsBlock = useCallback(() => {
-    if (!socketMethods || !chatDetails?.data) return;
-
-    socketMethods.emit("block", {
-      receiverId:
-        userTypeValue() === "SELLER"
-          ? chatDetails.data.createdBy
-          : chatDetails.data.recieverId,
-      senderId: decodedToken.userId,
-      roomId: activeRoomId ?? roomId,
-    });
-    refetch();
-  }, [socketMethods, chatDetails, activeRoomId, roomId, decodedToken]);
 
   const handleBack = () => {
     setChatToggle((prev) => !prev);
@@ -224,36 +118,32 @@ const ChatDetails = ({
 
     try {
       // Optimistic update
-      const tempId = Date.now();
-      setAllChatList((prev) => [
-        ...prev,
-        {
-          ...messageData,
-          id: tempId,
-          senderId: decodedToken.userId,
-          senderType: userTypeValue(),
-          createdAt: new Date().toISOString(),
-        },
-      ]);
+      // const tempId = Date.now();
+      // setAllChatList((prev) => [
+      //   ...prev,
+      //   {
+      //     ...messageData,
+      //     id: tempId,
+      //     senderId: decodedToken.userId,
+      //     senderType: userTypeValue(),
+      //     createdAt: new Date().toISOString(),
+      //   },
+      // ]);
 
-      const response = await sendMessage({
-        roomId: activeRoomId ?? roomId,
+      const response = await sendMessageMutation({
+        roomId: roomId??"",
         data: messageData,
       });
 
       if (response?.data) {
-        if (socketMethods) {
-          socketMethods.emit("send_message", {
-            receiverId:
-              userTypeValue() === "SELLER"
-                ? chatDetails?.data?.createdBy
-                : chatDetails?.data?.recieverId,
-            senderId: decodedToken.userId,
-            roomId: activeRoomId ?? roomId,
-            messageData: { ...messageData, ...response?.data?.data?.socket },
-          });
-          setInputValue("");
-        }
+        await sendMessage(
+          { ...messageData, ...response?.data?.data?.socket },
+          roomId,
+          userTypeValue() === "SELLER"
+            ? chatDetails?.data?.createdBy
+            : chatDetails?.data?.recieverId,
+          decodedToken.userId
+        );
       }
     } catch (error) {
       console.error("Failed to send message:", error);
@@ -337,9 +227,7 @@ const ChatDetails = ({
         {chatDetails?.data?.blockedBy ? (
           <div className="blocked-label">Blocked</div>
         ) : (
-          <button className="block" onClick={handleIsBlock}>
-            Block
-          </button>
+          <button className="block">Block</button>
         )}
       </div>
 
@@ -347,7 +235,7 @@ const ChatDetails = ({
         {allChatList.length === 0 ? (
           <div className="no-messages">No messages yet</div>
         ) : (
-          allChatList.map((msg) => (
+          [...allChatList, ...messages].map((msg) => (
             <div
               key={msg.id}
               className={`message ${

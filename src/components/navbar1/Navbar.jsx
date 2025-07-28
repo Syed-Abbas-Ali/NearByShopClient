@@ -14,13 +14,12 @@ import {
   accessTokenValue,
   userTypeValue,
 } from "../../utils/authenticationToken";
-import SocketContext from "../../context/socketContext";
 import toast from "react-hot-toast";
 import {
-  useGetNotificationListQuery,
+  // useGetNotificationListQuery,
   useSetIsReadMutation,
 } from "../../apis&state/apis/chat";
-import NotificationCard from "./components/notification/NotificationCard";
+// import NotificationCard from "./components/notification/NotificationCard";
 // import Chat from "./components/chat/Chat";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleChatActive } from "../../apis&state/state/chatState";
@@ -68,18 +67,13 @@ const desktopNavbarLinks = [
 
 const Navbar = () => {
   let token = accessTokenValue();
-  const socketMethods = useContext(SocketContext);
   const { roomId } = useSelector(state => state.chatState)
   const navigate = useNavigate();
   const dispatch = useDispatch()
 
   const { pathname } = useLocation();
-  const [notificationActive, setNotificationActive] = useState(false);
-  const [chatActive, setChatActive] = useState(false);
-  const [totalNotification, setTotalNotification] = useState();
-  const [activeRoomId, setActiveRoomId] = useState(null);
 
-  const { data: notificationList } = useGetNotificationListQuery();
+  // const { data: notificationList } = useGetNotificationListQuery();
   const [handleIsReadMutation] = useSetIsReadMutation();
   const handleMobileNav = (pathName) => {
     navigate(pathName);
@@ -105,40 +99,6 @@ const Navbar = () => {
     navigate("/");
   };
 
-  const handleLogin = async (id) => {
-    try {
-      const response = await handleIsReadMutation(id);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const handleLoginActive = () => {
-    navigate("/login");
-  };
-
-  const handleChatActive = () => {
-    if (!token) {
-      navigate("/login");
-    } else {
-      dispatch(toggleChatActive());
-    }
-  };
-
-  useEffect(() => {
-    if (notificationList) {
-      setTotalNotification(notificationList?.data);
-    }
-  }, [notificationList]);
-  useEffect(() => {
-    if (!socketMethods) return;
-    socketMethods.on("notification", (data) => {
-      setTotalNotification((prev) => [...prev, data]);
-      toast.success("new notification");
-    });
-    return () => {
-      socketMethods.off("notification");
-    };
-  }, [socketMethods]);
   return (
     <>
       <header className="mobile-navbar">

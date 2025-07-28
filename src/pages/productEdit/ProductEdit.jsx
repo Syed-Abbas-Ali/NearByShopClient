@@ -14,7 +14,6 @@ import cancelIcon from "../../assets/cancelIconRed.svg";
 import productUpload from "../../assets/productUpload.svg";
 import uploadDefaultImage from "../../assets/uploadDefaultImage.svg";
 import Selector from "../../components/selector/Selector";
-import SocketContext from "../../context/socketContext.js";
 import { accessTokenValue } from "../../utils/authenticationToken";
 import { productValidationSchema } from "../../utils/validations.js";
 import "./productEdit.scss";
@@ -41,7 +40,6 @@ const childImagesList = [
 const ProductEdit = () => {
   const value = useParams();
   const navigate = useNavigate();
-  const socketMethods = useContext(SocketContext);
 
   const [errors, setErrors] = useState({});
 
@@ -77,18 +75,6 @@ const ProductEdit = () => {
     }
   }, [categories]);
 
-  useEffect(() => {
-    const handleConnectionPort = () => {
-      socketMethods.emit("connect_socket", {
-        userId: decodedToken?.userId || "",
-        roomId: null,
-      });
-    };
-
-    if (socketMethods) {
-      handleConnectionPort();
-    }
-  }, [socketMethods]);
 
   useEffect(() => {
     if (categoryData?.categoryName) {
@@ -320,10 +306,7 @@ const ProductEdit = () => {
       });
       if (response?.data) {
         toast.success("Product added!");
-        // socketMethods.emit("send_notification", {
-        //   roomId: null,
-        //   ...response.data?.data,
-        // });
+        
         navigate(
           `/product-edit/${value?.shopUid.split("&")[0]}&${
             response?.data?.data?.messageData?.item_uid

@@ -6,19 +6,19 @@ import { Provider } from "react-redux";
 import store from "./store/store.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "antd/dist/reset.css"; // Import Ant Design styles
-import SocketContext from "./context/socketContext.js";
+import {ChatProvider} from "./context/socketContext.jsx";
 
 import { BrowserRouter } from "react-router-dom";
-import  socket  from "./utils/socketIo.js";
+// import  socket  from "./utils/socketIo.js";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
-      <SocketContext.Provider value={socket}>
+      <ChatProvider>
         <BrowserRouter>
           <App />
         </BrowserRouter>
-      </SocketContext.Provider>
+      </ChatProvider>
     </Provider>
   </StrictMode>
 );

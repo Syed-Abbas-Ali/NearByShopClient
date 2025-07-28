@@ -33,7 +33,8 @@ messaging.onBackgroundMessage((payload) => {
 
   const notification = payload.notification || {};
   const data = payload.data || {};
-
+  console.log("msggggg");
+  console.log(payload?.data?.roomId);
   const title = notification.title || data.title || "New Notification";
   const body = notification.body || data.body || "";
   const icon = notification.icon || data.icon;
@@ -80,7 +81,9 @@ self.addEventListener("notificationclick", function (event) {
 
   event.notification.close();
 
-  const targetUrl = "https://waytoshops.com/chats";
+  const targetUrl = payload?.data?.roomId
+    ? `https://waytoshops.com/chat${payload?.data?.roomId}`
+    : "https://waytoshops.com/chat";
   // const targetUrl = event.notification.data?.url ||'https://waytoshops.com/login';
 
   if (event.action === "open-chat" || !event.action) {

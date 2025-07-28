@@ -62,7 +62,7 @@ import UserLocationSelect from "./components/commonComponents/userLocationSelect
 import GlobalFilters from "./components/commonComponents/globalFilters/GlobalFilters";
 import UserLocationDetails from "./components/commonComponents/userLocationDetails/UserLocationDetails";
 import UserLocationMapComponent from "./components/commonComponents/userLocationMapComponent/UserLocationMapComponent";
-import socket from "./utils/socketIo";
+// import socket from "./utils/socketIo";
 import { accessTokenValue } from "./utils/authenticationToken";
 import { jwtDecode } from "jwt-decode";
 import AuthenticationRoutes from "./protectedRoutes/AuthenticationRoutes";
@@ -70,16 +70,7 @@ import ProtectedRoute from "./protectedRoutes/ProtectedRoutes";
 import { setRoomChat } from "./apis&state/state/chatState";
 import NotificationBanner from "./firebase/NotificationBanner";
 import { onForegroundMessage } from "./firebase/messaging";
-
-const needNotChatBot = [
-  "/signup",
-  "/login",
-  "/forgot-password",
-  "/change-password",
-  "/update-password",
-  "/otp",
-  "/thankyou",
-];
+import socketService from "./context/socket.service";
 
 const protectionPages = [
   { path: "/sub-home", element: <SubHomePage /> },
@@ -149,24 +140,44 @@ const App = () => {
   const { roomId, isChatActive } = useSelector((state) => state.chatState);
   const location = useLocation();
 
+  // useEffect(() => {
+  //   const handleConnectionPort = () => {
+  //     const token = accessTokenValue();
+  //     if (!token) {
+  //       return null;
+  //     }
+  //     const decodedToken = jwtDecode(token);
+
+  //     socket.emit("connect_socket", {
+  //       userId: decodedToken?.userId || "",
+  //       roomId: roomId ?? "",
+  //     });
+  //   };
+
+  //   if (socket && location && location?.pathname?.includes != "chat") {
+  //     handleConnectionPort();
+  //   }
+  // }, [socket, roomId, location]);
+
+  const handleConnectionPort = () => {
+    const token = accessTokenValue();
+    if (!token) return null;
+    const decodedToken = jwtDecode(token);
+    return decodedToken?.userId;
+  };
+
+  let userId = handleConnectionPort();
+
   useEffect(() => {
-    const handleConnectionPort = () => {
-      const token = accessTokenValue();
-      if (!token) {
-        return null;
-      }
-      const decodedToken = jwtDecode(token);
-
-      socket.emit("connect_socket", {
-        userId: decodedToken?.userId || "",
-        roomId: roomId ?? "",
-      });
+    if (!userId) return;
+    socketService.connect();
+    socketService.setOnline();
+    socketService.joinRoom(location?.pathname == "/chat" ? roomId : "");
+    return () => {
+      socketService.setOffline(userId);
+      socketService.disconnect();
     };
-
-    if (socket && location && location?.pathname?.includes != "chat") {
-      handleConnectionPort();
-    }
-  }, [socket, roomId, location]);
+  }, [userId, roomId, location]);
 
   useEffect(() => {
     clearInterval();
