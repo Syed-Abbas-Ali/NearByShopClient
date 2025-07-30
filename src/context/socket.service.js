@@ -99,6 +99,25 @@ class SocketService {
   }
 
   // Status methods
+  setIsBlock(data) {
+    console.log(data)
+    this.socket.emit("block", { ...data });
+  }
+  setIsBlockEvent(callback) {
+    this.socket.on("block", callback);
+  }
+  setIsBlockOff() {
+    this.socket.off("block");
+  }
+  setIsRead(data) {
+    this.socket.emit("is_read", { data });
+  }
+  setIsReadEvent(callback) {
+    this.socket.on("is_read",callback);
+  }
+  setIsReadEventOff() {
+    this.socket.off("is_read");
+  }
   setOnline() {
     let userId = handleConnectionPort();
     this.socket.emit("online", { userId });

@@ -3,24 +3,24 @@ import { jwtDecode } from "jwt-decode";
 
 export const accessTokenValue = () => {
   return (
-    JSON.parse(sessionStorage.getItem("user"))?.accessToken ??
-    JSON.parse(sessionStorage.getItem("user")) ??
+    JSON.parse(localStorage.getItem("user"))?.accessToken ??
+    JSON.parse(localStorage.getItem("user")) ??
     null
   );
 };
 
 export const userTypeValue = () => {
-  if (sessionStorage.getItem("user")) {
+  if (localStorage.getItem("user")) {
     const decoded = jwtDecode(
-      JSON.parse(sessionStorage.getItem("user"))?.accessToken ??
-        JSON.parse(sessionStorage.getItem("user"))
+      JSON.parse(localStorage.getItem("user"))?.accessToken ??
+        JSON.parse(localStorage.getItem("user"))
     );
     return decoded?.role
   }else{
     return null
   }
   // return
-  //   ? JSON.parse(sessionStorage.getItem("user"))?.role
+  //   ? JSON.parse(localStorage.getItem("user"))?.role
   //   : "USER";
 };
 

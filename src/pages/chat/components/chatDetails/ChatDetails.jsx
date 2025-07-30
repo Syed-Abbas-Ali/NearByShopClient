@@ -24,37 +24,39 @@ import {
   accessTokenValue,
   userTypeValue,
 } from "../../../../utils/authenticationToken";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useChat } from "../../../../context/socketContext";
+import { useLocation } from "react-router-dom";
+import socketService from "../../../../context/socket.service";
+import { setRoomChat } from "../../../../apis&state/state/chatState";
+import { debounce } from "lodash";
 // import { AppState, Platform } from "react-native";
 
-const ChatDetails = ({
-  chatToggle,
-  setChatToggle
-}) => {
+const ChatDetails = ({ chatToggle, setChatToggle }) => {
+  const location = useLocation();
+  const dispatch = useDispatch();
   const { roomId } = useSelector((state) => state.chatState);
   const token = accessTokenValue();
   const decodedToken = jwtDecode(token);
+  const [currentRoomId, setCurrentRoomId] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const chatBoxRef = useRef(null);
   const emojiPickerRef = useRef(null);
+  const [isReadCalled, setIsReadCalled] = useState(false);
   const { messages, sendMessage } = useChat();
-  useEffect(() => {
-    console.log(messages);
-  }, [messages]);
   const {
     data: chatDetails,
     refetch,
     isLoading,
     error,
+    isFetching,
   } = useGetSingleChatQuery(roomId, {
-    skip:!roomId,
+    skip: !roomId,
   });
 
   const [sendMessageMutation] = useSendMessageMutation();
   const [allChatList, setAllChatList] = useState([]);
-  console.log(navigator.userAgent);
   // Auto-scroll to bottom when messages change
   useEffect(() => {
     if (chatBoxRef.current) {
@@ -77,10 +79,11 @@ const ChatDetails = ({
   }, []);
 
   useEffect(() => {
-    if (chatDetails?.data) {
-      setAllChatList(chatDetails?.data?.messages);
+    if (location?.search > 5) {
+      let rid = location?.search?.splice(0, 1);
+      dispatch(setRoomChat(rid));
     }
-  }, [chatDetails]);
+  }, []);
 
   const handleBack = () => {
     setChatToggle((prev) => !prev);
@@ -105,33 +108,20 @@ const ChatDetails = ({
     }
   };
 
-  const handleSendMessage = async () => {
-    if (!inputValue.trim()) {
+  const handleSendMessage = async (text) => {
+    if (!inputValue.trim() && !text) {
       toast.error("Empty message can't be sent!");
       return;
     }
 
     const messageData = {
       isRead: false,
-      message: inputValue,
+      message: text ?? inputValue,
     };
 
     try {
-      // Optimistic update
-      // const tempId = Date.now();
-      // setAllChatList((prev) => [
-      //   ...prev,
-      //   {
-      //     ...messageData,
-      //     id: tempId,
-      //     senderId: decodedToken.userId,
-      //     senderType: userTypeValue(),
-      //     createdAt: new Date().toISOString(),
-      //   },
-      // ]);
-
       const response = await sendMessageMutation({
-        roomId: roomId??"",
+        roomId: roomId ?? "",
         data: messageData,
       });
 
@@ -140,8 +130,8 @@ const ChatDetails = ({
           { ...messageData, ...response?.data?.data?.socket },
           roomId,
           userTypeValue() === "SELLER"
-            ? chatDetails?.data?.createdBy
-            : chatDetails?.data?.recieverId,
+            ? currentRoomId?.createdBy
+            : currentRoomId?.recieverId,
           decodedToken.userId
         );
       }
@@ -152,6 +142,75 @@ const ChatDetails = ({
       setAllChatList((prev) => prev.filter((msg) => msg.id !== tempId));
     }
   };
+
+  const handleIsRead = async () => {
+    socketService.setIsRead({
+      receiverId: decodedToken.userId,
+      senderType: userTypeValue() !== "SELLER" ? "createdBy" : "recieverId",
+    });
+  };
+
+  const handleIsBlock = () => {
+    if (!socketService || !chatDetails?.data) return;
+
+    socketService.setIsBlock({
+      receiverId:
+        userTypeValue() === "SELLER"
+          ? chatDetails.data.createdBy
+          : chatDetails.data.recieverId,
+      senderId: decodedToken.userId,
+      roomId: roomId,
+    });
+    setTimeout(async() => {
+      await handleSendMessage("blocked")
+      refetch();
+    }, 500);
+  };
+
+  const handleIsReadDeBounce = debounce(async () => {
+    await handleIsRead();
+    refetch();
+  }, 500); // 300ms delay (adjust as needed)
+
+  const handleIsReadDeBounceCall = (p) => {
+    if (p == false) {
+      handleIsReadDeBounce();
+    }
+  };
+  useEffect(() => {
+    socketService.onReceiveMessage(async (message) => {
+      setAllChatList((prev) => [...prev, message.messageData]);
+      await handleIsRead();
+    });
+
+    return () => {
+      socketService.offReceiveMessage();
+    };
+  }, [socketService]);
+
+  useEffect(() => {
+    const handleIsReadEvent = () => refetch();
+    socketService.setIsReadEvent(handleIsReadEvent);
+    return () => {
+      socketService.setIsReadEventOff();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (roomId?.length > 5 && chatDetails?.data) {
+      handleIsRead();
+    }
+  }, [roomId]);
+  useEffect(() => {
+    if (chatDetails?.data) {
+      setAllChatList(chatDetails?.data?.messages);
+      setCurrentRoomId(chatDetails?.data);
+      if (!isReadCalled) {
+        handleIsRead();
+        setIsReadCalled(true);
+      }
+    }
+  }, [chatDetails, isFetching]);
 
   const formatCreatedAt = (createdAt) => {
     if (!createdAt) return "";
@@ -227,7 +286,9 @@ const ChatDetails = ({
         {chatDetails?.data?.blockedBy ? (
           <div className="blocked-label">Blocked</div>
         ) : (
-          <button className="block">Block</button>
+          <button className="block" onClick={handleIsBlock}>
+            Block
+          </button>
         )}
       </div>
 
@@ -235,7 +296,7 @@ const ChatDetails = ({
         {allChatList.length === 0 ? (
           <div className="no-messages">No messages yet</div>
         ) : (
-          [...allChatList, ...messages].map((msg) => (
+          [...allChatList].map((msg) => (
             <div
               key={msg.id}
               className={`message ${
@@ -246,6 +307,8 @@ const ChatDetails = ({
               <div className="message-timestamp">
                 {msg.senderId === decodedToken.userId &&
                   renderMessageStatus(msg.isRead)}
+                {msg.senderId != decodedToken.userId &&
+                  handleIsReadDeBounceCall(msg.isRead)}
                 <span>{formatCreatedAt(msg.createdAt)}</span>
               </div>
             </div>

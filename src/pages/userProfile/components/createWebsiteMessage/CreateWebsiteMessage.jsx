@@ -11,7 +11,7 @@ const CreateWebsiteMessage = () => {
   };
   
    const handleLogout = () => {
-    sessionStorage.removeItem("user"); // Clear the access token
+    localStorage.removeItem("user"); // Clear the access token
     window.location.href = "/";
 
   };

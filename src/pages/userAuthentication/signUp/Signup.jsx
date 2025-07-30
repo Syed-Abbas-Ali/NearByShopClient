@@ -68,7 +68,7 @@ const handleSignup = async () => {
     if (response?.data) {
       // Successful API response
       toast.success("Successfully OTP sent");
-      sessionStorage.setItem(
+      localStorage.setItem(
         "user",
         JSON.stringify({
           role: "USER",

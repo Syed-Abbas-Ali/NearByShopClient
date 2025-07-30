@@ -95,6 +95,7 @@ export function ChatProvider({ children }) {
       roomId,
       receiverId,
       timestamp: new Date().toISOString(),
+      createdAt: new Date().toISOString(),
       senderId
     };
 
@@ -104,6 +105,7 @@ export function ChatProvider({ children }) {
       messageData: message,
       senderId
     });
+    console.log(message)
     setMessages((prev) => [...prev, {...message,message:message?.text?.message}]);
   };
 

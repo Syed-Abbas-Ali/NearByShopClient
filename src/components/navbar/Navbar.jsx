@@ -71,7 +71,7 @@ const Navbar = () => {
     if (value === "profile") {
       navigateTo = "/profile";
     } else if (value === "logout") {
-      sessionStorage.clear();
+      localStorage.clear();
       navigateTo = "/login";
     }
     navigate(navigateTo);

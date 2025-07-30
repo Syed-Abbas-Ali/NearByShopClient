@@ -31,7 +31,7 @@ const ShopCard = ({ id, singleShop, handleFollow }) => {
   
     useEffect(() => {
       try {
-        const storedLocation = sessionStorage.getItem('userLocation');
+        const storedLocation = localStorage.getItem('userLocation');
         if (storedLocation) {
           const userLocation = JSON.parse(storedLocation);
           setLatitude(userLocation?.coordinates?.latitude);

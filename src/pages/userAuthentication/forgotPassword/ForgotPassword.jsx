@@ -55,7 +55,7 @@ const ForgotPassword = () => {
       const response = await forgetPassword(emailData);
       if (response?.data) {
         toast.success("Successfully sent OTP!");
-        sessionStorage.setItem(
+        localStorage.setItem(
           "user",
           JSON.stringify({
             accessToken: response?.data?.data.accessToken,

@@ -48,12 +48,12 @@ const Login = () => {
 
    
       if(response?.error?.status==422){
-        sessionStorage.setItem("user", JSON.stringify(response?.error?.data?.data));
+        localStorage.setItem("user", JSON.stringify(response?.error?.data?.data));
         toast.error(response?.error?.data?.message)
         navigate("/otp");
       }
       if (response?.data) {
-        sessionStorage.setItem("user", JSON.stringify(response.data.data));
+        localStorage.setItem("user", JSON.stringify(response.data.data));
         dispatch(setLogin());
         navigate("/");
       } else if (response?.error) {
