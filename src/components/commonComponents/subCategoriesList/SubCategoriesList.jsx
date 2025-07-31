@@ -64,7 +64,7 @@ const SubCategoriesList = ({ categoryName , selectedCategories,handleSelect,sele
                   <div className="category-image" >
                     <img src={category.imageUrl} alt="" />
                   </div>
-                  <p>{category?.name}</p>
+                  <p style={selected?.name === category?.name ? { color: "#ff6f00", fontWeight: "bold" } : {}}>{category?.name}</p>
                 </div>
               );
             })}
