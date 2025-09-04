@@ -31,7 +31,7 @@ const Settings = () => {
     navigate(-1);
   };
   const handleLogout = () => {
-    sessionStorage.clear();
+    localStorage.clear();
     navigate("/login");
   };
   return (

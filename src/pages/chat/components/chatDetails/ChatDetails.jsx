@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useRef, useState, useCallback } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+} from "react";
 import "./chatDetails.scss";
 import backIcon from "../../../../assets/arrowLeftLarge.svg";
 import messageSendIcon from "../../../../assets/messageSendIcon.svg";
@@ -18,34 +24,39 @@ import {
   accessTokenValue,
   userTypeValue,
 } from "../../../../utils/authenticationToken";
-import SocketContext from "../../../../context/socketContext";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useChat } from "../../../../context/socketContext";
+import { useLocation } from "react-router-dom";
+import socketService from "../../../../context/socket.service";
+import { setRoomChat } from "../../../../apis&state/state/chatState";
+import { debounce } from "lodash";
+// import { AppState, Platform } from "react-native";
 
-const ChatDetails = ({
-  chatToggle,
-  setChatToggle,
-  activeRoomId,
-  currentUserType,
-}) => {
-  const socketMethods = useContext(SocketContext);
+const ChatDetails = ({ chatToggle, setChatToggle }) => {
+  const location = useLocation();
+  const dispatch = useDispatch();
   const { roomId } = useSelector((state) => state.chatState);
   const token = accessTokenValue();
   const decodedToken = jwtDecode(token);
+  const [currentRoomId, setCurrentRoomId] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const chatBoxRef = useRef(null);
   const emojiPickerRef = useRef(null);
+  const [isReadCalled, setIsReadCalled] = useState(false);
+  const { messages, sendMessage } = useChat();
+  const {
+    data: chatDetails,
+    refetch,
+    isLoading,
+    error,
+    isFetching,
+  } = useGetSingleChatQuery(roomId, {
+    skip: !roomId,
+  });
 
-  const { data: chatDetails, refetch, isLoading, error } = useGetSingleChatQuery(
-    activeRoomId || roomId,
-    {
-      skip: !activeRoomId && !roomId,
-    }
-  );
-
-  const [sendMessage] = useSendMessageMutation();
+  const [sendMessageMutation] = useSendMessageMutation();
   const [allChatList, setAllChatList] = useState([]);
-
   // Auto-scroll to bottom when messages change
   useEffect(() => {
     if (chatBoxRef.current) {
@@ -56,7 +67,10 @@ const ChatDetails = ({
   // Handle click outside emoji picker
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target)) {
+      if (
+        emojiPickerRef.current &&
+        !emojiPickerRef.current.contains(event.target)
+      ) {
         setShowEmojiPicker(false);
       }
     };
@@ -64,66 +78,12 @@ const ChatDetails = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Update chat list when data changes
   useEffect(() => {
-    if (chatDetails?.data?.messages) {
-      setAllChatList(chatDetails.data.messages);
-      handleIsRead();
+    if (location?.search > 5) {
+      let rid = location?.search?.splice(0, 1);
+      dispatch(setRoomChat(rid));
     }
-  }, [chatDetails]);
-
-  // Socket event handlers
-  useEffect(() => {
-    if (!socketMethods) return;
-
-    const handleReceiveMessage = (data) => {
-      setAllChatList((prev) => [
-        ...prev,
-        {
-          ...data.messageData,
-          senderType: currentUserType === "seller" ? "USER" : "SELLER",
-          senderId: allChatList[0]?.senderId,
-          createdAt: new Date().toISOString()
-        },
-      ]);
-      handleIsRead();
-    };
-
-    const handleIsReadEvent = () => refetch();
-
-    socketMethods.on("receive_message", handleReceiveMessage);
-    socketMethods.on("is_read", handleIsReadEvent);
-
-    return () => {
-      socketMethods.off("receive_message", handleReceiveMessage);
-      socketMethods.off("is_read", handleIsReadEvent);
-    };
-  }, [socketMethods, currentUserType, allChatList]);
-
-  const handleIsRead = useCallback(() => {
-    if (!socketMethods || !chatDetails?.data) return;
-    
-    socketMethods.emit("is_read", {
-      receiverId: decodedToken.userId,
-      roomId: activeRoomId ?? roomId,
-      senderId: userTypeValue() !== "SELLER"
-        ? chatDetails.data.createdBy
-        : chatDetails.data.recieverId,
-    });
-  }, [socketMethods, chatDetails, activeRoomId, roomId, decodedToken]);
-
-  const handleIsBlock = useCallback(() => {
-    if (!socketMethods || !chatDetails?.data) return;
-
-    socketMethods.emit("block", {
-      receiverId: userTypeValue() === "SELLER"
-        ? chatDetails.data.createdBy
-        : chatDetails.data.recieverId,
-      senderId: decodedToken.userId,
-      roomId: activeRoomId ?? roomId,
-    });
-    refetch();
-  }, [socketMethods, chatDetails, activeRoomId, roomId, decodedToken]);
+  }, []);
 
   const handleBack = () => {
     setChatToggle((prev) => !prev);
@@ -142,66 +102,119 @@ const ChatDetails = ({
   };
 
   const handleKeyDown = (event) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
+    if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
       handleSendMessage();
     }
   };
 
-  const handleSendMessage = async () => {
-    if (!inputValue.trim()) {
+  const handleSendMessage = async (text) => {
+    if (!inputValue.trim() && !text) {
       toast.error("Empty message can't be sent!");
       return;
     }
 
     const messageData = {
       isRead: false,
-      message: inputValue,
+      message: text ?? inputValue,
     };
 
     try {
-      // Optimistic update
-      const tempId = Date.now();
-      setAllChatList(prev => [
-        ...prev,
-        {
-          ...messageData,
-          id: tempId,
-          senderId: decodedToken.userId,
-          senderType: userTypeValue(),
-          createdAt: new Date().toISOString()
-        }
-      ]);
-
-      const response = await sendMessage({
-        roomId: activeRoomId ?? roomId,
+      const response = await sendMessageMutation({
+        roomId: roomId ?? "",
         data: messageData,
       });
 
       if (response?.data) {
-        if (socketMethods) {
-          socketMethods.emit("send_message", {
-            receiverId: userTypeValue() === "SELLER"
-              ? chatDetails?.data?.createdBy
-              : chatDetails?.data?.recieverId,
-            senderId: decodedToken.userId,
-            roomId: activeRoomId ?? roomId,
-            messageData: { ...messageData, ...response?.data?.data?.socket },
-          });
-          setInputValue("");
-        }
+        await sendMessage(
+          { ...messageData, ...response?.data?.data?.socket },
+          roomId,
+          userTypeValue() === "SELLER"
+            ? currentRoomId?.createdBy
+            : currentRoomId?.recieverId,
+          decodedToken.userId
+        );
       }
     } catch (error) {
       console.error("Failed to send message:", error);
       toast.error("Failed to send message");
       // Revert optimistic update on error
-      setAllChatList(prev => prev.filter(msg => msg.id !== tempId));
+      setAllChatList((prev) => prev.filter((msg) => msg.id !== tempId));
     }
   };
 
+  const handleIsRead = async () => {
+    socketService.setIsRead({
+      receiverId: decodedToken.userId,
+      senderType: userTypeValue() !== "SELLER" ? "createdBy" : "recieverId",
+    });
+  };
+
+  const handleIsBlock = () => {
+    if (!socketService || !chatDetails?.data) return;
+
+    socketService.setIsBlock({
+      receiverId:
+        userTypeValue() === "SELLER"
+          ? chatDetails.data.createdBy
+          : chatDetails.data.recieverId,
+      senderId: decodedToken.userId,
+      roomId: roomId,
+    });
+    setTimeout(async() => {
+      await handleSendMessage("blocked")
+      refetch();
+    }, 500);
+  };
+
+  const handleIsReadDeBounce = debounce(async () => {
+    await handleIsRead();
+    refetch();
+  }, 500); // 300ms delay (adjust as needed)
+
+  const handleIsReadDeBounceCall = (p) => {
+    if (p == false) {
+      handleIsReadDeBounce();
+    }
+  };
+  useEffect(() => {
+    socketService.onReceiveMessage(async (message) => {
+      setAllChatList((prev) => [...prev, message.messageData]);
+      await handleIsRead();
+    });
+
+    return () => {
+      socketService.offReceiveMessage();
+    };
+  }, [socketService]);
+
+  useEffect(() => {
+    const handleIsReadEvent = () => refetch();
+    socketService.setIsReadEvent(handleIsReadEvent);
+    return () => {
+      socketService.setIsReadEventOff();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (roomId?.length > 5 && chatDetails?.data) {
+      handleIsRead();
+    }
+  }, [roomId]);
+  useEffect(() => {
+    if (chatDetails?.data) {
+      setAllChatList(chatDetails?.data?.messages);
+      setCurrentRoomId(chatDetails?.data);
+      if (!isReadCalled) {
+        handleIsRead();
+        setIsReadCalled(true);
+      }
+    }
+  }, [chatDetails, isFetching]);
+
   const formatCreatedAt = (createdAt) => {
     if (!createdAt) return "";
-    
+
     const date = new Date(createdAt);
     const now = new Date();
 
@@ -229,11 +242,16 @@ const ChatDetails = ({
   };
 
   const renderMessageStatus = (isRead) => (
-    <img src={isRead ? chatBlueTick : chatGreyTick} alt={isRead ? "Read" : "Unread"} />
+    <img
+      src={isRead ? chatBlueTick : chatGreyTick}
+      alt={isRead ? "Read" : "Unread"}
+    />
   );
 
-  if (isLoading) return <div className="chat-details loading">Loading chat...</div>;
-  if (error) return <div className="chat-details error">Error loading chat</div>;
+  if (isLoading)
+    return <div className="chat-details loading">Loading chat...</div>;
+  if (error)
+    return <div className="chat-details error">Error loading chat</div>;
 
   return (
     <div
@@ -242,7 +260,12 @@ const ChatDetails = ({
       id="chat-details-visible"
     >
       <div className="header">
-        <img src={backIcon} alt="Back" className="back-icon" onClick={handleBack} />
+        <img
+          src={backIcon}
+          alt="Back"
+          className="back-icon"
+          onClick={handleBack}
+        />
         <div className="current-user">
           <div className="user-default">
             <img src={chatUser1} alt="User" />
@@ -273,14 +296,19 @@ const ChatDetails = ({
         {allChatList.length === 0 ? (
           <div className="no-messages">No messages yet</div>
         ) : (
-          allChatList.map((msg) => (
+          [...allChatList].map((msg) => (
             <div
               key={msg.id}
-              className={`message ${msg.senderId === decodedToken.userId ? "right" : "left"}`}
+              className={`message ${
+                msg.senderId === decodedToken.userId ? "right" : "left"
+              }`}
             >
               <p className="message-content">{msg.message}</p>
               <div className="message-timestamp">
-                {msg.senderId === decodedToken.userId && renderMessageStatus(msg.isRead)}
+                {msg.senderId === decodedToken.userId &&
+                  renderMessageStatus(msg.isRead)}
+                {msg.senderId != decodedToken.userId &&
+                  handleIsReadDeBounceCall(msg.isRead)}
                 <span>{formatCreatedAt(msg.createdAt)}</span>
               </div>
             </div>

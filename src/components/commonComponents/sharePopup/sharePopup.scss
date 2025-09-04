@@ -12,19 +12,23 @@
   align-items: center;
   top: 0px;
   left: 0px;
-  .details-card{
+  .details-card {
     width: 400px;
     background-color: $white-color;
     padding: 20px;
     border-radius: 12px;
-    @media screen and (max-width:768px) {
+    @media screen and (max-width: 768px) {
       width: 350px;
     }
-    .cancel-icon-card{
+     @media screen and (max-width: 370px) {
+      width: 310px;
+      padding: 10px;
+    }
+    .cancel-icon-card {
       text-align: end;
-      img{
+      img {
         cursor: pointer;
-         height: 24px;
+        height: 24px;
       }
     }
   }

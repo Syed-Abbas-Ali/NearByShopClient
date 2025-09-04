@@ -199,7 +199,7 @@ const LocationVerification = () => {
 
       if (response?.data) {
         toast.success("Store Created Successfully!");
-        sessionStorage.setItem("user", JSON.stringify(response?.data.data));
+        localStorage.setItem("user", JSON.stringify(response?.data.data));
         navigate(-1);
       } else {
         toast.error(response?.error?.data?.message || "Something went wrong!");

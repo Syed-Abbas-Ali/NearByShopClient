@@ -4,16 +4,10 @@
   background: $white-color;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   cursor: pointer;
   position: relative;
   
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-  }
-
   .product-image-container {
     position: relative;
     width: 100%;
@@ -27,7 +21,6 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform 0.3s ease;
     }
     
     .action-buttons {
@@ -48,12 +41,6 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        transition: all 0.2s ease;
-        
-        &:hover {
-          background: $white-color;
-          transform: scale(1.1);
-        }
         
         img {
           width: 16px;
@@ -70,12 +57,10 @@
       font-size: 14px;
       font-weight: 500;
       color: $secondary-color;
-   
       line-height: 1.3;
       height: 20px;
       overflow: hidden;
       display: -webkit-box;
-   
     }
     
     .price-section {
@@ -86,7 +71,6 @@
       @media (max-width:450px) {
         gap:4px;
       }
-      
       
       .current-price {
         font-size: 16px;
@@ -145,14 +129,14 @@
     background: $white-color;
     padding: 16px;
     border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     z-index: 10;
     width: 95%;
     max-width: 280px;
     
     p {
       margin: 0 0 16px;
-      font-size: 14px;
+      font-size: 12px;
       color: $secondary-color;
       text-align: center;
     }
@@ -161,33 +145,33 @@
       display: flex;
       justify-content: center;
       gap: 12px;
+
+      @media (max-width:400px ){
+       gap: 10px; 
+      }
       
       button {
-        padding: 6px 12px;
+        padding: 4px 8px;
         border-radius: 4px;
         font-size: 13px;
         font-weight: 500;
         cursor: pointer;
-        transition: all 0.2s ease;
+          @media (max-width:400px ){
+      padding: 3px 6px;
+      font-size: 12px;
+      }
         
         &.cancel-btn {
           background: transparent;
           border: 1px solid #ddd;
           color: $secondary-color;
           
-          &:hover {
-            background: #f5f5f5;
-          }
         }
         
         &.confirm-btn {
           background: #ff4444;
           border: 1px solid #ff4444;
           color: white;
-          
-          &:hover:not(:disabled) {
-            background: #ff3333;
-          }
           
           &:disabled {
             opacity: 0.7;

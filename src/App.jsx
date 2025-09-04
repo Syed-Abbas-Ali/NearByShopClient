@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -8,7 +8,6 @@ import {
 
 // Assets
 import chatbotIcon from "./assets/chatbotIcon.svg";
-
 import ChatComponent from "./pages/chat/ChatComponent";
 
 // Lazy-loaded Pages
@@ -63,27 +62,20 @@ import UserLocationSelect from "./components/commonComponents/userLocationSelect
 import GlobalFilters from "./components/commonComponents/globalFilters/GlobalFilters";
 import UserLocationDetails from "./components/commonComponents/userLocationDetails/UserLocationDetails";
 import UserLocationMapComponent from "./components/commonComponents/userLocationMapComponent/UserLocationMapComponent";
-import socket from "./utils/socketIo";
+// import socket from "./utils/socketIo";
 import { accessTokenValue } from "./utils/authenticationToken";
 import { jwtDecode } from "jwt-decode";
 import AuthenticationRoutes from "./protectedRoutes/AuthenticationRoutes";
 import ProtectedRoute from "./protectedRoutes/ProtectedRoutes";
 import { setRoomChat } from "./apis&state/state/chatState";
-
-const needNotChatBot = [
-  "/signup",
-  "/login",
-  "/forgot-password",
-  "/change-password",
-  "/update-password",
-  "/otp",
-  "/thankyou",
-];
+import NotificationBanner from "./firebase/NotificationBanner";
+import { onForegroundMessage } from "./firebase/messaging";
+import socketService from "./context/socket.service";
 
 const protectionPages = [
   { path: "/sub-home", element: <SubHomePage /> },
   { path: "/sub-categories", element: <SubCategoriesPage /> },
- 
+
   { path: "/offer-edit/:shopUid/:offerUid", element: <OfferEditPage /> },
   {
     path: "/offer-sub-category/:categoryName",
@@ -92,9 +84,6 @@ const protectionPages = [
   { path: "/offer-products", element: <OfferSubCategoryProductsPage /> },
   { path: "/offer-sub-category-list", element: <OfferSubCategoryListPage /> },
   { path: "/wishlist", element: <WishlistPage /> },
-
-  
-
 
   // { path: "/shop/:shopCategory?", element: <ShopPage /> },
 
@@ -106,7 +95,7 @@ const protectionPages = [
   { path: "/notifications", element: <NotificationsPage /> },
   { path: "/chat", element: <ChatComponent /> },
   { path: "/chat-details", element: <ChatDetailsPage /> },
- 
+
   { path: "/settings", element: <SettingsPage /> },
   {
     path: "/aadhar-verification/:shopUid",
@@ -127,8 +116,8 @@ const nonProtectionPages = [
     element: <SubCategoryProductsPage />,
   },
   { path: "/shop", element: <ShopPage /> },
-   { path: "/shop-profile-view/:shopId", element: <ShopProfileViewPage /> },
-   { path: "/offer", element: <OfferPage /> },
+  { path: "/shop-profile-view/:shopId", element: <ShopProfileViewPage /> },
+  { path: "/offer", element: <OfferPage /> },
   { path: "/", element: <HomePage /> },
   { path: "/website-form", element: <WebsiteFormPage /> },
   { path: "/thankyou", element: <ThankyouPage /> },
@@ -144,33 +133,51 @@ const authenticationPages = [
 ];
 const App = () => {
   const dispatch = useDispatch();
-  const { isChatbotOpen, isFilterPopupOpen } = useSelector(
-    (state) => state.globalState
-  );
 
   const { isUserMapLocationOpen } = useSelector(
     (state) => state.mapDetailsState
   );
   const { roomId, isChatActive } = useSelector((state) => state.chatState);
+  const location = useLocation();
+
+  // useEffect(() => {
+  //   const handleConnectionPort = () => {
+  //     const token = accessTokenValue();
+  //     if (!token) {
+  //       return null;
+  //     }
+  //     const decodedToken = jwtDecode(token);
+
+  //     socket.emit("connect_socket", {
+  //       userId: decodedToken?.userId || "",
+  //       roomId: roomId ?? "",
+  //     });
+  //   };
+
+  //   if (socket && location && location?.pathname?.includes != "chat") {
+  //     handleConnectionPort();
+  //   }
+  // }, [socket, roomId, location]);
+
+  const handleConnectionPort = () => {
+    const token = accessTokenValue();
+    if (!token) return null;
+    const decodedToken = jwtDecode(token);
+    return decodedToken?.userId;
+  };
+
+  let userId = handleConnectionPort();
 
   useEffect(() => {
-    const handleConnectionPort = () => {
-      const token = accessTokenValue();
-      if (!token) {
-        return null;
-      }
-      const decodedToken = jwtDecode(token);
-
-      socket.emit("connect_socket", {
-        userId: decodedToken?.userId || "",
-        roomId: roomId ?? "",
-      });
+    if (!userId) return;
+    socketService.connect();
+    socketService.setOnline();
+    socketService.joinRoom(location?.pathname == "/chat" ? roomId : "");
+    return () => {
+      socketService.setOffline(userId);
+      socketService.disconnect();
     };
-
-    if (socket) {
-      handleConnectionPort();
-    }
-  }, [socket, roomId]);
+  }, [userId, roomId, location]);
 
   useEffect(() => {
     clearInterval();
@@ -181,11 +188,35 @@ const App = () => {
     }, 500);
   }, [isChatActive]);
 
-  const handleChatbotClick = () => {
-    dispatch(setIsChatbotOpen());
-  };
+  useEffect(() => {
+    // Register service worker
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/firebase-messaging-sw.js")
+        .then((reg) => console.log("✅ SW registered:", reg.scope))
+        .catch((err) => console.error("❌ SW register error:", err));
+    }
+
+    // Listen for foreground messages
+    const unsubscribe = onForegroundMessage((payload) => {
+      console.log("Foreground message received:", payload);
+
+      // Show in-app notification
+      if (Notification.permission === "granted") {
+        new Notification(payload.data.title, {
+          body: payload.data.body,
+          icon: "/vite.svg",
+          tag: "chat-notification",
+        });
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+
   return (
     <>
+      {accessTokenValue() && <NotificationBanner />}
       <Toaster
         position="top-center"
         reverseOrder={false}

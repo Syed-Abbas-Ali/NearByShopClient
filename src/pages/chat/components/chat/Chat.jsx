@@ -1,5 +1,4 @@
-import { jwtDecode } from "jwt-decode";
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import arrowLeftLarge from "../../../../assets/arrowLeftLarge.svg";
 import chatBlueTick from "../../../../assets/chatBlueTick.svg";
@@ -9,13 +8,11 @@ import Search from "../../../../components/search/Search";
 import ChatDetails from "../chatDetails/ChatDetails";
 import "./chat.scss";
 // socket.js
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useGetChatListQuery } from "../../../../apis&state/apis/chat";
-import SocketContext from "../../../../context/socketContext";
-import {
-  accessTokenValue,
-  userTypeValue,
-} from "../../../../utils/authenticationToken";
+import { userTypeValue } from "../../../../utils/authenticationToken";
+import { setRoomChat } from "../../../../apis&state/state/chatState";
+// import socket from "../../../../utils/socketIo";
 
 function formatCreatedAt(createdAt) {
   const date = new Date(createdAt);
@@ -45,16 +42,15 @@ function formatCreatedAt(createdAt) {
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`; // e.g., "1/2/2025"
 }
 
-const Chat = ({ activeRoomId, setActiveRoomId }) => {
+const Chat = () => {
   const { roomId } = useSelector((state) => state.chatState);
-  const socketMethods = useContext(SocketContext);
   const navigate = useNavigate();
-  const location = useLocation();
+  const dispatch = useDispatch();
   const [chatToggle, setChatToggle] = useState(true);
   const [currentUserType, setCurrentUserType] = useState("");
   const handleSingleChat = (singleRoomDetails) => {
     setChatToggle((prev) => !prev);
-    setActiveRoomId(singleRoomDetails.roomId);
+    dispatch(setRoomChat(singleRoomDetails.roomId));
   };
 
   const handleGoBack = () => {
@@ -64,52 +60,37 @@ const Chat = ({ activeRoomId, setActiveRoomId }) => {
     currentUserType,
   });
 
-  useEffect(() => {
-    const handleConnectionPort = () => {
-      const token = accessTokenValue();
-      const decodedToken = jwtDecode(token);
-      socketMethods.emit("connect_socket", {
-        userId: decodedToken?.userId || "",
-        roomId: activeRoomId ?? "",
+  const formatCreatedAt = (createdAt) => {
+    const date = new Date(createdAt);
+    const now = new Date();
+
+    const isToday = date.toDateString() === now.toDateString();
+    if (isToday) {
+      return date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
       });
-    };
-
-    if (socketMethods) {
-      handleConnectionPort();
     }
-  }, [socketMethods, activeRoomId]);
-  useEffect(() => {
-    if (chatList?.data[0]?.roomId && !roomId) {
-      setActiveRoomId(chatList.data[0].roomId);
+
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - now.getDay());
+    startOfWeek.setHours(0, 0, 0, 0);
+
+    const endOfWeek = new Date(now);
+    endOfWeek.setDate(now.getDate() + (6 - now.getDay()));
+    endOfWeek.setHours(23, 59, 59, 999);
+
+    if (date >= startOfWeek && date <= endOfWeek) {
+      return date.toLocaleDateString("en-US", { weekday: "short" }); // e.g., Mon, Wed
     }
-    if (!activeRoomId && roomId) {
-      setActiveRoomId(roomId);
-    }
-  }, [chatList]);
-    const formatCreatedAt = (createdAt) => {
-      console.log(createdAt)
-  const date = new Date(createdAt);
-  const now = new Date();
 
-  const isToday = date.toDateString() === now.toDateString();
-  if (isToday) {
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  }
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  };
 
-  const startOfWeek = new Date(now);
-  startOfWeek.setDate(now.getDate() - now.getDay());
-  startOfWeek.setHours(0, 0, 0, 0);
-
-  const endOfWeek = new Date(now);
-  endOfWeek.setDate(now.getDate() + (6 - now.getDay()));
-  endOfWeek.setHours(23, 59, 59, 999);
-
-  if (date >= startOfWeek && date <= endOfWeek) {
-    return date.toLocaleDateString('en-US', { weekday: 'short' }); // e.g., Mon, Wed
-  }
-
-  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-};
+  const handleChangeTab = (tabName) => {
+    setCurrentUserType(tabName);
+    dispatch(setRoomChat(""))
+  };
 
   return (
     <>
@@ -131,13 +112,13 @@ const Chat = ({ activeRoomId, setActiveRoomId }) => {
                 <div className="tabs-list">
                   <button
                     className={currentUserType === "" ? "active-btn" : ""}
-                    onClick={() => setCurrentUserType("")}
+                    onClick={() => handleChangeTab("")}
                   >
                     User
                   </button>
                   <button
                     className={currentUserType !== "" ? "active-btn" : ""}
-                    onClick={() => setCurrentUserType("seller")}
+                    onClick={() => handleChangeTab("seller")}
                   >
                     Seller
                   </button>
@@ -150,8 +131,9 @@ const Chat = ({ activeRoomId, setActiveRoomId }) => {
                 {chatList?.data?.map((user, index) => {
                   return (
                     <div
-                      className={`user ${user.roomId === activeRoomId ? "selected-user-bg" : ""
-                        }`}
+                      className={`user ${
+                        user.roomId === roomId ? "selected-user-bg" : ""
+                      }`}
                       key={index}
                       onClick={() => handleSingleChat(user)}
                     >
@@ -166,11 +148,10 @@ const Chat = ({ activeRoomId, setActiveRoomId }) => {
                                 ? user?.shopName.slice(0, 20) + ".."
                                 : user?.shopName
                               : user?.customerName?.length > 20
-                                ? user?.customerName.slice(0, 20) + ".."
-                                : user?.customerName}
-
+                              ? user?.customerName.slice(0, 20) + ".."
+                              : user?.customerName}
                           </h3>
-                              
+
                           <p>{formatCreatedAt(user?.lastMessage?.createdAt)}</p>
                         </div>
                         <p className="tick-message">
@@ -182,7 +163,9 @@ const Chat = ({ activeRoomId, setActiveRoomId }) => {
                             }
                             alt="tick"
                           />
-                          {user?.lastMessage?.message?.length>30 ? user?.lastMessage?.message?.slice(0,30)+"..":user?.lastMessage?.message }
+                          {user?.lastMessage?.message?.length > 30
+                            ? user?.lastMessage?.message?.slice(0, 30) + ".."
+                            : user?.lastMessage?.message}
                         </p>
                       </div>
                     </div>
@@ -194,7 +177,7 @@ const Chat = ({ activeRoomId, setActiveRoomId }) => {
           <ChatDetails
             chatToggle={chatToggle}
             setChatToggle={setChatToggle}
-            activeRoomId={activeRoomId ?? roomId}
+            activeRoomId={roomId}
             currentUserType={currentUserType}
           />
         </div>
