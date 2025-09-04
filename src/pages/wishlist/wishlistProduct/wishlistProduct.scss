@@ -37,7 +37,7 @@
       display: flex;
       gap: 8px;
       z-index: 2;
-      
+      flex-direction: column;      
       .action-button {
         background: rgba(255,255,255,0.9);
         border: none;

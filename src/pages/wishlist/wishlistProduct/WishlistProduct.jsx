@@ -47,20 +47,13 @@ const WishlistProduct = ({ product }) => {
   };
 
   return (
-    <div className="wishlist-product" onClick={handleProductClick}>
-      {showSharePopup && (
+    <>
+       {showSharePopup && (
         <SharePopup 
           setIsShare={setShowSharePopup} 
           productId={product.item_uid} 
         />
       )}
-
-      <div className="product-image-container">
-        <img 
-          src={product?.image} 
-          alt={product?.title} 
-          className="product-image"
-        />
         <div className="action-buttons">
           <button className="action-button" onClick={handleShare}>
             <img src={shareIcon} alt="Share" />
@@ -69,6 +62,16 @@ const WishlistProduct = ({ product }) => {
             <img src={deleteIcon} alt="Delete" />
           </button>
         </div>
+    <div className="wishlist-product" onClick={handleProductClick}>
+   
+
+      <div className="product-image-container">
+        <img 
+          src={product?.image} 
+          alt={product?.title} 
+          className="product-image"
+        />
+      
       </div>
 
       <div className="product-details">
@@ -118,6 +121,7 @@ const WishlistProduct = ({ product }) => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

@@ -122,15 +122,17 @@ console.log(width)
 
                <p className="distance">
               Radius{" "}
-              <span>
-                {haversine(
-                  latitude,
-                  longitude,
-                  singleShop?.store_location.latitude,
-                  singleShop?.store_location.longitude
-                )}{" "}
-                KM
-              </span>
+           <span>
+  {Math.floor(
+    haversine(
+      latitude,
+      longitude,
+      singleShop?.store_location.latitude,
+      singleShop?.store_location.longitude
+    ) * 10
+  ) / 10}{" "}
+  KM
+</span>
             </p>
        <div className="location-text">
   {singleShop?.shop_address && (

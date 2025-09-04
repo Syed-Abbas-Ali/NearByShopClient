@@ -45,7 +45,17 @@ const Login = () => {
 
       const finalData = { ...loginData };
       const response = await userLogin(finalData);
+     
+  if (response?.data) {
+  const userData = JSON.stringify(response.data.data);
+  
+  // OLD WAY: localStorage.setItem("user", userData);
+  // NEW, RELIABLE WAY:
+  nativeStorage.setItem("user", userData);
 
+  dispatch(setLogin());
+  navigate("/");
+}
    
       if(response?.error?.status==422){
         sessionStorage.setItem("user", JSON.stringify(response?.error?.data?.data));
