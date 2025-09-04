@@ -12,8 +12,8 @@ import Filters from "../../components/filters/Filters";
 
 // Constants for scroll modes
 const SCROLL_MODE = {
-  HORIZONTAL: 'horizontal',
-  VERTICAL: 'vertical'
+  HORIZONTAL: "horizontal",
+  VERTICAL: "vertical",
 };
 
 const Home = () => {
@@ -25,13 +25,12 @@ const Home = () => {
   //   },
   // } = useSelector((state) => state);
 
-   
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
 
   useEffect(() => {
     try {
-      const storedLocation = localStorage.getItem('userLocation');
+      const storedLocation = sessionStorage.getItem("userLocation");
       if (storedLocation) {
         const userLocation = JSON.parse(storedLocation);
         setLatitude(userLocation?.coordinates?.latitude);
@@ -60,8 +59,8 @@ const Home = () => {
     const handleResize = () => {
       setIsWideScreen(window.innerWidth < 500);
     };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
@@ -92,20 +91,23 @@ const Home = () => {
   const lastCategoryRef = useCallback(
     (node) => {
       if (!allCategories || loadingRef.current || selectedCategories) return;
-      
+
       if (observer.current) observer.current.disconnect();
-      
+
       observer.current = new IntersectionObserver(
         (entries) => {
-          if (entries[0].isIntersecting && loadedCategoryIndex < allCategories.length) {
+          if (
+            entries[0].isIntersecting &&
+            loadedCategoryIndex < allCategories.length
+          ) {
             loadingRef.current = true;
             setLoadingMore(true);
-            
+
             setTimeout(() => {
               const nextIndex = loadedCategoryIndex + categoriesPerLoad;
-              setVisibleCategories(prev => [
+              setVisibleCategories((prev) => [
                 ...prev,
-                ...allCategories.slice(loadedCategoryIndex, nextIndex)
+                ...allCategories.slice(loadedCategoryIndex, nextIndex),
               ]);
               setLoadedCategoryIndex(nextIndex);
               loadingRef.current = false;
@@ -127,7 +129,7 @@ const Home = () => {
         <div className="search-filter">
           {isWideScreen && (
             <div className="location-searchbar">
-              <UserLocationPointer/>
+              <UserLocationPointer />
             </div>
           )}
           <FilterInputComponent
@@ -166,7 +168,7 @@ const Home = () => {
             visibleCategories.map((item, index) => {
               const isLastCategory = index === visibleCategories.length - 1;
               return (
-                <div 
+                <div
                   ref={isLastCategory ? lastCategoryRef : null}
                   key={item._id || index}
                 >

@@ -248,7 +248,7 @@ const CustomMapComponent = ({ handleSetLocationDetails }) => {
 
   // Get initial location from session storage
   const [initialLocation, setInitialLocation] = useState(() => {
-    const storedLocation = localStorage.getItem('userLocation');
+    const storedLocation = sessionStorage.getItem("userLocation");
     return storedLocation ? JSON.parse(storedLocation) : null;
   });
 

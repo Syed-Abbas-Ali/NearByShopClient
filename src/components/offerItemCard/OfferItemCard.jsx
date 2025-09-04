@@ -23,7 +23,7 @@ const OfferItemCard = ({ categoryList, subcategory, discountItem }) => {
   // Load location from session storage
   useEffect(() => {
     try {
-      const storedLocation = localStorage.getItem('userLocation');
+      const storedLocation = sessionStorage.getItem("userLocation");
       if (storedLocation) {
         const userLocation = JSON.parse(storedLocation);
         setLatitude(userLocation?.coordinates?.latitude);

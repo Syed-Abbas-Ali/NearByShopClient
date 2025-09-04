@@ -40,7 +40,8 @@ const ProductSection = ({
     },
     { skip: shouldSkip }
   );
-
+console.log(latitude)
+console.log(longitude)
   // Reset products when filters change
   useEffect(() => {
     setCurrentPage(1);
