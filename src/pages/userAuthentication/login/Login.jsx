@@ -10,7 +10,7 @@ import FormHeader from "../../../components/commonComponents/auth&VerificatonCom
 import { useDispatch } from "react-redux";
 import { setLogin } from "../../../apis&state/state/authSlice";
 import toast from "react-hot-toast";
-import CircularLoader from "../../../components/circularLoader/CircularLoader"
+import CircularLoader from "../../../components/circularLoader/CircularLoader";
 
 const loginFields = [
   {
@@ -36,7 +36,7 @@ const Login = () => {
     password: "",
   });
 
-  const [userLogin,{ isLoading }] = useLoginApiMutation();
+  const [userLogin, { isLoading }] = useLoginApiMutation();
 
   const handleLogin = async () => {
     try {
@@ -45,21 +45,24 @@ const Login = () => {
 
       const finalData = { ...loginData };
       const response = await userLogin(finalData);
-     
-  if (response?.data) {
-  const userData = JSON.stringify(response.data.data);
-  
-  // OLD WAY: localStorage.setItem("user", userData);
-  // NEW, RELIABLE WAY:
-  nativeStorage.setItem("user", userData);
 
-  dispatch(setLogin());
-  navigate("/");
-}
-   
-      if(response?.error?.status==422){
-        localStorage.setItem("user", JSON.stringify(response?.error?.data?.data));
-        toast.error(response?.error?.data?.message)
+      if (response?.data) {
+        const userData = JSON.stringify(response.data.data);
+
+        // OLD WAY: localStorage.setItem("user", userData);
+        // NEW, RELIABLE WAY:
+        nativeStorage.setItem("user", userData);
+
+        dispatch(setLogin());
+        navigate("/");
+      }
+
+      if (response?.error?.status == 422) {
+        localStorage.setItem(
+          "user",
+          JSON.stringify(response?.error?.data?.data)
+        );
+        toast.error(response?.error?.data?.message);
         navigate("/otp");
       }
       if (response?.data) {
@@ -156,7 +159,9 @@ const Login = () => {
               Forgot your password?
             </p>
             <div className="action-card">
-              <button onClick={handleLogin}>{isLoading ? <CircularLoader /> : "Login"}</button>
+              <button onClick={handleLogin}>
+                {isLoading ? <CircularLoader /> : "Login"}
+              </button>
               {/* <div className="or-card">- Or -</div>
               <button className="google-signup">
                 <img src={googleIcon} alt="google" /> Login with Google
@@ -166,6 +171,7 @@ const Login = () => {
               <p>If you not have an account?</p>
               <span onClick={handleNavigateSignUp}>Create Account</span>
             </div>
+            {window.AndroidBridge ? "yes" : "No"}
           </div>
         </div>
       </div>
