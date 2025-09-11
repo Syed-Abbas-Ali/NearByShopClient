@@ -68,13 +68,29 @@ const handleSignup = async () => {
     if (response?.data) {
       // Successful API response
       toast.success("Successfully OTP sent");
-      localStorage.setItem(
+
+               if (window.AndroidBridge && window.AndroidBridge.storeData) {
+        // --- This is for the Android App ---
+        // Use the correct case "AndroidBridge" and method "storeData"
+        window.AndroidBridge.storeData(
         "user",
         JSON.stringify({
           role: "USER",
           accessToken: response?.data.data.accessToken,
         })
-      );
+      );;
+      } else {
+        // --- This is the fallback for the Web Browser ---
+        localStorage.setItem(
+        "user",
+        JSON.stringify({
+          role: "USER",
+          accessToken: response?.data.data.accessToken,
+        })
+      );;
+      }
+
+      
       navigate("/otp");
     } else if (response?.error) {
       // API response with error

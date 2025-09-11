@@ -7,19 +7,35 @@ const NotificationBanner = ({ userId, onTokenReceived }) => {
   const [showBanner, setShowBanner] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // *** MODIFIED LOGIC ***
+  // Check if running inside our Android WebView
+  const isAndroidApp = window.Android && typeof window.Android.requestNotifications === 'function';
+
   useEffect(() => {
-    if (Notification.permission === 'default') {
+    // Only show the web banner if NOT in the Android app
+    // and permission is 'default'
+    if (!isAndroidApp && Notification.permission === 'default') {
       setShowBanner(true);
     }
-  }, []);
+  }, [isAndroidApp]);
 
   const handleEnableNotifications = async () => {
     setIsLoading(true);
     try {
-      const token = await requestNotificationPermission();
-      if (token) {
-        await sendTokenToServer(token);
-        setShowBanner(false);
+      // *** MODIFIED LOGIC ***
+      // If inside the Android app, call the native code.
+      // Otherwise, use the web permission flow.
+      if (isAndroidApp) {
+        console.log("Calling native Android function for notifications...");
+        window.Android.requestNotifications();
+        // The banner will be hidden by the dismiss button, as native prompt appears
+      } else {
+        const token = await requestNotificationPermission();
+        if (token) {
+          await sendTokenToServer(token);
+          if (onTokenReceived) onTokenReceived(token);
+          setShowBanner(false);
+        }
       }
     } catch (error) {
       console.error('Error enabling notifications:', error);

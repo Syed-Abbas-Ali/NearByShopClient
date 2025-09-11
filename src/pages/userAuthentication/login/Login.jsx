@@ -8,7 +8,8 @@ import { loginValidationSchema } from "../../../utils/validations";
 import AppBanner from "../../../components/commonComponents/auth&VerificatonComponents/appBanner/AppBanner";
 import FormHeader from "../../../components/commonComponents/auth&VerificatonComponents/formHeader/FormHeader";
 import { useDispatch } from "react-redux";
-import { setLogin } from "../../../apis&state/state/authSlice";
+// --- CHANGE 1: Import 'loginSuccess' instead of 'setLogin' ---
+import { loginSuccess } from "../../../apis&state/state/authSlice";
 import toast from "react-hot-toast";
 import CircularLoader from "../../../components/circularLoader/CircularLoader";
 
@@ -46,30 +47,32 @@ const Login = () => {
       const finalData = { ...loginData };
       const response = await userLogin(finalData);
 
-      if (response?.data) {
-        const userData = JSON.stringify(response.data.data);
-
-        // OLD WAY: localStorage.setItem("user", userData);
-        // NEW, RELIABLE WAY:
-        nativeStorage.setItem("user", userData);
-
-        dispatch(setLogin());
-        navigate("/");
-      }
-
-      if (response?.error?.status == 422) {
+      if (response?.error?.status === 422) {
+        // This part for OTP seems correct, so we keep it.
         localStorage.setItem(
           "user",
           JSON.stringify(response?.error?.data?.data)
         );
         toast.error(response?.error?.data?.message);
         navigate("/otp");
-      }
-      if (response?.data) {
-        localStorage.setItem("user", JSON.stringify(response.data.data));
-        dispatch(setLogin());
+      } else if (response?.data) {
+        // --- CHANGE 2: This is the updated success logic ---
+
+        // 1. Get the complete user object from the API response.
+        // This object should include the token.
+        const userData = response.data.data;
+
+        // 2. Dispatch the new 'loginSuccess' action and pass the user object.
+        // The authSlice will automatically handle saving the token to the Android App
+        // and the full user object to localStorage for the website.
+        dispatch(loginSuccess(userData));
+
+        // 3. Show a success message and navigate.
+        toast.success("Login Successful!");
         navigate("/");
+
       } else if (response?.error) {
+        // This existing error handling is fine.
         const errorMessage =
           response?.error?.data?.errors[0]?.message || "Something went wrong!";
         if (response?.error?.data?.errors[0]?.message) {
@@ -92,7 +95,7 @@ const Login = () => {
         err.inner.forEach((error) => {
           validationErrors[error.path] = error.message;
         });
-        setErrors(validationErrors); // Set validation errors to state
+        setErrors(validationErrors);
       }
     }
   };
@@ -109,7 +112,7 @@ const Login = () => {
 
       setErrors((prevErrors) => {
         const newErrors = { ...prevErrors };
-        delete newErrors[name]; // Remove error when field is valid
+        delete newErrors[name];
         return newErrors;
       });
     } catch (error) {
@@ -162,16 +165,11 @@ const Login = () => {
               <button onClick={handleLogin}>
                 {isLoading ? <CircularLoader /> : "Login"}
               </button>
-              {/* <div className="or-card">- Or -</div>
-              <button className="google-signup">
-                <img src={googleIcon} alt="google" /> Login with Google
-              </button> */}
             </div>
             <div className="account-question">
               <p>If you not have an account?</p>
               <span onClick={handleNavigateSignUp}>Create Account</span>
             </div>
-            {window.AndroidBridge ? "yes" : "No"}
           </div>
         </div>
       </div>
